@@ -55,8 +55,7 @@
         
         <!-- Hidden content that will be displayed after successful login -->
         <div id="hidden-section">
-            <h2>Welcome to the secret section!</h2>
-            <p>You have successfully logged in.</p>
+            <p>Access granted.</p>
         </div>
     </div>
 
@@ -67,11 +66,11 @@
                 let hiddenSection = document.getElementById("hidden-section");
 
                 // Check if password is correct
-                if (password === "1234") {
+                if (password === "jj is the best") {
                     hiddenSection.style.display = "block";  // Reveal hidden content
                     document.getElementById("input").disabled = true; // Disable input
                     document.getElementById("input").value = "";  // Clear the input field
-                    document.getElementById("prompt").textContent = "Access granted!";
+                    document.getElementById("prompt").textContent = "Access granted."; // Nonchalant message
                 } else {
                     // Incorrect password - do nothing and reset the input field
                     document.getElementById("input").value = "";
