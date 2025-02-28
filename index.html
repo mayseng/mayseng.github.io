@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Command Prompt Password</title>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: 'Courier New', monospace;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #container {
+            text-align: left;
+        }
+
+        #prompt {
+            display: block;
+        }
+
+        #input {
+            background: black;
+            border: none;
+            color: white;
+            font-size: 16px;
+            width: 200px;
+            outline: none;
+        }
+
+        #input:focus {
+            border: none;
+        }
+
+        #response {
+            margin-top: 10px;
+        }
+
+        .hidden-section {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <span id="prompt">C:\> </span>
+        <input type="password" id="input" autofocus placeholder="Enter password" onkeydown="checkPassword(event)">
+        <div id="response"></div>
+
+        <!-- Hidden section, will be revealed on correct password -->
+        <div id="hidden-section" class="hidden-section">
+            <h2>Welcome to the secret section!</h2>
+            <p>You have access to this hidden content.</p>
+        </div>
+    </div>
+
+    <script>
+        function checkPassword(event) {
+            if (event.key === "Enter") {
+                let password = document.getElementById("input").value;
+                let response = document.getElementById("response");
+                let hiddenSection = document.getElementById("hidden-section");
+
+                if (password === "yourpassword123") {
+                    response.textContent = "Password correct. Access granted!";
+                    hiddenSection.classList.remove("hidden-section");
+                    document.getElementById("input").disabled = true;
+                } else {
+                    response.textContent = "Incorrect password. Try again.";
+                    document.getElementById("input").value = "";
+                }
+            }
+        }
+    </script>
+</body>
+</html>
