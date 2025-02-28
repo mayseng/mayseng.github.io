@@ -75,6 +75,15 @@
             100% { opacity: 1; }
         }
 
+        /* New section content */
+        #new-section {
+            display: none; /* Hidden initially */
+            background-color: darkgreen;
+            color: white;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
     </style>
 </head>
 <body>
@@ -89,6 +98,13 @@
         <div id="hidden-section">
             <!-- No extra messages after successful login -->
         </div>
+
+        <!-- New section to show after successful password entry -->
+        <div id="new-section">
+            <h1>Welcome to the New Section!</h1>
+            <p>This is the content that you can access after entering the correct password.</p>
+            <p>Feel free to add more information here!</p>
+        </div>
     </div>
 
     <script>
@@ -96,15 +112,17 @@
             if (event.key === "Enter") {
                 let password = document.getElementById("input").value;
                 let hiddenSection = document.getElementById("hidden-section");
+                let newSection = document.getElementById("new-section");
 
                 // Check if password is correct
                 if (password === "jj is the best") {
-                    hiddenSection.style.display = "block";  // Reveal hidden content
+                    hiddenSection.style.display = "block";  // Reveal hidden content (if any)
                     document.getElementById("input").disabled = true; // Disable input
                     document.getElementById("input").value = "";  // Clear the input field
                     document.getElementById("prompt").textContent = " "; // Blank the prompt
+                    newSection.style.display = "block"; // Show the new section
                 } else {
-                    // Incorrect password - do nothing and reset the input field
+                    // Incorrect password - reset the input field
                     document.getElementById("input").value = "";
                 }
             }
