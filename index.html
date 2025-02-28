@@ -8,8 +8,8 @@
         body {
             background-color: black;
             color: white;
-            font-family: 'Courier New', monospace, 'Terminal', sans-serif; /* Use terminal-like font */
-            font-weight: bold; /* Make the font bold */
+            font-family: 'Courier New', monospace, 'Terminal', sans-serif; /* Terminal-like font */
+            font-weight: bold; /* Bold text */
             margin: 0;
             height: 100vh;
             display: flex;
@@ -37,6 +37,7 @@
             caret-color: white; /* Make the caret (cursor) white */
             font-family: 'Courier New', monospace;
             font-weight: bold; /* Bold input text */
+            letter-spacing: 1px;
         }
 
         #input:focus {
@@ -49,19 +50,11 @@
             color: white;
         }
 
-        /* Style the blinking cursor */
-        #input::after {
-            content: "|";
-            color: white;
-            font-weight: bold;
-            animation: blink 0.8s step-end infinite;
+        /* Make the cursor really thick */
+        #input {
+            caret-width: 10px; /* Makes the cursor thicker */
         }
 
-        @keyframes blink {
-            0% { opacity: 1; }
-            50% { opacity: 0; }
-            100% { opacity: 1; }
-        }
     </style>
 </head>
 <body>
@@ -71,7 +64,7 @@
         
         <!-- Hidden content that will be displayed after successful login -->
         <div id="hidden-section">
-            <p>Welcome to the secret section!</p> <!-- Optional content you can change -->
+            <!-- No extra messages after successful login -->
         </div>
     </div>
 
