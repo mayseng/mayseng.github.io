@@ -37,7 +37,7 @@
             font-family: 'Courier New', monospace;
             font-weight: bold; /* Bold input text */
             letter-spacing: 1px;
-            caret-color: transparent; /* Hide the default caret */
+            caret-color: white; /* Default caret */
             padding: 0;
         }
 
@@ -49,30 +49,6 @@
             display: none;
             margin-top: 20px;
             color: white;
-        }
-
-        /* Custom thick blinking cursor */
-        #input-container {
-            position: relative;
-            display: inline-block;
-        }
-
-        #cursor {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 4px; /* Thick cursor width */
-            height: 100%;
-            background-color: white;
-            animation: blink 0.8s step-end infinite;
-            pointer-events: none; /* Prevent cursor from interfering with typing */
-        }
-
-        /* Blinking animation */
-        @keyframes blink {
-            0% { opacity: 1; }
-            50% { opacity: 0; }
-            100% { opacity: 1; }
         }
 
         /* New section content */
@@ -89,9 +65,8 @@
 <body>
     <div id="container">
         <span id="prompt">C:\> </span>
-        <div id="input-container">
+        <div>
             <input type="password" id="input" autofocus oninput="updateCursorPosition()" onkeydown="checkPassword(event)">
-            <div id="cursor"></div> <!-- Custom blinking cursor -->
         </div>
         
         <!-- Hidden content that will be displayed after successful login -->
@@ -130,25 +105,7 @@
 
         function updateCursorPosition() {
             const input = document.getElementById("input");
-            const cursor = document.getElementById("cursor");
-
-            // Get the position of the caret (cursor) within the input field
-            const caretPosition = input.selectionStart;
-
-            // Get the width of the text in the input field
-            const textWidth = getTextWidth(input.value.substring(0, caretPosition), input);
-
-            // Move the custom cursor to the right position
-            cursor.style.left = `${textWidth}px`; // Adjust position based on text width
-        }
-
-        // Function to calculate text width in the input field
-        function getTextWidth(text, input) {
-            const canvas = document.createElement("canvas");
-            const context = canvas.getContext("2d");
-            const font = getComputedStyle(input).font;
-            context.font = font;
-            return context.measureText(text).width; // Return the width of the text
+            // Remove custom cursor logic
         }
     </script>
 </body>
