@@ -34,7 +34,6 @@
             font-size: 16px;
             width: 100%;
             outline: none;
-            caret-color: white; /* Make the caret (cursor) white */
             font-family: 'Courier New', monospace;
             font-weight: bold; /* Bold input text */
             letter-spacing: 1px;
@@ -50,9 +49,27 @@
             color: white;
         }
 
-        /* Make the cursor really thick */
-        #input {
-            caret-width: 10px; /* Makes the cursor thicker */
+        /* Custom thick blinking cursor */
+        #input-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        #cursor {
+            position: absolute;
+            top: 0;
+            right: -2px;
+            width: 4px; /* Thick cursor width */
+            height: 100%;
+            background-color: white;
+            animation: blink 0.8s step-end infinite;
+        }
+
+        /* Blinking animation */
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0; }
+            100% { opacity: 1; }
         }
 
     </style>
@@ -60,7 +77,10 @@
 <body>
     <div id="container">
         <span id="prompt">C:\> </span>
-        <input type="password" id="input" autofocus onkeydown="checkPassword(event)">
+        <div id="input-container">
+            <input type="password" id="input" autofocus onkeydown="checkPassword(event)">
+            <div id="cursor"></div> <!-- Custom blinking cursor -->
+        </div>
         
         <!-- Hidden content that will be displayed after successful login -->
         <div id="hidden-section">
