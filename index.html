@@ -8,7 +8,7 @@
         body {
             background-color: black;
             color: white;
-            font-family: 'Courier New', monospace;
+            font-family: 'Courier New', monospace, 'Terminal', sans-serif; /* Use terminal-like font */
             font-weight: bold; /* Make the font bold */
             margin: 0;
             height: 100vh;
@@ -34,9 +34,9 @@
             font-size: 16px;
             width: 100%;
             outline: none;
-            caret-color: white;
+            caret-color: white; /* Make the caret (cursor) white */
             font-family: 'Courier New', monospace;
-            font-weight: bold; /* Ensure the input text is bold */
+            font-weight: bold; /* Bold input text */
         }
 
         #input:focus {
@@ -48,16 +48,30 @@
             margin-top: 20px;
             color: white;
         }
+
+        /* Style the blinking cursor */
+        #input::after {
+            content: "|";
+            color: white;
+            font-weight: bold;
+            animation: blink 0.8s step-end infinite;
+        }
+
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0; }
+            100% { opacity: 1; }
+        }
     </style>
 </head>
 <body>
     <div id="container">
         <span id="prompt">C:\> </span>
-        <input type="password" id="input" autofocus placeholder="Enter password" onkeydown="checkPassword(event)">
+        <input type="password" id="input" autofocus onkeydown="checkPassword(event)">
         
         <!-- Hidden content that will be displayed after successful login -->
         <div id="hidden-section">
-            <p>Access granted.</p>
+            <p>Welcome to the secret section!</p> <!-- Optional content you can change -->
         </div>
     </div>
 
@@ -66,14 +80,13 @@
             if (event.key === "Enter") {
                 let password = document.getElementById("input").value;
                 let hiddenSection = document.getElementById("hidden-section");
-                let prompt = document.getElementById("prompt");
 
                 // Check if password is correct
                 if (password === "jj is the best") {
                     hiddenSection.style.display = "block";  // Reveal hidden content
-                    prompt.textContent = "Access granted."; // Update prompt text only once
                     document.getElementById("input").disabled = true; // Disable input
                     document.getElementById("input").value = "";  // Clear the input field
+                    document.getElementById("prompt").textContent = " "; // Blank the prompt
                 } else {
                     // Incorrect password - do nothing and reset the input field
                     document.getElementById("input").value = "";
