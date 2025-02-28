@@ -66,13 +66,14 @@
             if (event.key === "Enter") {
                 let password = document.getElementById("input").value;
                 let hiddenSection = document.getElementById("hidden-section");
+                let prompt = document.getElementById("prompt");
 
                 // Check if password is correct
                 if (password === "jj is the best") {
                     hiddenSection.style.display = "block";  // Reveal hidden content
+                    prompt.textContent = "Access granted."; // Update prompt text only once
                     document.getElementById("input").disabled = true; // Disable input
                     document.getElementById("input").value = "";  // Clear the input field
-                    document.getElementById("prompt").textContent = "Access granted."; // Nonchalant message
                 } else {
                     // Incorrect password - do nothing and reset the input field
                     document.getElementById("input").value = "";
