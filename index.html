@@ -38,6 +38,7 @@
             font-weight: bold; /* Bold input text */
             letter-spacing: 1px;
             caret-color: transparent; /* Hide the default caret */
+            padding: 0;
         }
 
         #input:focus {
@@ -59,7 +60,7 @@
         #cursor {
             position: absolute;
             top: 0;
-            right: 0;
+            left: 0;
             width: 4px; /* Thick cursor width */
             height: 100%;
             background-color: white;
@@ -78,7 +79,7 @@
 </head>
 <body>
     <div id="container">
-        <span id="prompt">C:\1> </span>
+        <span id="prompt">C:\> </span>
         <div id="input-container">
             <input type="password" id="input" autofocus oninput="updateCursorPosition()" onkeydown="checkPassword(event)">
             <div id="cursor"></div> <!-- Custom blinking cursor -->
@@ -112,13 +113,24 @@
         function updateCursorPosition() {
             const input = document.getElementById("input");
             const cursor = document.getElementById("cursor");
-            
+
             // Get the position of the caret (cursor) within the input field
             const caretPosition = input.selectionStart;
-            const fontWidth = 8;  // Approximate width of each character (adjust if necessary)
+
+            // Get the width of the text in the input field
+            const textWidth = getTextWidth(input.value.substring(0, caretPosition), input);
 
             // Move the custom cursor to the right position
-            cursor.style.left = `${caretPosition * fontWidth}px`; // Adjust position based on caret position
+            cursor.style.left = `${textWidth}px`; // Adjust position based on text width
+        }
+
+        // Function to calculate text width in the input field
+        function getTextWidth(text, input) {
+            const canvas = document.createElement("canvas");
+            const context = canvas.getContext("2d");
+            const font = getComputedStyle(input).font;
+            context.font = font;
+            return context.measureText(text).width; // Return the width of the text
         }
     </script>
 </body>
