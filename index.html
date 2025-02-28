@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Command Prompt Password</title>
+    <title>Command Prompt Login</title>
     <style>
         body {
             background-color: black;
@@ -18,10 +18,12 @@
 
         #container {
             text-align: left;
+            width: 500px;
         }
 
         #prompt {
             display: block;
+            white-space: nowrap;
         }
 
         #input {
@@ -29,20 +31,20 @@
             border: none;
             color: white;
             font-size: 16px;
-            width: 200px;
+            width: 100%;
             outline: none;
+            caret-color: white;
+            font-family: 'Courier New', monospace;
         }
 
         #input:focus {
-            border: none;
+            outline: none;
         }
 
-        #response {
-            margin-top: 10px;
-        }
-
-        .hidden-section {
+        #hidden-section {
             display: none;
+            margin-top: 20px;
+            color: white;
         }
     </style>
 </head>
@@ -50,12 +52,11 @@
     <div id="container">
         <span id="prompt">C:\> </span>
         <input type="password" id="input" autofocus placeholder="Enter password" onkeydown="checkPassword(event)">
-        <div id="response"></div>
-
-        <!-- Hidden section, will be revealed on correct password -->
-        <div id="hidden-section" class="hidden-section">
+        
+        <!-- Hidden content that will be displayed after successful login -->
+        <div id="hidden-section">
             <h2>Welcome to the secret section!</h2>
-            <p>You have access to this hidden content.</p>
+            <p>You have successfully logged in.</p>
         </div>
     </div>
 
@@ -63,15 +64,16 @@
         function checkPassword(event) {
             if (event.key === "Enter") {
                 let password = document.getElementById("input").value;
-                let response = document.getElementById("response");
                 let hiddenSection = document.getElementById("hidden-section");
 
-                if (password === "yourpassword123") {
-                    response.textContent = "Password correct. Access granted!";
-                    hiddenSection.classList.remove("hidden-section");
-                    document.getElementById("input").disabled = true;
+                // Check if password is correct
+                if (password === "1234") {
+                    hiddenSection.style.display = "block";  // Reveal hidden content
+                    document.getElementById("input").disabled = true; // Disable input
+                    document.getElementById("input").value = "";  // Clear the input field
+                    document.getElementById("prompt").textContent = "Access granted!";
                 } else {
-                    response.textContent = "Incorrect password. Try again.";
+                    // Incorrect password - do nothing and reset the input field
                     document.getElementById("input").value = "";
                 }
             }
