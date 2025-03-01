@@ -22,6 +22,18 @@
             width: 500px;
         }
 
+        #header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        #header img {
+            width: 40px; /* Adjust the size of the logo */
+            height: 40px;
+            margin-right: 10px; /* Space between the logo and title */
+        }
+
         #prompt {
             display: block;
             white-space: nowrap;
@@ -64,6 +76,12 @@
 </head>
 <body>
     <div id="container">
+        <div id="header">
+            <!-- Logo image -->
+            <img src="https://api.deepai.org/job-view-file/b2b09150-943b-4c62-aa80-787706cd309c/outputs/output.jpg" alt="Logo">
+            <h1>SECRET MINISTRATION</h1>
+        </div>
+        
         <span id="prompt">C:\> </span>
         <div>
             <input type="password" id="input" autofocus oninput="updateCursorPosition()" onkeydown="checkPassword(event)">
