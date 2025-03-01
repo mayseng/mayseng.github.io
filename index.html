@@ -8,7 +8,7 @@
         body {
             background-color: black;
             color: white;
-            font-family: 'Courier New', monospace, 'Terminal', sans-serif; 
+            font-family: 'Courier New', monospace, 'Terminal', sans-serif;
             font-weight: bold;
             margin: 0;
             height: 100vh;
@@ -36,7 +36,7 @@
             width: 100%;
             outline: none;
             font-family: 'Courier New', monospace;
-            font-weight: bold; 
+            font-weight: bold;
             letter-spacing: 1px;
             caret-color: white;
             padding: 0;
@@ -62,6 +62,13 @@
             display: none;
             margin-top: 20px;
             color: white;
+            width: 100%;
+        }
+
+        #command-section {
+            display: none; /* Hidden initially */
+            width: 100%;
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -69,12 +76,23 @@
     <div id="container">
         <span id="prompt">C:\> </span>
         <div>
-            <input type="text" id="input" autofocus oninput="updateCursorPosition()" onkeydown="checkCommand(event)">
+            <input type="password" id="input" autofocus oninput="updateCursorPosition()" onkeydown="checkPassword(event)">
         </div>
         
         <!-- Hidden content that will be displayed after successful login -->
         <div id="hidden-section">
-            <!-- Hidden messages or content after successful login -->
+            <!-- No extra messages after successful login -->
+        </div>
+
+        <!-- Command prompt section for interacting with notes after login -->
+        <div id="command-section">
+            <span id="command-prompt">C:\> </span>
+            <div>
+                <input type="text" id="command-input" autofocus oninput="updateCursorPosition()" onkeydown="checkCommand(event)">
+            </div>
+            
+            <!-- Display notes here -->
+            <div id="notes-container"></div>
         </div>
     </div>
 
@@ -92,7 +110,7 @@
         // Function to display notes
         function displayNotes() {
             const notes = loadNotes();
-            const container = document.getElementById("hidden-section");
+            const container = document.getElementById("notes-container");
             container.innerHTML = ''; // Clear any previous content
             for (let noteName in notes) {
                 let noteDiv = document.createElement("div");
@@ -102,21 +120,36 @@
             }
         }
 
-        // Handle the input commands
-        function checkCommand(event) {
+        // Handle the password input
+        function checkPassword(event) {
             if (event.key === "Enter") {
-                let command = document.getElementById("input").value.trim();
-                let notes = loadNotes();
+                let password = document.getElementById("input").value;
                 let hiddenSection = document.getElementById("hidden-section");
+                let commandSection = document.getElementById("command-section");
 
                 // Check if password is correct
-                if (command === "jj is the best") {
+                if (password === "jj is the best") {
                     hiddenSection.style.display = "block";  // Reveal hidden content
                     document.getElementById("input").disabled = true; // Disable input
                     document.getElementById("input").value = "";  // Clear the input field
                     document.getElementById("prompt").textContent = " "; // Blank the prompt
-                    displayNotes(); // Show saved notes after login
-                } else if (command.startsWith("create note")) {
+                    commandSection.style.display = "block"; // Show command section
+                    displayNotes(); // Display any saved notes
+                } else {
+                    // Incorrect password - reset the input field
+                    document.getElementById("input").value = "";
+                }
+            }
+        }
+
+        // Handle commands in the new command prompt after login
+        function checkCommand(event) {
+            if (event.key === "Enter") {
+                let command = document.getElementById("command-input").value.trim();
+                let notes = loadNotes();
+                let container = document.getElementById("notes-container");
+
+                if (command.startsWith("create note")) {
                     // Command to create a new note
                     const noteName = command.slice(12).trim();
                     if (noteName) {
@@ -132,11 +165,14 @@
                 } else if (command === "show notes") {
                     // Command to show all saved notes
                     displayNotes();
+                } else if (command === "clear") {
+                    // Command to clear the terminal output (i.e., hide notes)
+                    container.innerHTML = '';
                 } else {
                     alert("Command not recognized. Try 'create note [name]' or 'show notes'.");
                 }
-                
-                document.getElementById("input").value = ""; // Clear input field
+
+                document.getElementById("command-input").value = ""; // Clear input field
             }
         }
 
