@@ -8,13 +8,14 @@
         body {
             background-color: black;
             color: white;
-            font-family: 'Courier New', monospace, 'Terminal', sans-serif; /* Terminal-like font */
-            font-weight: bold; /* Bold text */
+            font-family: 'Courier New', monospace, 'Terminal', sans-serif; 
+            font-weight: bold;
             margin: 0;
             height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
+            flex-direction: column;
         }
 
         #container {
@@ -35,9 +36,9 @@
             width: 100%;
             outline: none;
             font-family: 'Courier New', monospace;
-            font-weight: bold; /* Bold input text */
+            font-weight: bold; 
             letter-spacing: 1px;
-            caret-color: white; /* Default caret */
+            caret-color: white;
             padding: 0;
         }
 
@@ -45,67 +46,102 @@
             outline: none;
         }
 
+        .note {
+            background-color: darkgreen;
+            color: white;
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid white;
+        }
+
+        .note-title {
+            font-weight: bold;
+        }
+
         #hidden-section {
             display: none;
             margin-top: 20px;
             color: white;
         }
-
-        /* New section content */
-        #new-section {
-            display: none; /* Hidden initially */
-            background-color: darkgreen;
-            color: white;
-            padding: 20px;
-            margin-top: 20px;
-        }
-
     </style>
 </head>
 <body>
     <div id="container">
         <span id="prompt">C:\> </span>
         <div>
-            <input type="password" id="input" autofocus oninput="updateCursorPosition()" onkeydown="checkPassword(event)">
+            <input type="text" id="input" autofocus oninput="updateCursorPosition()" onkeydown="checkCommand(event)">
         </div>
         
         <!-- Hidden content that will be displayed after successful login -->
         <div id="hidden-section">
-            <!-- No extra messages after successful login -->
-        </div>
-
-        <!-- New section to show after successful password entry -->
-        <div id="new-section">
-            <h1>Welcome to the New Section!</h1>
-            <p>This is the content that you can access after entering the correct password.</p>
-            <p>Feel free to add more information here!</p>
+            <!-- Hidden messages or content after successful login -->
         </div>
     </div>
 
     <script>
-        function checkPassword(event) {
+        // Store notes in localStorage
+        function loadNotes() {
+            const notes = JSON.parse(localStorage.getItem('notes')) || {};
+            return notes;
+        }
+
+        function saveNotes(notes) {
+            localStorage.setItem('notes', JSON.stringify(notes));
+        }
+
+        // Function to display notes
+        function displayNotes() {
+            const notes = loadNotes();
+            const container = document.getElementById("hidden-section");
+            container.innerHTML = ''; // Clear any previous content
+            for (let noteName in notes) {
+                let noteDiv = document.createElement("div");
+                noteDiv.classList.add("note");
+                noteDiv.innerHTML = `<div class="note-title">${noteName}</div><p>${notes[noteName]}</p>`;
+                container.appendChild(noteDiv);
+            }
+        }
+
+        // Handle the input commands
+        function checkCommand(event) {
             if (event.key === "Enter") {
-                let password = document.getElementById("input").value;
+                let command = document.getElementById("input").value.trim();
+                let notes = loadNotes();
                 let hiddenSection = document.getElementById("hidden-section");
-                let newSection = document.getElementById("new-section");
 
                 // Check if password is correct
-                if (password === "jj is the best") {
-                    hiddenSection.style.display = "block";  // Reveal hidden content (if any)
+                if (command === "jj is the best") {
+                    hiddenSection.style.display = "block";  // Reveal hidden content
                     document.getElementById("input").disabled = true; // Disable input
                     document.getElementById("input").value = "";  // Clear the input field
                     document.getElementById("prompt").textContent = " "; // Blank the prompt
-                    newSection.style.display = "block"; // Show the new section
+                    displayNotes(); // Show saved notes after login
+                } else if (command.startsWith("create note")) {
+                    // Command to create a new note
+                    const noteName = command.slice(12).trim();
+                    if (noteName) {
+                        let noteContent = prompt("Enter content for the note:");
+                        if (noteContent) {
+                            notes[noteName] = noteContent;
+                            saveNotes(notes);
+                            displayNotes(); // Refresh the list of notes
+                        }
+                    } else {
+                        alert("Please provide a name for your note.");
+                    }
+                } else if (command === "show notes") {
+                    // Command to show all saved notes
+                    displayNotes();
                 } else {
-                    // Incorrect password - reset the input field
-                    document.getElementById("input").value = "";
+                    alert("Command not recognized. Try 'create note [name]' or 'show notes'.");
                 }
+                
+                document.getElementById("input").value = ""; // Clear input field
             }
         }
 
         function updateCursorPosition() {
-            const input = document.getElementById("input");
-            // Remove custom cursor logic
+            // Placeholder function for handling cursor behavior if needed
         }
     </script>
 </body>
