@@ -4,22 +4,64 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SECRET MINISTRATION</title>
-    <!-- Using an external image URL for favicon -->
-    <link rel="icon" href="https://api.deepai.org/job-view-file/b2b09150-943b-4c62-aa80-787706cd309c/outputs/output.jpg" type="image/png">
-
     <style>
+    <link rel="icon" href="https://api.deepai.org/job-view-file/d2d5cf78-db3c-4f4a-b654-f7e0888b480a/outputs/output.jpg" type="image/png">
+
         body {
             background-color: black;
             color: white;
-            font-family: 'Courier New', monospace, 'Terminal', sans-serif;
-            font-weight: bold;
+            font-family: 'Courier New', monospace, 'Terminal', sans-serif; /* Terminal-like font */
+            font-weight: bold; /* Bold text */
             margin: 0;
             height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
         }
-        /* Other styles remain the same */
+
+        #container {
+            text-align: left;
+            width: 500px;
+        }
+
+        #prompt {
+            display: block;
+            white-space: nowrap;
+        }
+
+        #input {
+            background: black;
+            border: none;
+            color: white;
+            font-size: 16px;
+            width: 100%;
+            outline: none;
+            font-family: 'Courier New', monospace;
+            font-weight: bold; /* Bold input text */
+            letter-spacing: 1px;
+            caret-color: white; /* Default caret */
+            padding: 0;
+        }
+
+        #input:focus {
+            outline: none;
+        }
+
+        #hidden-section {
+            display: none;
+            margin-top: 20px;
+            color: white;
+        }
+
+        /* New section content */
+        #new-section {
+            display: none; /* Hidden initially */
+            background-color: darkgreen;
+            color: white;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
     </style>
 </head>
 <body>
@@ -27,6 +69,18 @@
         <span id="prompt">C:\> </span>
         <div>
             <input type="password" id="input" autofocus oninput="updateCursorPosition()" onkeydown="checkPassword(event)">
+        </div>
+        
+        <!-- Hidden content that will be displayed after successful login -->
+        <div id="hidden-section">
+            <!-- No extra messages after successful login -->
+        </div>
+
+        <!-- New section to show after successful password entry -->
+        <div id="new-section">
+            <h1>Welcome to the New Section!</h1>
+            <p>This is the content that you can access after entering the correct password.</p>
+            <p>Feel free to add more information here!</p>
         </div>
     </div>
 
@@ -37,13 +91,15 @@
                 let hiddenSection = document.getElementById("hidden-section");
                 let newSection = document.getElementById("new-section");
 
+                // Check if password is correct
                 if (password === "jj is the best") {
-                    hiddenSection.style.display = "block";
-                    document.getElementById("input").disabled = true;
-                    document.getElementById("input").value = "";
-                    document.getElementById("prompt").textContent = " ";
-                    newSection.style.display = "block";
+                    hiddenSection.style.display = "block";  // Reveal hidden content (if any)
+                    document.getElementById("input").disabled = true; // Disable input
+                    document.getElementById("input").value = "";  // Clear the input field
+                    document.getElementById("prompt").textContent = " "; // Blank the prompt
+                    newSection.style.display = "block"; // Show the new section
                 } else {
+                    // Incorrect password - reset the input field
                     document.getElementById("input").value = "";
                 }
             }
@@ -51,7 +107,8 @@
 
         function updateCursorPosition() {
             const input = document.getElementById("input");
+            // Remove custom cursor logic
         }
     </script>
 </body>
-</html>
+</html>\
