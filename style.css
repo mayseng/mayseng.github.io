@@ -1,4 +1,3 @@
-/* General Styles */
 body {
     background-color: black;
     color: white;
@@ -9,67 +8,47 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 0;
-}
-
-h1 {
-    font-size: 24px;
-    margin-bottom: 10px;
-}
-
-/* Login Section Styles */
-#login-container {
+    padding: 20px;
+    overflow: hidden;
     text-align: center;
-    background-color: #333;
-    padding: 30px;
-    border-radius: 8px;
+}
+
+#login-container {
     display: block;
+    width: 300px;
 }
 
-#login-container h1 {
-    font-size: 1.5rem;
-    margin-bottom: 20px;
-}
-
-/* Login Form Styles */
-#login-section input {
-    padding: 10px;
-    margin: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background-color: #222;
-    color: white;
+#username, #password {
     width: 100%;
-    max-width: 250px;
+    padding: 10px;
+    margin: 10px 0;
+    background-color: black;
+    color: white;
+    border: 1px solid white;
+    font-size: 16px;
 }
 
 button {
+    width: 100%;
     padding: 10px;
-    background-color: #5c6bc0;
+    background-color: black;
     color: white;
-    border: none;
+    border: 1px solid white;
     cursor: pointer;
-    border-radius: 4px;
 }
 
 button:hover {
-    background-color: #3949ab;
+    background-color: #444;
 }
 
-#error-message {
-    color: red;
-    margin-top: 10px;
+#command-section {
+    display: none;
+    width: 100%;
+    text-align: left;
 }
 
-/* Command Prompt Styles */
-#password-section, #command-section {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-}
-
-#password-section input, #command-section input {
-    background: black;
+#command-input {
+    background-color: black;
     border: none;
     color: white;
     font-size: 18px;
@@ -80,10 +59,6 @@ button:hover {
     letter-spacing: 1px;
     caret-color: white;
     padding: 0;
-}
-
-#password-section input:focus, #command-section input:focus {
-    outline: none;
 }
 
 #notes-container {
@@ -103,5 +78,9 @@ button:hover {
 
 #error-message {
     color: red;
+    margin-top: 10px;
+}
+
+#error-message-command {
     margin-top: 10px;
 }
