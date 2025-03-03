@@ -105,17 +105,20 @@
     </div>
 
     <script>
-        function showRegistration() {
+        // Show registration form
+        document.getElementById("register-button").onclick = function() {
             document.getElementById("login-section").style.display = "none";
             document.getElementById("registration-section").style.display = "block";
-        }
+        };
 
-        function showLogin() {
+        // Show login form
+        document.getElementById("back-to-login-button").onclick = function() {
             document.getElementById("registration-section").style.display = "none";
             document.getElementById("login-section").style.display = "block";
-        }
+        };
 
-        function registerUser () {
+        // Register user
+        document.getElementById("register-submit-button").onclick = function() {
             const username = document.getElementById("register-username").value;
             const password = document.getElementById("register-password").value;
             const registerMessage = document.getElementById("register-message");
@@ -129,15 +132,17 @@
                     localStorage.setItem("users", JSON.stringify(users));
                     registerMessage.innerHTML = "Registration successful! Redirecting to login...";
                     setTimeout(() => {
-                        showLogin(); // Redirect to login after 2 seconds
+                        document.getElementById("registration-section").style.display = "none";
+                        document.getElementById("login-section").style.display = "block";
                     }, 2000);
                 }
             } else {
                 registerMessage.innerHTML = "ERROR: Please enter a username and password.";
             }
-        }
+        };
 
-        function loginUser () {
+        // Login user
+        document.getElementById("login-button").onclick = function() {
             const username = document.getElementById("login-username").value;
             const password = document.getElementById("login-password").value;
             const loginMessage = document.getElementById("login-message");
@@ -151,8 +156,9 @@
             } else {
                 loginMessage.innerHTML = "ERROR: Incorrect username or password.";
             }
-        }
+        };
 
+        // Load user notes
         function loadUser Notes(username) {
             const notes = JSON.parse(localStorage.getItem("notes")) || {};
             const userNotes = notes[username] || [];
@@ -167,6 +173,7 @@
             notesContainer.style.display = "block"; // Show notes
         }
 
+        // Add note for user
         function addNoteForUser (username, noteContent) {
             const notes = JSON.parse(localStorage.getItem("notes")) || {};
             if (!notes[username]) {
@@ -176,6 +183,7 @@
             localStorage.setItem("notes", JSON.stringify(notes));
         }
 
+        // Command input handling
         document.getElementById("command-input").addEventListener("keydown", function(event) {
             if (event.key === "Enter") {
                 const command = this.value.trim();
@@ -194,6 +202,7 @@
             }
         });
 
+        // Check command input
         function checkCommand(event) {
             if (event.key === "Enter") {
                 let command = document.getElementById("command-input").value.trim();
@@ -222,12 +231,6 @@
                 document.getElementById("command-input").value = "";
             }
         }
-
-        // Event listeners for buttons
-        document.getElementById("register-button").onclick = showRegistration;
-        document.getElementById("back-to-login-button").onclick = showLogin;
-        document.getElementById("register-submit-button").onclick = registerUser ;
-        document.getElementById("login-button").onclick = loginUser ;
     </script>
 </body>
 </html>
