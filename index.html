@@ -3,40 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Secret Ministration</title>
+    <title>SECRET MINISTRATION</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Login Section -->
+    <!-- Login Form Section -->
     <div id="login-container">
-        <h1>Secret Ministration Login</h1>
-        <div id="login-section">
-            <label for="username">Username:</label>
-            <input type="text" id="username" placeholder="Enter username" required>
-
-            <label for="password">Password:</label>
-            <input type="password" id="password" placeholder="Enter password" required>
-
-            <button onclick="login()">Login</button>
-        </div>
-        <div id="error-message" style="color: red; display: none;">Invalid username or password!</div>
+        <h1>Login</h1>
+        <input type="text" id="username" placeholder="Username" required>
+        <input type="password" id="password" placeholder="Password" required>
+        <button onclick="login()">Login</button>
+        <div id="error-message" style="color: red; display: none;">ERROR: Invalid login credentials</div>
     </div>
 
-    <!-- Password Section (for notes and command input) -->
-    <div id="password-section" style="display: none;">
-        <span id="prompt">C:\> </span>
-        <input type="password" id="input" autofocus onkeydown="checkPassword(event)">
-    </div>
-
-    <!-- Command Section (for notes) -->
+    <!-- Command Section (visible after login) -->
     <div id="command-section" style="display: none;">
         <span id="prompt">C:\> </span>
-        <input type="text" id="command-input" onkeydown="checkCommand(event)">
+        <input type="text" id="command-input" onkeydown="checkCommand(event)" autofocus>
+        <div id="notes-container" style="display: none;"></div>
+        <div id="error-message-command" style="color: red;"></div>
     </div>
-
-    <!-- Notes Section -->
-    <div id="notes-container"></div>
-    <div id="error-message"></div>
 
     <script src="script.js"></script>
 </body>
