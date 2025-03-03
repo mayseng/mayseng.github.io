@@ -69,33 +69,42 @@ function checkCommand(event) {
             reminders.tests[className] = testDate;
             saveReminders(reminders);
             errorMessage.innerHTML = `Test for '${className}' set on ${testDate}.`;
-        } else if (command.startsWith("school test")) {
+        } else if (command.startsWith("school test delete")) {
             const parts = command.split(" ");
-            if (parts.length < 3) {
-                errorMessage.innerHTML = "ERROR: Please specify a class or 'all' to view tests.";
+            if (parts.length < 4) {
+                errorMessage.innerHTML = "ERROR: Please provide a class and a date.";
+                return;
+            }
+            const className = parts[3];
+            let reminders = loadReminders();
+            if (reminders.tests && reminders.tests[className]) {
+                delete reminders.tests[className];
+                saveReminders(reminders);
+                errorMessage.innerHTML = `Test for '${className}' deleted.`;
+            } else {
+                errorMessage.innerHTML = "ERROR: No test found for this class.";
+            }
+        } else if (command.startsWith("school assignment")) {
+            const parts = command.split(" ");
+            if (parts.length < 4) {
+                errorMessage.innerHTML = "ERROR: Please provide a class and a date.";
                 return;
             }
             const className = parts[2];
+            const assignmentDate = parts.slice(3).join(" ");
             let reminders = loadReminders();
-            if (className === "all") {
-                let reminderText = "Upcoming tests:<br>";
-                for (let cls in reminders.tests) {
-                    reminderText += `${cls}: ${reminders.tests[cls]}<br>`;
-                }
-                errorMessage.innerHTML = reminderText;
-            } else {
-                if (reminders.tests[className]) {
-                    errorMessage.innerHTML = `Test for '${className}' is on ${reminders.tests[className]}.`;
-                } else {
-                    errorMessage.innerHTML = "ERROR: No test found for this class.";
-                }
-            }
+            if (!reminders.assignments) reminders.assignments = {};
+            reminders.assignments[className] = assignmentDate;
+            saveReminders(reminders);
+            errorMessage.innerHTML = `Assignment for '${className}' set on ${assignmentDate}.`;
         } else if (command === "help school") {
             errorMessage.innerHTML = `
                 School Commands:<br>
                 - school test set <class> <date>: Set a test date for a class.<br>
+                - school test delete <class>: Delete a test for a specific class.<br>
                 - school test <class>: View the test date for a specific class.<br>
                 - school test all: View all upcoming test dates.<br>
+                - school assignment <class> <date>: Set an assignment due date for a class.<br>
             `;
         } else {
             errorMessage.innerHTML = "ERROR: Command not recognized.";
