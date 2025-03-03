@@ -13,8 +13,8 @@
             margin: 0;
             height: 100vh;
             display: flex;
-            justify-content: flex-start; /* Align the content to the left */
-            align-items: flex-start; /* Align the content to the top */
+            justify-content: flex-start;
+            align-items: flex-start;
             padding: 20px;
             overflow: hidden;
         }
@@ -30,8 +30,8 @@
             font-size: 18px;
         }
 
-        #input {
-            background: transparent;
+        #input, #command-input {
+            background: black;
             border: none;
             color: white;
             font-size: 18px;
@@ -44,7 +44,7 @@
             padding: 0;
         }
 
-        #input:focus {
+        #input:focus, #command-input:focus {
             outline: none;
         }
 
@@ -68,6 +68,11 @@
         .note-title {
             font-weight: bold;
         }
+
+        #error-message {
+            color: red;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -84,8 +89,10 @@
             <input type="text" id="command-input" autofocus oninput="updateCursorPosition()" onkeydown="checkCommand(event)">
         </div>
 
-        <!-- Hidden container for notes, only displayed on show notes command -->
+        <!-- Hidden container for notes, only displayed when the right command is typed -->
         <div id="notes-container"></div>
+        <!-- ERROR message -->
+        <div id="error-message"></div>
     </div>
 
     <script>
@@ -136,8 +143,10 @@
         function checkCommand(event) {
             if (event.key === "Enter") {
                 let command = document.getElementById("command-input").value.trim();
-                let notes = loadNotes();
+                let errorMessage = document.getElementById("error-message");
                 let notesContainer = document.getElementById("notes-container");
+
+                errorMessage.innerHTML = '';  // Reset error message
 
                 if (command.startsWith("create note")) {
                     // Command to create a new note
@@ -145,20 +154,20 @@
                     if (noteName) {
                         let noteContent = prompt("Enter content for the note:");
                         if (noteContent) {
+                            // Save the note
+                            let notes = loadNotes();
                             notes[noteName] = noteContent;
                             saveNotes(notes);
                         }
                     } else {
-                        alert("Please provide a name for your note.");
+                        errorMessage.innerHTML = "ERROR: Please provide a name for your note.";
                     }
                 } else if (command === "show notes") {
                     // Command to show all saved notes
                     displayNotes();
-                } else if (command === "clear") {
-                    // Command to clear the terminal output (i.e., hide notes)
-                    notesContainer.innerHTML = '';
                 } else {
-                    alert("Command not recognized. Try 'create note [name]' or 'show notes'.");
+                    // Command not recognized
+                    errorMessage.innerHTML = "ERROR: Command not recognized.";
                 }
 
                 // Clear the input field after command is processed
