@@ -1,7 +1,7 @@
 // Set up hardcoded user credentials (username and password)
 const USERS = {
     "admin": "password123",
-    "user": "123"
+    "user": "1234"
 };
 
 let currentUser = "";
@@ -29,22 +29,10 @@ function checkCommand(event) {
         let errorMessage = document.getElementById("error-message-command");
         errorMessage.innerHTML = '';
 
-        if (command.startsWith("create note")) {
-            handleCreateNote(command);
-        } else if (command.startsWith("edit note")) {
-            handleEditNote(command);
-        } else if (command.startsWith("show note")) {
-            handleShowNote(command);
-        } else if (command === "show notes") {
-            handleShowNotes();
-        } else if (command.startsWith("delete note")) {
-            handleDeleteNote(command);
-        } else if (command.startsWith("school test set")) {
-            handleSetSchoolTest(command);
-        } else if (command.startsWith("school test delete")) {
-            handleDeleteSchoolTest(command);
+        if (command.startsWith("school test set")) {
+            handleSchoolTestSet(command, errorMessage);
         } else if (command === "school test all") {
-            handleShowAllTests();
+            handleShowAllTests(errorMessage);
         } else {
             errorMessage.innerHTML = "ERROR: Command not recognized.";
         }
@@ -53,75 +41,10 @@ function checkCommand(event) {
     }
 }
 
-// Notes functions
-function handleCreateNote(command) {
-    const parts = command.split(" ");
-    if (parts.length < 4) {
-        document.getElementById("error-message-command").innerHTML = "ERROR: Please provide a name and content for your note.";
-        return;
-    }
-    const noteName = parts[2];
-    const noteContent = parts.slice(3).join(" ");
-    let notes = loadNotes();
-    notes[noteName] = { content: noteContent, tags: [] };
-    saveNotes(notes);
-    document.getElementById("error-message-command").innerHTML = `Note '${noteName}' created.`;
-}
-
-function handleEditNote(command) {
-    const parts = command.split(" ");
-    if (parts.length < 4) {
-        document.getElementById("error-message-command").innerHTML = "ERROR: Please provide a name and new content for your note.";
-        return;
-    }
-    const noteName = parts[2];
-    const newContent = parts.slice(3).join(" ");
-    let notes = loadNotes();
-    if (notes[noteName]) {
-        notes[noteName].content = newContent;
-        saveNotes(notes);
-        document.getElementById("error-message-command").innerHTML = `Note '${noteName}' updated.`;
-    } else {
-        document.getElementById("error-message-command").innerHTML = "ERROR: Note not found.";
-    }
-}
-
-function handleShowNote(command) {
-    const noteName = command.slice(10).trim();
-    let notes = loadNotes();
-    if (notes[noteName]) {
-        document.getElementById("error-message-command").innerHTML = `<strong>${noteName}:</strong> ${notes[noteName].content}`;
-    } else {
-        document.getElementById("error-message-command").innerHTML = "ERROR: Note not found.";
-    }
-}
-
-function handleShowNotes() {
-    let notes = loadNotes();
-    if (Object.keys(notes).length === 0) {
-        document.getElementById("error-message-command").innerHTML = "No notes found.";
-    } else {
-        document.getElementById("error-message-command").innerHTML = Object.keys(notes).map(name => `<strong>${name}:</strong> ${notes[name].content}`).join("<br>");
-    }
-}
-
-function handleDeleteNote(command) {
-    const noteName = command.slice(12).trim();
-    let notes = loadNotes();
-    if (notes[noteName]) {
-        delete notes[noteName];
-        saveNotes(notes);
-        document.getElementById("error-message-command").innerHTML = `Note '${noteName}' deleted.`;
-    } else {
-        document.getElementById("error-message-command").innerHTML = "ERROR: Note not found.";
-    }
-}
-
-// School test functions
-function handleSetSchoolTest(command) {
+function handleSchoolTestSet(command, errorMessage) {
     const parts = command.split(" ");
     if (parts.length < 5) {
-        document.getElementById("error-message-command").innerHTML = "ERROR: Please provide a class and a date.";
+        errorMessage.innerHTML = "ERROR: Please provide a class and a date.";
         return;
     }
     const className = parts[3];
@@ -131,32 +54,32 @@ function handleSetSchoolTest(command) {
     if (!reminders.tests[className]) reminders.tests[className] = [];
     reminders.tests[className].push(testDate);
     saveReminders(reminders);
-    document.getElementById("error-message-command").innerHTML = `Test for '${className}' set on ${testDate}.`;
+    errorMessage.innerHTML = `Test for '${className}' set on ${testDate}.`;
 }
 
-function handleDeleteSchoolTest(command) {
-    const parts = command.split(" ");
-    if (parts.length < 5) {
-        document.getElementById("error-message-command").innerHTML = "ERROR: Please provide a class and a date to delete.";
-        return;
-    }
-    const className = parts[3];
-    const testDate = parts.slice(4).join(" ");
-    let reminders = loadReminders();
-    if (reminders.tests && reminders.tests[className]) {
-        reminders.tests[className] = reminders.tests[className].filter(date => date !== testDate);
-        saveReminders(reminders);
-        document.getElementById("error-message-command").innerHTML = `Test on '${testDate}' for '${className}' deleted.`;
-    } else {
-        document.getElementById("error-message-command").innerHTML = "ERROR: Test not found.";
-    }
-}
-
-function handleShowAllTests() {
+function handleShowAllTests(errorMessage) {
     let reminders = loadReminders();
     if (reminders.tests && Object.keys(reminders.tests).length > 0) {
-        document.getElementById("error-message-command").innerHTML = Object.entries(reminders.tests).map(([cls, dates]) => `<strong>${cls}:</strong> ${dates.join(", ")}`).join("<br>");
+        errorMessage.innerHTML = Object.entries(reminders.tests)
+            .map(([cls, dates]) => `<strong>${cls}:</strong> ${dates.join(", ")}`)
+            .join("<br>");
     } else {
-        document.getElementById("error-message-command").innerHTML = "No tests scheduled.";
+        errorMessage.innerHTML = "No tests scheduled.";
     }
 }
+
+// Function to load reminders from local storage
+function loadReminders() {
+    return JSON.parse(localStorage.getItem('reminders')) || { tests: {} };
+}
+
+// Function to save reminders to local storage
+function saveReminders(reminders) {
+    localStorage.setItem('reminders', JSON.stringify(reminders));
+}
+
+// Ensure the login form is always shown on page load
+window.onload = function() {
+    document.getElementById("login-container").style.display = "block";
+    document.getElementById("command-section").style.display = "none";
+};
