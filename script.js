@@ -86,7 +86,7 @@ function checkCommand(event) {
             }
         } else if (command.startsWith("school test set")) {
             const parts = command.split(" ");
-            if (parts.length < 4) {
+            if (parts.length < 5) {
                 errorMessage.innerHTML = "ERROR: Please provide a class and a date.";
                 return;
             }
@@ -94,13 +94,16 @@ function checkCommand(event) {
             const testDate = parts.slice(4).join(" ");
             let reminders = loadReminders();
             if (!reminders.tests) reminders.tests = {};
-            reminders.tests[className] = testDate;
+            if (!reminders.tests[className]) reminders.tests[className] = [];
+            reminders.tests[className].push(testDate);
             saveReminders(reminders);
             errorMessage.innerHTML = `Test for '${className}' set on ${testDate}.`;
         } else if (command === "school test all") {
             let reminders = loadReminders();
             if (reminders.tests && Object.keys(reminders.tests).length > 0) {
-                errorMessage.innerHTML = Object.entries(reminders.tests).map(([cls, date]) => `<strong>${cls}:</strong> ${date}`).join("<br>");
+                errorMessage.innerHTML = Object.entries(reminders.tests)
+                    .map(([cls, dates]) => `<strong>${cls}:</strong> ${dates.join(", ")}`)
+                    .join("<br>");
             } else {
                 errorMessage.innerHTML = "No tests scheduled.";
             }
