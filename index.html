@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Note Taking App with Uer Accounts</title>
+    <title>Note Taking App with User Accounts</title>
     <style>
         body {
             background-color: black;
@@ -83,7 +83,7 @@
             <input type="password" id="login-password" placeholder="Password">
             <button id="login-button">Login</button>
             <div id="login-message"></div>
-            <button onclick="showRegistration()">Register</button>
+            <button id="register-button">Register</button>
         </div>
 
         <div id="registration-section" style="display: none;">
@@ -92,7 +92,7 @@
             <input type="password" id="register-password" placeholder="Password">
             <button id="register-submit-button">Register</button>
             <div id="register-message"></div>
-            <button onclick="showLogin()">Back to Login</button>
+            <button id="back-to-login-button">Back to Login</button>
         </div>
 
         <div id="command-section" style="display: none;">
@@ -222,6 +222,12 @@
                 document.getElementById("command-input").value = "";
             }
         }
+
+        // Event listeners for buttons
+        document.getElementById("register-button").onclick = showRegistration;
+        document.getElementById("back-to-login-button").onclick = showLogin;
+        document.getElementById("register-submit-button").onclick = registerUser ;
+        document.getElementById("login-button").onclick = loginUser ;
     </script>
 </body>
 </html>
