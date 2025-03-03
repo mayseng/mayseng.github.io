@@ -1,35 +1,46 @@
+/* General Styles */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #1c1c1c;
+    background-color: black;
     color: white;
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    margin: 0;
+    height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    margin: 0;
+    padding: 0;
 }
 
+h1 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+/* Login Section Styles */
 #login-container {
     text-align: center;
     background-color: #333;
-    padding: 20px;
+    padding: 30px;
     border-radius: 8px;
     display: block;
 }
 
 #login-container h1 {
-    font-size: 2rem;
+    font-size: 1.5rem;
+    margin-bottom: 20px;
 }
 
-input {
+/* Login Form Styles */
+#login-section input {
     padding: 10px;
     margin: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    width: 100%;
-    max-width: 300px;
     background-color: #222;
     color: white;
+    width: 100%;
+    max-width: 250px;
 }
 
 button {
@@ -45,8 +56,34 @@ button:hover {
     background-color: #3949ab;
 }
 
-#command-section, #password-section {
-    text-align: left;
+#error-message {
+    color: red;
+    margin-top: 10px;
+}
+
+/* Command Prompt Styles */
+#password-section, #command-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+#password-section input, #command-section input {
+    background: black;
+    border: none;
+    color: white;
+    font-size: 18px;
+    width: 100%;
+    outline: none;
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    letter-spacing: 1px;
+    caret-color: white;
+    padding: 0;
+}
+
+#password-section input:focus, #command-section input:focus {
+    outline: none;
 }
 
 #notes-container {
@@ -67,5 +104,4 @@ button:hover {
 #error-message {
     color: red;
     margin-top: 10px;
-    display: none;
 }
