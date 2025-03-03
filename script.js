@@ -21,7 +21,7 @@ function login() {
     }
 }
 
-// Function to handle commands for notes
+// Function to handle commands for notes and school reminders
 function checkCommand(event) {
     if (event.key === "Enter") {
         let command = document.getElementById("command-input").value.trim();
@@ -56,40 +56,40 @@ function checkCommand(event) {
             } else {
                 errorMessage.innerHTML = "ERROR: Note not found.";
             }
-        } else if (command.startsWith("show note")) {
-            const noteName = command.slice(10).trim();
-            let notes = loadNotes();
-            if (notes[noteName]) {
-                errorMessage.innerHTML = ''; // Clear previous error
-                let noteDiv = document.createElement("div");
-                noteDiv.classList.add("note");
-                noteDiv.innerHTML = `<strong>${noteName}:</strong> ${notes[noteName].content} <em>(Tags: ${notes[noteName].tags.join(", ")})</em>`;
-                notesContainer.appendChild(noteDiv);
-                notesContainer.style.display = "block"; // Show notes
-            } else {
-                errorMessage.innerHTML = "ERROR: Note not found.";
+        } else if (command.startsWith("school test set")) {
+            const parts = command.split(" ");
+            if (parts.length < 4) {
+                errorMessage.innerHTML = "ERROR: Please provide a class and a date.";
+                return;
             }
-        } else if (command === "show notes" || command === "notes") {
-            displayNotes();
-        } else if (command.startsWith("delete note")) {
-            const noteName = command.slice(12).trim();
-            let notes = loadNotes();
-            if (notes[noteName]) {
-                delete notes[noteName];
-                saveNotes(notes);
-                errorMessage.innerHTML = `Note "${noteName}" deleted.`;
-            } else {
-                errorMessage.innerHTML = "ERROR: Note not found.";
+            const className = parts[3];
+            const testDate = parts.slice(4).join(" ");
+            let reminders = loadReminders();
+            if (!reminders.tests) reminders.tests = {};
+            reminders.tests[className] = testDate;
+            saveReminders(reminders);
+            errorMessage.innerHTML = `Test for '${className}' set on ${testDate}.`;
+        } else if (command.startsWith("school test")) {
+            const parts = command.split(" ");
+            if (parts.length < 3) {
+                errorMessage.innerHTML = "ERROR: Please specify a class or 'all' to view tests.";
+                return;
             }
-        } else if (command === "help notes") {
-            errorMessage.innerHTML = `
-                Available commands:<br>
-                - create note <name> <content>: Create a new note.<br>
-                - edit note <name> <new content>: Edit an existing note.<br>
-                - show note <name>: Display a specific note.<br>
-                - show notes or notes: Display all notes.<br>
-                - delete note <name>: Delete a specific note.<br>
-            `;
+            const className = parts[2];
+            let reminders = loadReminders();
+            if (className === "all") {
+                let reminderText = "Upcoming tests:<br>";
+                for (let cls in reminders.tests) {
+                    reminderText += `${cls}: ${reminders.tests[cls]}<br>`;
+                }
+                errorMessage.innerHTML = reminderText;
+            } else {
+                if (reminders.tests[className]) {
+                    errorMessage.innerHTML = `Test for '${className}' is on ${reminders.tests[className]}.`;
+                } else {
+                    errorMessage.innerHTML = "ERROR: No test found for this class.";
+                }
+            }
         } else {
             errorMessage.innerHTML = "ERROR: Command not recognized.";
         }
@@ -107,6 +107,16 @@ function loadNotes() {
 // Function to save notes to local storage
 function saveNotes(notes) {
     localStorage.setItem('notes', JSON.stringify(notes));
+}
+
+// Function to load reminders from local storage
+function loadReminders() {
+    return JSON.parse(localStorage.getItem('reminders')) || {};
+}
+
+// Function to save reminders to local storage
+function saveReminders(reminders) {
+    localStorage.setItem('reminders', JSON.stringify(reminders));
 }
 
 // Ensure the login form is always shown on page load
