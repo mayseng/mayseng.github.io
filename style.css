@@ -17,10 +17,18 @@ body {
     display: block;
     width: 400px;
     text-align: left;
-    border: 2px solid white;
     padding: 20px;
     background-color: black;
+    border: 2px solid white;
     border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+}
+
+#login-container h1 {
+    font-size: 24px;
+    color: #00ff00;  /* Bright green header */
+    margin-bottom: 20px;
+    text-align: center;
 }
 
 #username, #password {
@@ -29,9 +37,16 @@ body {
     margin: 10px 0;
     background-color: black;
     color: white;
-    border: 1px solid white;
+    border: 1px solid #00ff00;  /* Green border for inputs */
     font-size: 16px;
     letter-spacing: 1px;
+    box-sizing: border-box;
+    font-family: 'Courier New', monospace;
+}
+
+#username:focus, #password:focus {
+    border-color: #00ff00;  /* Green focus border for inputs */
+    outline: none;
 }
 
 button {
@@ -39,15 +54,23 @@ button {
     padding: 10px;
     background-color: black;
     color: white;
-    border: 1px solid white;
+    border: 1px solid #00ff00;  /* Green border for button */
     cursor: pointer;
     font-size: 18px;
-    letter-spacing: 1px;
     font-weight: bold;
+    letter-spacing: 1px;
+    transition: background-color 0.3s ease;
 }
 
 button:hover {
-    background-color: #444;
+    background-color: #444;  /* Slight dark hover effect */
+}
+
+#error-message {
+    color: red;
+    margin-top: 10px;
+    font-size: 14px;
+    display: none;  /* Hide error message by default */
 }
 
 #command-section {
@@ -57,7 +80,7 @@ button:hover {
 }
 
 #prompt {
-    color: #00ff00; /* Green prompt text */
+    color: #00ff00;  /* Green prompt text */
 }
 
 #command-input {
@@ -87,11 +110,6 @@ button:hover {
     padding: 10px;
     margin-top: 10px;
     border: 1px solid white;
-}
-
-#error-message {
-    color: red;
-    margin-top: 10px;
 }
 
 #error-message-command {
