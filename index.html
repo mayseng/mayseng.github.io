@@ -48,7 +48,6 @@
             outline: none;
         }
 
-        /* Hide notes initially, only display when show notes command is executed */
         #notes-container {
             display: none;
             background-color: black;
@@ -58,15 +57,10 @@
         }
 
         .note {
-            background-color: darkgreen;
             color: white;
             padding: 10px;
             margin-top: 10px;
             border: 1px solid white;
-        }
-
-        .note-title {
-            font-weight: bold;
         }
 
         #error-message {
@@ -77,69 +71,59 @@
 </head>
 <body>
     <div id="container">
-        <!-- Prompt section for the login password -->
         <div id="password-section">
             <span id="prompt">C:\> </span>
-            <input type="password" id="input" autofocus oninput="updateCursorPosition()" onkeydown="checkPassword(event)">
+            <input type="password" id="input" autofocus onkeydown="checkPassword(event)">
         </div>
 
-        <!-- Hidden section, only visible after successful login -->
         <div id="command-section" style="display: none;">
             <span id="prompt">C:\> </span>
-            <input type="text" id="command-input" autofocus oninput="updateCursorPosition()" onkeydown="checkCommand(event)">
+            <input type="text" id="command-input" onkeydown="checkCommand(event)">
         </div>
 
-        <!-- Hidden container for notes, only displayed when the right command is typed -->
         <div id="notes-container"></div>
-        <!-- ERROR message -->
         <div id="error-message"></div>
     </div>
 
     <script>
-        // Store notes in localStorage
         function loadNotes() {
-            const notes = JSON.parse(localStorage.getItem('notes')) || {};
-            return notes;
+            return JSON.parse(localStorage.getItem('notes')) || {};
         }
 
         function saveNotes(notes) {
             localStorage.setItem('notes', JSON.stringify(notes));
         }
 
-        // Function to display notes
         function displayNotes() {
             const notes = loadNotes();
             const container = document.getElementById("notes-container");
-            container.innerHTML = ''; // Clear any previous content
+            container.innerHTML = ''; // Clear previous content
             for (let noteName in notes) {
                 let noteDiv = document.createElement("div");
                 noteDiv.classList.add("note");
-                noteDiv.innerHTML = `<div class="note-title">${noteName}</div><p>${notes[noteName]}</p>`;
+                noteDiv.innerHTML = `<strong>${noteName}:</strong> ${notes[noteName]}`;
                 container.appendChild(noteDiv);
             }
             container.style.display = "block"; // Show notes
         }
 
-        // Handle password input
         function checkPassword(event) {
             if (event.key === "Enter") {
                 let password = document.getElementById("input").value;
                 let passwordSection = document.getElementById("password-section");
                 let commandSection = document.getElementById("command-section");
 
-                // Check if password is correct
                 if (password === "jj is the best") {
                     passwordSection.style.display = "none";  // Hide password prompt
                     commandSection.style.display = "block";  // Show command section
-                    document.getElementById("input").disabled = true; // Disable password input
                     document.getElementById("input").value = "";  // Clear the input field
+                    document.getElementById("command-input").focus(); // Focus on command input
                 } else {
                     document.getElementById("input").value = ""; // Clear password field
                 }
             }
         }
 
-        // Handle commands in the command prompt after login
         function checkCommand(event) {
             if (event.key === "Enter") {
                 let command = document.getElementById("command-input").value.trim();
@@ -149,35 +133,4 @@
                 errorMessage.innerHTML = '';  // Reset error message
 
                 if (command.startsWith("create note")) {
-                    // Command to create a new note
-                    const noteName = command.slice(12).trim();
-                    if (noteName) {
-                        let noteContent = prompt("Enter content for the note:");
-                        if (noteContent) {
-                            // Save the note
-                            let notes = loadNotes();
-                            notes[noteName] = noteContent;
-                            saveNotes(notes);
-                        }
-                    } else {
-                        errorMessage.innerHTML = "ERROR: Please provide a name for your note.";
-                    }
-                } else if (command === "show notes") {
-                    // Command to show all saved notes
-                    displayNotes();
-                } else {
-                    // Command not recognized
-                    errorMessage.innerHTML = "ERROR: Command not recognized.";
-                }
-
-                // Clear the input field after command is processed
-                document.getElementById("command-input").value = "";
-            }
-        }
-
-        function updateCursorPosition() {
-            // Placeholder function for handling cursor behavior if needed
-        }
-    </script>
-</body>
-</html>
+                    const noteName = command.slice(12).
