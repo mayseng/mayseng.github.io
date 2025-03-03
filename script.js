@@ -16,7 +16,7 @@ function login() {
         document.getElementById("login-container").style.display = "none";
         document.getElementById("command-section").style.display = "block";
         document.getElementById("command-input").focus();
-        document.getElementById("prompt").innerText = `C:\\${currentUser}> `;
+        document.getElementById("prompt").innerText = `C:\${currentUser}> `;
     } else {
         document.getElementById("error-message").style.display = "block";
     }
@@ -27,13 +27,9 @@ function checkCommand(event) {
     if (event.key === "Enter") {
         let command = document.getElementById("command-input").value.trim();
         let errorMessage = document.getElementById("error-message-command");
-        let notesContainer = document.getElementById("notes-container");
-
         errorMessage.innerHTML = '';
 
-        if (command === "help notes") {
-            errorMessage.innerHTML = "Available note commands: <br> - create note <name> <content><br> - edit note <name> <new content><br> - show note <name><br> - show notes<br> - delete note <name>";
-        } else if (command.startsWith("create note")) {
+        if (command.startsWith("create note")) {
             const parts = command.split(" ");
             if (parts.length < 4) {
                 errorMessage.innerHTML = "ERROR: Please provide a name and content for your note.";
@@ -103,7 +99,7 @@ function checkCommand(event) {
         } else if (command.startsWith("school test delete")) {
             const parts = command.split(" ");
             if (parts.length < 5) {
-                errorMessage.innerHTML = "ERROR: Please provide a class and a date to delete.";
+                errorMessage.innerHTML = "ERROR: Please provide a class and a date.";
                 return;
             }
             const className = parts[3];
@@ -112,9 +108,9 @@ function checkCommand(event) {
             if (reminders.tests && reminders.tests[className]) {
                 reminders.tests[className] = reminders.tests[className].filter(date => date !== testDate);
                 saveReminders(reminders);
-                errorMessage.innerHTML = `Test for '${className}' on ${testDate} deleted.`;
+                errorMessage.innerHTML = `Test on '${testDate}' for '${className}' deleted.`;
             } else {
-                errorMessage.innerHTML = "ERROR: No such test found.";
+                errorMessage.innerHTML = "ERROR: No test found.";
             }
         } else if (command === "school test all") {
             let reminders = loadReminders();
@@ -132,3 +128,29 @@ function checkCommand(event) {
         document.getElementById("command-input").value = "";
     }
 }
+
+// Function to load notes from local storage
+function loadNotes() {
+    return JSON.parse(localStorage.getItem('notes')) || {};
+}
+
+// Function to save notes to local storage
+function saveNotes(notes) {
+    localStorage.setItem('notes', JSON.stringify(notes));
+}
+
+// Function to load reminders from local storage
+function loadReminders() {
+    return JSON.parse(localStorage.getItem('reminders')) || {};
+}
+
+// Function to save reminders to local storage
+function saveReminders(reminders) {
+    localStorage.setItem('reminders', JSON.stringify(reminders));
+}
+
+// Ensure the login form is always shown on page load
+window.onload = function() {
+    document.getElementById("login-container").style.display = "block";
+    document.getElementById("command-section").style.display = "none";
+};
