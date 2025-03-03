@@ -1,6 +1,6 @@
 // Set up hardcoded user credentials (username and password)
 const USERS = {
-    "admin": "password123", // Example username: admin, password: password123
+    "mayseng": "mayseng", // Example username: admin, password: password123
     "user": "1234"          // Example username: user, password: 1234
 };
 
