@@ -3,27 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SECRET MINISTRATION</title>
-    <!-- Link to external CSS file -->
+    <title>Secret Ministration - Login</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="container">
-        <div id="password-section">
-            <span id="prompt">C:\> </span>
-            <input type="password" id="input" autofocus onkeydown="checkPassword(event)">
-        </div>
+    <div id="login-container">
+        <h1>Secret Ministration Login</h1>
+        <div id="login-section">
+            <label for="username">Username:</label>
+            <input type="text" id="username" placeholder="Enter username" required>
 
-        <div id="command-section" style="display: none;">
-            <span id="prompt">C:\> </span>
-            <input type="text" id="command-input" onkeydown="checkCommand(event)">
-        </div>
+            <label for="password">Password:</label>
+            <input type="password" id="password" placeholder="Enter password" required>
 
-        <div id="notes-container"></div>
-        <div id="error-message"></div>
+            <button onclick="login()">Login</button>
+        </div>
+        <div id="error-message" style="color: red; display: none;">Invalid username or password!</div>
+    </div>
+    
+    <div id="logged-in-container" style="display: none;">
+        <h1>Welcome to Secret Ministration!</h1>
+        <p>You have logged in successfully.</p>
     </div>
 
-    <!-- Link to external JavaScript file -->
     <script src="script.js"></script>
 </body>
 </html>
