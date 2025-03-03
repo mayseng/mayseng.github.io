@@ -15,7 +15,7 @@ function login() {
         // Hide the login form
         document.getElementById("login-container").style.display = "none";
 
-        // Show the password section
+        // Show the password section (for command input)
         document.getElementById("password-section").style.display = "block";
         document.getElementById("input").focus();
 
