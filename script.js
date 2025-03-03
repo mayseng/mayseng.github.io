@@ -1,8 +1,10 @@
 // Set up hardcoded user credentials (username and password)
 const USERS = {
-    "admin": "password123", // Example username: admin, password: password123
-    "user": "1234"          // Example username: user, password: 1234
+    "admin": "password123",
+    "user": "1234"
 };
+
+let currentUser = "";
 
 // Function to handle the login process
 function login() {
@@ -10,12 +12,11 @@ function login() {
     const password = document.getElementById("password").value;
 
     if (USERS[username] && USERS[username] === password) {
+        currentUser = username;
         document.getElementById("login-container").style.display = "none";
         document.getElementById("command-section").style.display = "block";
         document.getElementById("command-input").focus();
-
-        // Set prompt to include the username
-        document.getElementById("prompt").innerText = `C:\${username}> `;
+        document.getElementById("prompt").innerText = `C:\${currentUser}> `;
     } else {
         document.getElementById("error-message").style.display = "block";
     }
@@ -28,7 +29,7 @@ function checkCommand(event) {
         let errorMessage = document.getElementById("error-message-command");
         let notesContainer = document.getElementById("notes-container");
 
-        errorMessage.innerHTML = '';  // Reset error message
+        errorMessage.innerHTML = '';
 
         if (command.startsWith("create note")) {
             const parts = command.split(" ");
@@ -37,10 +38,11 @@ function checkCommand(event) {
                 return;
             }
             const noteName = parts[2];
-            const noteContent = parts.slice(3).join(" "); // Join the rest as content
+            const noteContent = parts.slice(3).join(" ");
             let notes = loadNotes();
-            notes[noteName] = { content: noteContent, tags: [] }; // Store content and tags
+            notes[noteName] = { content: noteContent, tags: [] };
             saveNotes(notes);
+            errorMessage.innerHTML = `Note '${noteName}' created.`;
         } else if (command.startsWith("edit note")) {
             const parts = command.split(" ");
             if (parts.length < 4) {
@@ -51,8 +53,34 @@ function checkCommand(event) {
             const newContent = parts.slice(3).join(" ");
             let notes = loadNotes();
             if (notes[noteName]) {
-                notes[noteName].content = newContent; // Update content
+                notes[noteName].content = newContent;
                 saveNotes(notes);
+                errorMessage.innerHTML = `Note '${noteName}' updated.`;
+            } else {
+                errorMessage.innerHTML = "ERROR: Note not found.";
+            }
+        } else if (command.startsWith("show note")) {
+            const noteName = command.slice(10).trim();
+            let notes = loadNotes();
+            if (notes[noteName]) {
+                errorMessage.innerHTML = `<strong>${noteName}:</strong> ${notes[noteName].content}`;
+            } else {
+                errorMessage.innerHTML = "ERROR: Note not found.";
+            }
+        } else if (command === "show notes") {
+            let notes = loadNotes();
+            if (Object.keys(notes).length === 0) {
+                errorMessage.innerHTML = "No notes found.";
+            } else {
+                errorMessage.innerHTML = Object.keys(notes).map(name => `<strong>${name}:</strong> ${notes[name].content}`).join("<br>");
+            }
+        } else if (command.startsWith("delete note")) {
+            const noteName = command.slice(12).trim();
+            let notes = loadNotes();
+            if (notes[noteName]) {
+                delete notes[noteName];
+                saveNotes(notes);
+                errorMessage.innerHTML = `Note '${noteName}' deleted.`;
             } else {
                 errorMessage.innerHTML = "ERROR: Note not found.";
             }
@@ -69,48 +97,17 @@ function checkCommand(event) {
             reminders.tests[className] = testDate;
             saveReminders(reminders);
             errorMessage.innerHTML = `Test for '${className}' set on ${testDate}.`;
-        } else if (command.startsWith("school test delete")) {
-            const parts = command.split(" ");
-            if (parts.length < 4) {
-                errorMessage.innerHTML = "ERROR: Please provide a class and a date.";
-                return;
-            }
-            const className = parts[3];
+        } else if (command === "school test all") {
             let reminders = loadReminders();
-            if (reminders.tests && reminders.tests[className]) {
-                delete reminders.tests[className];
-                saveReminders(reminders);
-                errorMessage.innerHTML = `Test for '${className}' deleted.`;
+            if (reminders.tests && Object.keys(reminders.tests).length > 0) {
+                errorMessage.innerHTML = Object.entries(reminders.tests).map(([cls, date]) => `<strong>${cls}:</strong> ${date}`).join("<br>");
             } else {
-                errorMessage.innerHTML = "ERROR: No test found for this class.";
+                errorMessage.innerHTML = "No tests scheduled.";
             }
-        } else if (command.startsWith("school assignment")) {
-            const parts = command.split(" ");
-            if (parts.length < 4) {
-                errorMessage.innerHTML = "ERROR: Please provide a class and a date.";
-                return;
-            }
-            const className = parts[2];
-            const assignmentDate = parts.slice(3).join(" ");
-            let reminders = loadReminders();
-            if (!reminders.assignments) reminders.assignments = {};
-            reminders.assignments[className] = assignmentDate;
-            saveReminders(reminders);
-            errorMessage.innerHTML = `Assignment for '${className}' set on ${assignmentDate}.`;
-        } else if (command === "help school") {
-            errorMessage.innerHTML = `
-                School Commands:<br>
-                - school test set <class> <date>: Set a test date for a class.<br>
-                - school test delete <class>: Delete a test for a specific class.<br>
-                - school test <class>: View the test date for a specific class.<br>
-                - school test all: View all upcoming test dates.<br>
-                - school assignment <class> <date>: Set an assignment due date for a class.<br>
-            `;
         } else {
             errorMessage.innerHTML = "ERROR: Command not recognized.";
         }
 
-        // Clear the input field after command is processed
         document.getElementById("command-input").value = "";
     }
 }
