@@ -83,7 +83,7 @@
             <input type="password" id="login-password" placeholder="Password">
             <button id="login-button">Login</button>
             <div id="login-message"></div>
-            <button id="register-button">Register</button>
+            <button onclick="showRegistration()">Register</button>
         </div>
 
         <div id="registration-section" style="display: none;">
@@ -92,7 +92,7 @@
             <input type="password" id="register-password" placeholder="Password">
             <button id="register-submit-button">Register</button>
             <div id="register-message"></div>
-            <button id="back-to-login-button">Back to Login</button>
+            <button onclick="showLogin()">Back to Login</button>
         </div>
 
         <div id="command-section" style="display: none;">
@@ -164,6 +164,7 @@
                 noteDiv.innerHTML = note;
                 notesContainer.appendChild(noteDiv);
             });
+            notesContainer.style.display = "block"; // Show notes
         }
 
         function addNoteForUser (username, noteContent) {
