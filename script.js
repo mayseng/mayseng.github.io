@@ -1,12 +1,58 @@
-// script.js
+// Set up hardcoded user credentials (username and password)
+const USERS = {
+    "admin": "password123", // Example username: admin, password: password123
+    "user": "1234"          // Example username: user, password: 1234
+};
+
+// Function to handle the login process
+function login() {
+    // Get the username and password entered by the user
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+
+    // Check if the username exists and if the password matches
+    if (USERS[username] && USERS[username] === password) {
+        // Hide the login form
+        document.getElementById("login-container").style.display = "none";
+
+        // Show the password section
+        document.getElementById("password-section").style.display = "block";
+        document.getElementById("input").focus();
+
+        // Optionally, store the username in localStorage to persist login across sessions
+        localStorage.setItem("loggedIn", username);
+
+    } else {
+        // Show error message if credentials are invalid
+        document.getElementById("error-message").style.display = "block";
+    }
+}
+
+// Check if the user is already logged in when the page loads
+window.onload = function() {
+    const loggedInUser = localStorage.getItem("loggedIn");
+
+    // If the user is logged in, skip the login page and show the password section
+    if (loggedInUser) {
+        document.getElementById("login-container").style.display = "none";
+        document.getElementById("password-section").style.display = "block";
+        document.getElementById("input").focus();
+    } else {
+        document.getElementById("login-container").style.display = "block";
+    }
+};
+
+// Function to load notes from local storage
 function loadNotes() {
     return JSON.parse(localStorage.getItem('notes')) || {};
 }
 
+// Function to save notes to local storage
 function saveNotes(notes) {
     localStorage.setItem('notes', JSON.stringify(notes));
 }
 
+// Function to display notes
 function displayNotes() {
     const notes = loadNotes();
     const container = document.getElementById("notes-container");
@@ -20,26 +66,27 @@ function displayNotes() {
     container.style.display = "block"; // Show notes
 }
 
-// Make sure the checkPassword function is correctly defined
+// Function to check the password entered for the note functionality
 function checkPassword(event) {
-    if (event.key === "Enter") { // Listen for the "Enter" key
+    if (event.key === "Enter") {
         let password = document.getElementById("input").value;
         let passwordSection = document.getElementById("password-section");
         let commandSection = document.getElementById("command-section");
 
-        // Check if password is correct
-        if (password === "jj is the best") {  // Password condition
-            passwordSection.style.display = "none";  // Hide password input
-            commandSection.style.display = "block";  // Show command input
-            document.getElementById("input").value = "";  // Clear password field
+        // Check if the password is correct
+        if (password === "jj is the best") {
+            passwordSection.style.display = "none";  // Hide password prompt
+            commandSection.style.display = "block";  // Show command section
+            document.getElementById("input").value = "";  // Clear the input field
             document.getElementById("command-input").focus(); // Focus on command input
         } else {
-            document.getElementById("input").value = ""; // Clear password field if incorrect
-            document.getElementById("error-message").innerHTML = "ERROR: Incorrect password."; // Show error message
+            document.getElementById("input").value = ""; // Clear password field
+            document.getElementById("error-message").innerHTML = "ERROR: Incorrect password.";
         }
     }
 }
 
+// Function to handle commands for notes
 function checkCommand(event) {
     if (event.key === "Enter") {
         let command = document.getElementById("command-input").value.trim();
