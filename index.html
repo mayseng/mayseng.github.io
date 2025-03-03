@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SECRET MINISTRATION</title>
+    <title>Note Taking App with User Accounts</title>
     <style>
         body {
             background-color: black;
@@ -87,7 +87,7 @@
             <h2>Register</h2>
             <input type="text" id="register-username" placeholder="Username">
             <input type="password" id="register-password" placeholder="Password">
-            <button onclick="registerUser ()">Register</button>
+            <button onclick="registerUser()">Register</button>
             <div id="register-message"></div>
         </div>
 
@@ -95,7 +95,7 @@
             <h2>Login</h2>
             <input type="text" id="login-username" placeholder="Username">
             <input type="password" id="login-password" placeholder="Password">
-            <button onclick="loginUser ()">Login</button>
+            <button onclick="loginUser()">Login</button>
             <div id="login-message"></div>
         </div>
 
@@ -109,7 +109,7 @@
     </div>
 
     <script>
-        function registerUser () {
+        function registerUser() {
             const username = document.getElementById("register-username").value;
             const password = document.getElementById("register-password").value;
             const registerMessage = document.getElementById("register-message");
@@ -132,7 +132,7 @@
             }
         }
 
-        function loginUser () {
+        function loginUser() {
             const username = document.getElementById("login-username").value;
             const password = document.getElementById("login-password").value;
             const loginMessage = document.getElementById("login-message");
@@ -142,13 +142,13 @@
                 loginMessage.innerHTML = "Login successful!";
                 document.getElementById("login-section").style.display = "none";
                 document.getElementById("command-section").style.display = "block";
-                loadUser Notes(username); // Load notes for the logged-in user
+                loadUserNotes(username); // Load notes for the logged-in user
             } else {
                 loginMessage.innerHTML = "ERROR: Wrong username or password.";
             }
         }
 
-        function loadUser Notes(username) {
+        function loadUserNotes(username) {
             const notes = JSON.parse(localStorage.getItem("notes")) || {};
             const userNotes = notes[username] || [];
             const notesContainer = document.getElementById("notes-container");
@@ -161,7 +161,7 @@
             });
         }
 
-        function addNoteForUser (username, noteContent) {
+        function addNoteForUser(username, noteContent) {
             const notes = JSON.parse(localStorage.getItem("notes")) || {};
             if (!notes[username]) {
                 notes[username] = [];
@@ -178,8 +178,8 @@
                 if (command.startsWith("add note")) {
                     const noteContent = command.slice(9).trim();
                     if (noteContent) {
-                        addNoteForUser (username, noteContent);
-                        loadUser Notes(username); // Refresh the notes display
+                        addNoteForUser(username, noteContent);
+                        loadUserNotes(username); // Refresh the notes display
                         this.value = ""; // Clear the input
                     } else {
                         document.getElementById("error-message").innerHTML = "ERROR: Please provide content for your note.";
