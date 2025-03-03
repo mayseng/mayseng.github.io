@@ -19,28 +19,31 @@ function login() {
         document.getElementById("password-section").style.display = "block";
         document.getElementById("input").focus();
 
-        // Optionally, store the username in localStorage to persist login across sessions
-        localStorage.setItem("loggedIn", username);
-
     } else {
         // Show error message if credentials are invalid
         document.getElementById("error-message").style.display = "block";
     }
 }
 
-// Check if the user is already logged in when the page loads
-window.onload = function() {
-    const loggedInUser = localStorage.getItem("loggedIn");
+// Function to check the password entered for the note functionality
+function checkPassword(event) {
+    if (event.key === "Enter") {
+        let password = document.getElementById("input").value;
+        let passwordSection = document.getElementById("password-section");
+        let commandSection = document.getElementById("command-section");
 
-    // If the user is logged in, skip the login page and show the password section
-    if (loggedInUser) {
-        document.getElementById("login-container").style.display = "none";
-        document.getElementById("password-section").style.display = "block";
-        document.getElementById("input").focus();
-    } else {
-        document.getElementById("login-container").style.display = "block";
+        // Check if the password is correct
+        if (password === "jj is the best") {
+            passwordSection.style.display = "none";  // Hide password prompt
+            commandSection.style.display = "block";  // Show command section
+            document.getElementById("input").value = "";  // Clear the input field
+            document.getElementById("command-input").focus(); // Focus on command input
+        } else {
+            document.getElementById("input").value = ""; // Clear password field
+            document.getElementById("error-message").innerHTML = "ERROR: Incorrect password.";
+        }
     }
-};
+}
 
 // Function to load notes from local storage
 function loadNotes() {
@@ -64,26 +67,6 @@ function displayNotes() {
         container.appendChild(noteDiv);
     }
     container.style.display = "block"; // Show notes
-}
-
-// Function to check the password entered for the note functionality
-function checkPassword(event) {
-    if (event.key === "Enter") {
-        let password = document.getElementById("input").value;
-        let passwordSection = document.getElementById("password-section");
-        let commandSection = document.getElementById("command-section");
-
-        // Check if the password is correct
-        if (password === "jj is the best") {
-            passwordSection.style.display = "none";  // Hide password prompt
-            commandSection.style.display = "block";  // Show command section
-            document.getElementById("input").value = "";  // Clear the input field
-            document.getElementById("command-input").focus(); // Focus on command input
-        } else {
-            document.getElementById("input").value = ""; // Clear password field
-            document.getElementById("error-message").innerHTML = "ERROR: Incorrect password.";
-        }
-    }
 }
 
 // Function to handle commands for notes
@@ -163,3 +146,11 @@ function checkCommand(event) {
         document.getElementById("command-input").value = "";
     }
 }
+
+// Ensure the login form is always shown on page load, even after refresh
+window.onload = function() {
+    // Always show the login screen and hide other sections
+    document.getElementById("login-container").style.display = "block";
+    document.getElementById("password-section").style.display = "none";
+    document.getElementById("command-section").style.display = "none";
+};
