@@ -6,20 +6,17 @@ const USERS = {
 
 // Function to handle the login process
 function login() {
-    // Get the username and password entered by the user
     const username = document.getElementById("username").value;
     const password = document.getElementById("password").value;
 
-    // Check if the username exists and if the password matches
     if (USERS[username] && USERS[username] === password) {
-        // Hide the login form
         document.getElementById("login-container").style.display = "none";
-
-        // Show the command input section
         document.getElementById("command-section").style.display = "block";
         document.getElementById("command-input").focus();
+
+        // Set prompt to include the username
+        document.getElementById("prompt").innerText = `C:\\${username}> `;
     } else {
-        // Show error message if credentials are invalid
         document.getElementById("error-message").style.display = "block";
     }
 }
