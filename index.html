@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SECRET MINISTRATION</title>
+    <title>Note Taking App with User Accounts</title>
     <style>
         body {
             background-color: black;
@@ -71,9 +71,20 @@
 </head>
 <body>
     <div id="container">
-        <div id="password-section">
-            <span id="prompt">C:\> </span>
-            <input type="password" id="input" autofocus onkeydown="checkPassword(event)">
+        <div id="registration-section">
+            <h2>Register</h2>
+            <input type="text" id="register-username" placeholder="Username">
+            <input type="password" id="register-password" placeholder="Password">
+            <button onclick="registerUser ()">Register</button>
+            <div id="register-message"></div>
+        </div>
+
+        <div id="login-section">
+            <h2>Login</h2>
+            <input type="text" id="login-username" placeholder="Username">
+            <input type="password" id="login-password" placeholder="Password">
+            <button onclick="loginUser ()">Login</button>
+            <div id="login-message"></div>
         </div>
 
         <div id="command-section" style="display: none;">
@@ -86,45 +97,80 @@
     </div>
 
     <script>
-        function loadNotes() {
-            return JSON.parse(localStorage.getItem('notes')) || {};
-        }
+        function registerUser () {
+            const username = document.getElementById("register-username").value;
+            const password = document.getElementById("register-password").value;
+            const registerMessage = document.getElementById("register-message");
 
-        function saveNotes(notes) {
-            localStorage.setItem('notes', JSON.stringify(notes));
-        }
-
-        function displayNotes() {
-            const notes = loadNotes();
-            const container = document.getElementById("notes-container");
-            container.innerHTML = ''; // Clear previous content
-            for (let noteName in notes) {
-                let noteDiv = document.createElement("div");
-                noteDiv.classList.add("note");
-                noteDiv.innerHTML = `<strong>${noteName}:</strong> ${notes[noteName].content} <em>(Tags: ${notes[noteName].tags.join(", ")})</em>`;
-                container.appendChild(noteDiv);
-            }
-            container.style.display = "block"; // Show notes
-        }
-
-        function checkPassword(event) {
-            if (event.key === "Enter") {
-                let password = document.getElementById("input").value;
-                let passwordSection = document.getElementById("password-section");
-                let commandSection = document.getElementById("command-section");
-
-                // Check if password is correct
-                if (password === "jj is the best") {
-                    passwordSection.style.display = "none";  // Hide password prompt
-                    commandSection.style.display = "block";  // Show command section
-                    document.getElementById("input").value = "";  // Clear the input field
-                    document.getElementById("command-input").focus(); // Focus on command input
+            if (username && password) {
+                let users = JSON.parse(localStorage.getItem("users")) || {};
+                if (users[username]) {
+                    registerMessage.innerHTML = "ERROR: Username already exists.";
                 } else {
-                    document.getElementById("input").value = ""; // Clear password field
-                    document.getElementById("error-message").innerHTML = "ERROR: Incorrect password.";
+                    users[username] = password; // Save username and password
+                    localStorage.setItem("users", JSON.stringify(users));
+                    registerMessage.innerHTML = "Registration successful! You can now log in.";
+                }
+            } else {
+                registerMessage.innerHTML = "ERROR: Please enter a username and password.";
+            }
+        }
+
+        function loginUser () {
+            const username = document.getElementById("login-username").value;
+            const password = document.getElementById("login-password").value;
+            const loginMessage = document.getElementById("login-message");
+
+            let users = JSON.parse(localStorage.getItem("users")) || {};
+            if (users[username] && users[username] === password) {
+                loginMessage.innerHTML = "Login successful!";
+                document.getElementById("login-section").style.display = "none";
+                document.getElementById("command-section").style.display = "block";
+                loadUser Notes(username); // Load notes for the logged-in user
+            } else {
+                loginMessage.innerHTML = "ERROR: Invalid username or password.";
+            }
+        }
+
+        function loadUser Notes(username) {
+            const notes = JSON.parse(localStorage.getItem("notes")) || {};
+            const userNotes = notes[username] || [];
+            const notesContainer = document.getElementById("notes-container");
+            notesContainer.innerHTML = ''; // Clear previous notes
+
+            userNotes.forEach(note => {
+                let noteDiv = document.createElement("div");
+                noteDiv.innerHTML = note;
+                notesContainer.appendChild(noteDiv);
+            });
+        }
+
+        function addNoteForUser (username, noteContent) {
+            const notes = JSON.parse(localStorage.getItem("notes")) || {};
+            if (!notes[username]) {
+                notes[username] = [];
+            }
+            notes[username].push(noteContent);
+            localStorage.setItem("notes", JSON.stringify(notes));
+        }
+
+        document.getElementById("command-input").addEventListener("keydown", function(event) {
+            if (event.key === "Enter") {
+                const command = this.value.trim();
+                const username = document.getElementById("login-username").value; // Get the logged-in username
+
+                if (command.startsWith("add note")) {
+                    const noteContent = command.slice(9).trim();
+                    if (noteContent) {
+                        addNoteForUser (username, noteContent);
+                        loadUser Notes(username); // Refresh the notes display
+                        this.value = ""; // Clear the input
+                    } else {
+                        document.getElementById("error-message").innerHTML = "ERROR: Please provide content for your note.";
+                    }
                 }
             }
-        }
+        });
 
         function checkCommand(event) {
             if (event.key === "Enter") {
