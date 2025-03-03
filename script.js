@@ -1,6 +1,6 @@
 // Set up hardcoded user credentials (username and password)
 const USERS = {
-    "mayseng": "mayseng", // Example username: admin, password: password123
+    "admin": "password123", // Example username: admin, password: password123
     "user": "1234"          // Example username: user, password: 1234
 };
 
@@ -15,7 +15,7 @@ function login() {
         document.getElementById("command-input").focus();
 
         // Set prompt to include the username
-        document.getElementById("prompt").innerText = `C:\\${username}> `;
+        document.getElementById("prompt").innerText = `C:\${username}> `;
     } else {
         document.getElementById("error-message").style.display = "block";
     }
@@ -90,6 +90,13 @@ function checkCommand(event) {
                     errorMessage.innerHTML = "ERROR: No test found for this class.";
                 }
             }
+        } else if (command === "help school") {
+            errorMessage.innerHTML = `
+                School Commands:<br>
+                - school test set <class> <date>: Set a test date for a class.<br>
+                - school test <class>: View the test date for a specific class.<br>
+                - school test all: View all upcoming test dates.<br>
+            `;
         } else {
             errorMessage.innerHTML = "ERROR: Command not recognized.";
         }
