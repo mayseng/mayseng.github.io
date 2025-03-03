@@ -113,6 +113,7 @@
                 let passwordSection = document.getElementById("password-section");
                 let commandSection = document.getElementById("command-section");
 
+                // Check if password is correct
                 if (password === "jj is the best") {
                     passwordSection.style.display = "none";  // Hide password prompt
                     commandSection.style.display = "block";  // Show command section
@@ -120,6 +121,7 @@
                     document.getElementById("command-input").focus(); // Focus on command input
                 } else {
                     document.getElementById("input").value = ""; // Clear password field
+                    document.getElementById("error-message").innerHTML = "ERROR: Incorrect password.";
                 }
             }
         }
@@ -133,4 +135,40 @@
                 errorMessage.innerHTML = '';  // Reset error message
 
                 if (command.startsWith("create note")) {
-                    const noteName = command.slice(12).
+                    const noteName = command.slice(12).trim();
+                    if (noteName) {
+                        let noteContent = prompt("Enter content for the note:");
+                        if (noteContent) {
+                            let notes = loadNotes();
+                            notes[noteName] = noteContent;
+                            saveNotes(notes);
+                        }
+                    } else {
+                        errorMessage.innerHTML = "ERROR: Please provide a name for your note.";
+                    }
+                } else if (command.startsWith("show note")) {
+                    const noteName = command.slice(10).trim();
+                    let notes = loadNotes();
+                    if (notes[noteName]) {
+                        errorMessage.innerHTML = ''; // Clear previous error
+                        let noteDiv = document.createElement("div");
+                        noteDiv.classList.add("note");
+                        noteDiv.innerHTML = `<strong>${noteName}:</strong> ${notes[noteName]}`;
+                        notesContainer.appendChild(noteDiv);
+                        notesContainer.style.display = "block"; // Show notes
+                    } else {
+                        errorMessage.innerHTML = "ERROR: Note not found.";
+                    }
+                } else if (command === "show notes") {
+                    displayNotes();
+                } else {
+                    errorMessage.innerHTML = "ERROR: Command not recognized.";
+                }
+
+                // Clear the input field after command is processed
+                document.getElementById("command-input").value = "";
+            }
+        }
+    </script>
+</body>
+</html>
