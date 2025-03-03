@@ -20,21 +20,22 @@ function displayNotes() {
     container.style.display = "block"; // Show notes
 }
 
+// Make sure the checkPassword function is correctly defined
 function checkPassword(event) {
-    if (event.key === "Enter") {
+    if (event.key === "Enter") { // Listen for the "Enter" key
         let password = document.getElementById("input").value;
         let passwordSection = document.getElementById("password-section");
         let commandSection = document.getElementById("command-section");
 
         // Check if password is correct
-        if (password === "jj is the best") {
-            passwordSection.style.display = "none";  // Hide password prompt
-            commandSection.style.display = "block";  // Show command section
-            document.getElementById("input").value = "";  // Clear the input field
+        if (password === "jj is the best") {  // Password condition
+            passwordSection.style.display = "none";  // Hide password input
+            commandSection.style.display = "block";  // Show command input
+            document.getElementById("input").value = "";  // Clear password field
             document.getElementById("command-input").focus(); // Focus on command input
         } else {
-            document.getElementById("input").value = ""; // Clear password field
-            document.getElementById("error-message").innerHTML = "ERROR: Incorrect password.";
+            document.getElementById("input").value = ""; // Clear password field if incorrect
+            document.getElementById("error-message").innerHTML = "ERROR: Incorrect password."; // Show error message
         }
     }
 }
