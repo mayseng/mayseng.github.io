@@ -1,7 +1,7 @@
 // Set up hardcoded user credentials (username and password)
 const USERS = {
     "admin": "password123",
-    "user": "1234"
+    "user": "123"
 };
 
 let currentUser = "";
