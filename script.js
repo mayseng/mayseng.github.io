@@ -15,65 +15,20 @@ function login() {
         // Hide the login form
         document.getElementById("login-container").style.display = "none";
 
-        // Show the password section (for command input)
-        document.getElementById("password-section").style.display = "block";
-        document.getElementById("input").focus();
-
+        // Show the command input section
+        document.getElementById("command-section").style.display = "block";
+        document.getElementById("command-input").focus();
     } else {
         // Show error message if credentials are invalid
         document.getElementById("error-message").style.display = "block";
     }
 }
 
-// Function to check the password entered for the note functionality
-function checkPassword(event) {
-    if (event.key === "Enter") {
-        let password = document.getElementById("input").value;
-        let passwordSection = document.getElementById("password-section");
-        let commandSection = document.getElementById("command-section");
-
-        // Check if the password is correct
-        if (password === "jj is the best") {
-            passwordSection.style.display = "none";  // Hide password prompt
-            commandSection.style.display = "block";  // Show command section
-            document.getElementById("input").value = "";  // Clear the input field
-            document.getElementById("command-input").focus(); // Focus on command input
-        } else {
-            document.getElementById("input").value = ""; // Clear password field
-            document.getElementById("error-message").innerHTML = "ERROR: Incorrect password.";
-        }
-    }
-}
-
-// Function to load notes from local storage
-function loadNotes() {
-    return JSON.parse(localStorage.getItem('notes')) || {};
-}
-
-// Function to save notes to local storage
-function saveNotes(notes) {
-    localStorage.setItem('notes', JSON.stringify(notes));
-}
-
-// Function to display notes
-function displayNotes() {
-    const notes = loadNotes();
-    const container = document.getElementById("notes-container");
-    container.innerHTML = ''; // Clear previous content
-    for (let noteName in notes) {
-        let noteDiv = document.createElement("div");
-        noteDiv.classList.add("note");
-        noteDiv.innerHTML = `<strong>${noteName}:</strong> ${notes[noteName].content} <em>(Tags: ${notes[noteName].tags.join(", ")})</em>`;
-        container.appendChild(noteDiv);
-    }
-    container.style.display = "block"; // Show notes
-}
-
 // Function to handle commands for notes
 function checkCommand(event) {
     if (event.key === "Enter") {
         let command = document.getElementById("command-input").value.trim();
-        let errorMessage = document.getElementById("error-message");
+        let errorMessage = document.getElementById("error-message-command");
         let notesContainer = document.getElementById("notes-container");
 
         errorMessage.innerHTML = '';  // Reset error message
@@ -147,10 +102,18 @@ function checkCommand(event) {
     }
 }
 
-// Ensure the login form is always shown on page load, even after refresh
+// Function to load notes from local storage
+function loadNotes() {
+    return JSON.parse(localStorage.getItem('notes')) || {};
+}
+
+// Function to save notes to local storage
+function saveNotes(notes) {
+    localStorage.setItem('notes', JSON.stringify(notes));
+}
+
+// Ensure the login form is always shown on page load
 window.onload = function() {
-    // Always show the login screen and hide other sections
     document.getElementById("login-container").style.display = "block";
-    document.getElementById("password-section").style.display = "none";
     document.getElementById("command-section").style.display = "none";
 };
