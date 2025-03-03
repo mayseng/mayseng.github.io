@@ -15,7 +15,12 @@ body {
 
 #login-container {
     display: block;
-    width: 300px;
+    width: 400px;
+    text-align: left;
+    border: 2px solid white;
+    padding: 20px;
+    background-color: black;
+    border-radius: 5px;
 }
 
 #username, #password {
@@ -26,6 +31,7 @@ body {
     color: white;
     border: 1px solid white;
     font-size: 16px;
+    letter-spacing: 1px;
 }
 
 button {
@@ -35,6 +41,9 @@ button {
     color: white;
     border: 1px solid white;
     cursor: pointer;
+    font-size: 18px;
+    letter-spacing: 1px;
+    font-weight: bold;
 }
 
 button:hover {
@@ -45,6 +54,10 @@ button:hover {
     display: none;
     width: 100%;
     text-align: left;
+}
+
+#prompt {
+    color: #00ff00; /* Green prompt text */
 }
 
 #command-input {
