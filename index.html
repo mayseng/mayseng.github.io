@@ -13,15 +13,14 @@
             margin: 0;
             height: 100vh;
             display: flex;
-            justify-content: flex-start;
-            align-items: flex-start;
-            padding: 20px;
-            overflow: hidden;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
         }
 
         #container {
             text-align: left;
-            width: 100%;
+            width: 300px;
         }
 
         #prompt {
@@ -30,9 +29,9 @@
             font-size: 18px;
         }
 
-        #input, #command-input {
+        input {
             background: black;
-            border: none;
+            border: 1px solid white;
             color: white;
             font-size: 18px;
             width: 100%;
@@ -41,11 +40,24 @@
             font-weight: bold;
             letter-spacing: 1px;
             caret-color: white;
-            padding: 0;
+            padding: 5px;
+            margin-bottom: 10px;
         }
 
-        #input:focus, #command-input:focus {
-            outline: none;
+        button {
+            background-color: white;
+            color: black;
+            border: none;
+            padding: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        button:hover {
+            background-color: gray;
         }
 
         #notes-container {
@@ -79,7 +91,7 @@
             <div id="register-message"></div>
         </div>
 
-        <div id="login-section">
+        <div id="login-section" style="display: none;">
             <h2>Login</h2>
             <input type="text" id="login-username" placeholder="Username">
             <input type="password" id="login-password" placeholder="Password">
@@ -105,11 +117,15 @@
             if (username && password) {
                 let users = JSON.parse(localStorage.getItem("users")) || {};
                 if (users[username]) {
-                    registerMessage.innerHTML = "ERROR: Username already exists.";
+                    registerMessage.innerHTML = "ERROR: Username already taken.";
                 } else {
                     users[username] = password; // Save username and password
                     localStorage.setItem("users", JSON.stringify(users));
-                    registerMessage.innerHTML = "Registration successful! You can now log in.";
+                    registerMessage.innerHTML = "Registration successful! Redirecting to login...";
+                    setTimeout(() => {
+                        document.getElementById("registration-section").style.display = "none";
+                        document.getElementById("login-section").style.display = "block";
+                    }, 2000); // Redirect after 2 seconds
                 }
             } else {
                 registerMessage.innerHTML = "ERROR: Please enter a username and password.";
@@ -128,7 +144,7 @@
                 document.getElementById("command-section").style.display = "block";
                 loadUser Notes(username); // Load notes for the logged-in user
             } else {
-                loginMessage.innerHTML = "ERROR: Invalid username or password.";
+                loginMessage.innerHTML = "ERROR: Wrong username or password.";
             }
         }
 
