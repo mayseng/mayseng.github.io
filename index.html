@@ -135,17 +135,16 @@
                 errorMessage.innerHTML = '';  // Reset error message
 
                 if (command.startsWith("create note")) {
-                    const noteName = command.slice(12).trim();
-                    if (noteName) {
-                        let noteContent = prompt("Enter content for the note:");
-                        if (noteContent) {
-                            let notes = loadNotes();
-                            notes[noteName] = noteContent;
-                            saveNotes(notes);
-                        }
-                    } else {
-                        errorMessage.innerHTML = "ERROR: Please provide a name for your note.";
+                    const parts = command.split(" ");
+                    if (parts.length < 4) {
+                        errorMessage.innerHTML = "ERROR: Please provide a name and content for your note.";
+                        return;
                     }
+                    const noteName = parts[2];
+                    const noteContent = parts.slice(3).join(" "); // Join the rest as content
+                    let notes = loadNotes();
+                    notes[noteName] = noteContent;
+                    saveNotes(notes);
                 } else if (command.startsWith("show note")) {
                     const noteName = command.slice(10).trim();
                     let notes = loadNotes();
@@ -159,8 +158,18 @@
                     } else {
                         errorMessage.innerHTML = "ERROR: Note not found.";
                     }
-                } else if (command === "show notes") {
+                } else if (command === "show notes" || command === "notes") {
                     displayNotes();
+                } else if (command.startsWith("delete note")) {
+                    const noteName = command.slice(12).trim();
+                    let notes = loadNotes();
+                    if (notes[noteName]) {
+                        delete notes[noteName];
+                        saveNotes(notes);
+                        errorMessage.innerHTML = `Note "${noteName}" deleted.`;
+                    } else {
+                        errorMessage.innerHTML = "ERROR: Note not found.";
+                    }
                 } else {
                     errorMessage.innerHTML = "ERROR: Command not recognized.";
                 }
