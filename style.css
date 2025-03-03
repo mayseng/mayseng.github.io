@@ -1,5 +1,5 @@
 body {
-    background-color: black;
+    background-color: #121212; /* Dark background for a modern, sleek look */
     color: white;
     font-family: 'Courier New', monospace;
     font-weight: bold;
@@ -11,6 +11,7 @@ body {
     padding: 20px;
     overflow: hidden;
     text-align: center;
+    background: linear-gradient(135deg, #121212, #1f1f1f); /* Soft gradient background */
 }
 
 #login-container {
@@ -18,15 +19,15 @@ body {
     width: 400px;
     text-align: left;
     padding: 20px;
-    background-color: black;
-    border: 2px solid white;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+    background-color: #2a2a2a; /* Darker background for the login form */
+    border: 2px solid #444; /* Subtle border */
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
 }
 
 #login-container h1 {
     font-size: 24px;
-    color: #00ff00;  /* Bright green header */
+    color: #f1f1f1;  /* Soft white for the heading */
     margin-bottom: 20px;
     text-align: center;
 }
@@ -35,9 +36,9 @@ body {
     width: 100%;
     padding: 10px;
     margin: 10px 0;
-    background-color: black;
+    background-color: #333;  /* Dark input background */
     color: white;
-    border: 1px solid #00ff00;  /* Green border for inputs */
+    border: 1px solid #555;  /* Dark border for input fields */
     font-size: 16px;
     letter-spacing: 1px;
     box-sizing: border-box;
@@ -45,25 +46,26 @@ body {
 }
 
 #username:focus, #password:focus {
-    border-color: #00ff00;  /* Green focus border for inputs */
+    border-color: #888;  /* Lighter border on focus */
     outline: none;
 }
 
 button {
     width: 100%;
     padding: 10px;
-    background-color: black;
+    background-color: #444;  /* Dark background for button */
     color: white;
-    border: 1px solid #00ff00;  /* Green border for button */
+    border: 1px solid #666;  /* Subtle border */
     cursor: pointer;
     font-size: 18px;
     font-weight: bold;
     letter-spacing: 1px;
     transition: background-color 0.3s ease;
+    border-radius: 4px;
 }
 
 button:hover {
-    background-color: #444;  /* Slight dark hover effect */
+    background-color: #555;  /* Slightly lighter background on hover */
 }
 
 #error-message {
@@ -80,11 +82,11 @@ button:hover {
 }
 
 #prompt {
-    color: #00ff00;  /* Green prompt text */
+    color: white;  /* White prompt text */
 }
 
 #command-input {
-    background-color: black;
+    background-color: #333;  /* Dark background for command input */
     border: none;
     color: white;
     font-size: 18px;
@@ -99,7 +101,7 @@ button:hover {
 
 #notes-container {
     display: none;
-    background-color: black;
+    background-color: #333;  /* Dark background for notes */
     color: white;
     margin-top: 10px;
     width: 100%;
