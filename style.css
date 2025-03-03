@@ -14,7 +14,7 @@ body {
     background-color: #333;
     padding: 20px;
     border-radius: 8px;
-    display: none;
+    display: block;
 }
 
 #login-container h1 {
@@ -67,4 +67,5 @@ button:hover {
 #error-message {
     color: red;
     margin-top: 10px;
+    display: none;
 }
