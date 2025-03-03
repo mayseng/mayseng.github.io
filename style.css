@@ -1,0 +1,73 @@
+/* style.css */
+body {
+    background-color: black;
+    color: white;
+    font-family: 'Courier New', monospace, 'Terminal', sans-serif;
+    font-weight: bold;
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 20px;
+    overflow: hidden;
+}
+
+#container {
+    text-align: left;
+    width: 100%;
+}
+
+#prompt {
+    display: block;
+    white-space: nowrap;
+    font-size: 18px;
+}
+
+#input, #command-input {
+    background: black;
+    border: none;
+    color: white;
+    font-size: 18px;
+    width: 100%;
+    outline: none;
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    letter-spacing: 1px;
+    caret-color: white;
+    padding: 0;
+}
+
+#input:focus, #command-input:focus {
+    outline: none;
+}
+
+#notes-container {
+    display: none;
+    background-color: black;
+    color: white;
+    margin-top: 10px;
+    width: 100%;
+}
+
+.note {
+    color: white;
+    padding: 10px;
+    margin-top: 10px;
+    border: 1px solid white;
+}
+
+#error-message {
+    color: red;
+    margin-top: 10px;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 600px) {
+    body {
+        padding: 10px;
+    }
+    #input, #command-input {
+        font-size: 16px;
+    }
+}
