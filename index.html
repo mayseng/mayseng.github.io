@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Secret Ministration - Login</title>
+    <title>Secret Ministration</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- Login Section -->
     <div id="login-container">
         <h1>Secret Ministration Login</h1>
         <div id="login-section">
@@ -18,13 +19,24 @@
 
             <button onclick="login()">Login</button>
         </div>
-        <div id="error-message" style="color: red; display: none;">Invalid username or password!</div>
+        <div id="error-message">Invalid username or password!</div>
     </div>
-    
-    <div id="logged-in-container" style="display: none;">
-        <h1>Welcome to Secret Ministration!</h1>
-        <p>You have logged in successfully.</p>
+
+    <!-- Password Section (for notes and command input) -->
+    <div id="password-section" style="display: none;">
+        <span id="prompt">C:\> </span>
+        <input type="password" id="input" autofocus onkeydown="checkPassword(event)">
     </div>
+
+    <!-- Command Section (for notes) -->
+    <div id="command-section" style="display: none;">
+        <span id="prompt">C:\> </span>
+        <input type="text" id="command-input" onkeydown="checkCommand(event)">
+    </div>
+
+    <!-- Notes Section -->
+    <div id="notes-container"></div>
+    <div id="error-message"></div>
 
     <script src="script.js"></script>
 </body>
