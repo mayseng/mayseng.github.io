@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>New</title>
+    <title>Note Taking App with User Accounts</title>
     <style>
         body {
             background-color: black;
@@ -21,12 +21,6 @@
         #container {
             text-align: left;
             width: 300px;
-        }
-
-        #prompt {
-            display: block;
-            white-space: nowrap;
-            font-size: 18px;
         }
 
         input {
@@ -79,15 +73,6 @@
             color: red;
             margin-top: 10px;
         }
-
-        #redirect-button {
-            background: transparent;
-            color: white;
-            border: none;
-            cursor: pointer;
-            text-decoration: underline;
-            margin-top: 10px;
-        }
     </style>
 </head>
 <body>
@@ -98,7 +83,7 @@
             <input type="password" id="login-password" placeholder="Password">
             <button onclick="loginUser ()">Login</button>
             <div id="login-message"></div>
-            <button id="redirect-button" onclick="showRegistration()">Register</button>
+            <button onclick="showRegistration()">Register</button>
         </div>
 
         <div id="registration-section" style="display: none;">
@@ -107,7 +92,7 @@
             <input type="password" id="register-password" placeholder="Password">
             <button onclick="registerUser ()">Register</button>
             <div id="register-message"></div>
-            <button id="redirect-button" onclick="showLogin()">Back to Login</button>
+            <button onclick="showLogin()">Back to Login</button>
         </div>
 
         <div id="command-section" style="display: none;">
