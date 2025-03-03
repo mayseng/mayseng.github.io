@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>new one</title>
+    <title>SECRET MINISTRATION</title>
     <style>
         body {
             background-color: black;
@@ -13,19 +13,26 @@
             margin: 0;
             height: 100vh;
             display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-start;
+            padding: 20px;
+            overflow: hidden;
         }
 
         #container {
             text-align: left;
-            width: 300px;
+            width: 100%;
         }
 
-        input {
+        #prompt {
+            display: block;
+            white-space: nowrap;
+            font-size: 18px;
+        }
+
+        #input, #command-input {
             background: black;
-            border: 1px solid white;
+            border: none;
             color: white;
             font-size: 18px;
             width: 100%;
@@ -34,24 +41,11 @@
             font-weight: bold;
             letter-spacing: 1px;
             caret-color: white;
-            padding: 5px;
-            margin-bottom: 10px;
+            padding: 0;
         }
 
-        button {
-            background-color: white;
-            color: black;
-            border: none;
-            padding: 10px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            width: 100%;
-            margin-bottom: 10px;
-        }
-
-        button:hover {
-            background-color: gray;
+        #input:focus, #command-input:focus {
+            outline: none;
         }
 
         #notes-container {
@@ -77,22 +71,9 @@
 </head>
 <body>
     <div id="container">
-        <div id="login-section">
-            <h2>Login</h2>
-            <input type="text" id="login-username" placeholder="Username">
-            <input type="password" id="login-password" placeholder="Password">
-            <button id="login-button">Login</button>
-            <div id="login-message"></div>
-            <button id="register-button">Register</button>
-        </div>
-
-        <div id="registration-section" style="display: none;">
-            <h2>Register</h2>
-            <input type="text" id="register-username" placeholder="Username">
-            <input type="password" id="register-password" placeholder="Password">
-            <button id="register-submit-button">Register</button>
-            <div id="register-message"></div>
-            <button id="back-to-login-button">Back to Login</button>
+        <div id="password-section">
+            <span id="prompt">C:\> </span>
+            <input type="password" id="input" autofocus onkeydown="checkPassword(event)">
         </div>
 
         <div id="command-section" style="display: none;">
@@ -105,104 +86,46 @@
     </div>
 
     <script>
-        // Show registration form
-        document.getElementById("register-button").onclick = function() {
-            document.getElementById("login-section").style.display = "none";
-            document.getElementById("registration-section").style.display = "block";
-        };
+        function loadNotes() {
+            return JSON.parse(localStorage.getItem('notes')) || {};
+        }
 
-        // Show login form
-        document.getElementById("back-to-login-button").onclick = function() {
-            document.getElementById("registration-section").style.display = "none";
-            document.getElementById("login-section").style.display = "block";
-        };
+        function saveNotes(notes) {
+            localStorage.setItem('notes', JSON.stringify(notes));
+        }
 
-        // Register user
-        document.getElementById("register-submit-button").onclick = function() {
-            const username = document.getElementById("register-username").value;
-            const password = document.getElementById("register-password").value;
-            const registerMessage = document.getElementById("register-message");
-
-            if (username && password) {
-                let users = JSON.parse(localStorage.getItem("users")) || {};
-                if (users[username]) {
-                    registerMessage.innerHTML = "ERROR: Username already taken.";
-                } else {
-                    users[username] = password; // Save username and password
-                    localStorage.setItem("users", JSON.stringify(users));
-                    registerMessage.innerHTML = "Registration successful! Redirecting to login...";
-                    setTimeout(() => {
-                        document.getElementById("registration-section").style.display = "none";
-                        document.getElementById("login-section").style.display = "block";
-                    }, 2000);
-                }
-            } else {
-                registerMessage.innerHTML = "ERROR: Please enter a username and password.";
-            }
-        };
-
-        // Login user
-        document.getElementById("login-button").onclick = function() {
-            const username = document.getElementById("login-username").value;
-            const password = document.getElementById("login-password").value;
-            const loginMessage = document.getElementById("login-message");
-
-            let users = JSON.parse(localStorage.getItem("users")) || {};
-            if (users[username] && users[username] === password) {
-                loginMessage.innerHTML = "Login successful!";
-                document.getElementById("login-section").style.display = "none";
-                document.getElementById("command-section").style.display = "block";
-                loadUser Notes(username); // Load notes for the logged-in user
-            } else {
-                loginMessage.innerHTML = "ERROR: Incorrect username or password.";
-            }
-        };
-
-        // Load user notes
-        function loadUser Notes(username) {
-            const notes = JSON.parse(localStorage.getItem("notes")) || {};
-            const userNotes = notes[username] || [];
-            const notesContainer = document.getElementById("notes-container");
-            notesContainer.innerHTML = ''; // Clear previous notes
-
-            userNotes.forEach(note => {
+        function displayNotes() {
+            const notes = loadNotes();
+            const container = document.getElementById("notes-container");
+            container.innerHTML = ''; // Clear previous content
+            for (let noteName in notes) {
                 let noteDiv = document.createElement("div");
-                noteDiv.innerHTML = note;
-                notesContainer.appendChild(noteDiv);
-            });
-            notesContainer.style.display = "block"; // Show notes
-        }
-
-        // Add note for user
-        function addNoteForUser (username, noteContent) {
-            const notes = JSON.parse(localStorage.getItem("notes")) || {};
-            if (!notes[username]) {
-                notes[username] = [];
+                noteDiv.classList.add("note");
+                noteDiv.innerHTML = `<strong>${noteName}:</strong> ${notes[noteName].content} <em>(Tags: ${notes[noteName].tags.join(", ")})</em>`;
+                container.appendChild(noteDiv);
             }
-            notes[username].push(noteContent);
-            localStorage.setItem("notes", JSON.stringify(notes));
+            container.style.display = "block"; // Show notes
         }
 
-        // Command input handling
-        document.getElementById("command-input").addEventListener("keydown", function(event) {
+        function checkPassword(event) {
             if (event.key === "Enter") {
-                const command = this.value.trim();
-                const username = document.getElementById("login-username").value; // Get the logged-in username
+                let password = document.getElementById("input").value;
+                let passwordSection = document.getElementById("password-section");
+                let commandSection = document.getElementById("command-section");
 
-                if (command.startsWith("add note")) {
-                    const noteContent = command.slice(9).trim();
-                    if (noteContent) {
-                        addNoteForUser (username, noteContent);
-                        loadUser Notes(username); // Refresh the notes display
-                        this.value = ""; // Clear the input
-                    } else {
-                        document.getElementById("error-message").innerHTML = "ERROR: Please provide content for your note.";
-                    }
+                // Check if password is correct
+                if (password === "jj is the best") {
+                    passwordSection.style.display = "none";  // Hide password prompt
+                    commandSection.style.display = "block";  // Show command section
+                    document.getElementById("input").value = "";  // Clear the input field
+                    document.getElementById("command-input").focus(); // Focus on command input
+                } else {
+                    document.getElementById("input").value = ""; // Clear password field
+                    document.getElementById("error-message").innerHTML = "ERROR: Incorrect password.";
                 }
             }
-        });
+        }
 
-        // Check command input
         function checkCommand(event) {
             if (event.key === "Enter") {
                 let command = document.getElementById("command-input").value.trim();
@@ -211,18 +134,66 @@
 
                 errorMessage.innerHTML = '';  // Reset error message
 
-                if (command.startsWith("show notes")) {
-                    const notes = JSON.parse(localStorage.getItem("notes")) || {};
-                    const username = document.getElementById("login-username").value; // Get the logged-in username
-                    const userNotes = notes[username] || [];
-                    notesContainer.innerHTML = ''; // Clear previous notes
-
-                    userNotes.forEach(note => {
+                if (command.startsWith("create note")) {
+                    const parts = command.split(" ");
+                    if (parts.length < 4) {
+                        errorMessage.innerHTML = "ERROR: Please provide a name and content for your note.";
+                        return;
+                    }
+                    const noteName = parts[2];
+                    const noteContent = parts.slice(3).join(" "); // Join the rest as content
+                    let notes = loadNotes();
+                    notes[noteName] = { content: noteContent, tags: [] }; // Store content and tags
+                    saveNotes(notes);
+                } else if (command.startsWith("edit note")) {
+                    const parts = command.split(" ");
+                    if (parts.length < 4) {
+                        errorMessage.innerHTML = "ERROR: Please provide a name and new content for your note.";
+                        return;
+                    }
+                    const noteName = parts[2];
+                    const newContent = parts.slice(3).join(" ");
+                    let notes = loadNotes();
+                    if (notes[noteName]) {
+                        notes[noteName].content = newContent; // Update content
+                        saveNotes(notes);
+                    } else {
+                        errorMessage.innerHTML = "ERROR: Note not found.";
+                    }
+                } else if (command.startsWith("show note")) {
+                    const noteName = command.slice(10).trim();
+                    let notes = loadNotes();
+                    if (notes[noteName]) {
+                        errorMessage.innerHTML = ''; // Clear previous error
                         let noteDiv = document.createElement("div");
-                        noteDiv.innerHTML = note;
+                        noteDiv.classList.add("note");
+                        noteDiv.innerHTML = `<strong>${noteName}:</strong> ${notes[noteName].content} <em>(Tags: ${notes[noteName].tags.join(", ")})</em>`;
                         notesContainer.appendChild(noteDiv);
-                    });
-                    notesContainer.style.display = "block"; // Show notes
+                        notesContainer.style.display = "block"; // Show notes
+                    } else {
+                        errorMessage.innerHTML = "ERROR: Note not found.";
+                    }
+                } else if (command === "show notes" || command === "notes") {
+                    displayNotes();
+                } else if (command.startsWith("delete note")) {
+                    const noteName = command.slice(12).trim();
+                    let notes = loadNotes();
+                    if (notes[noteName]) {
+                        delete notes[noteName];
+                        saveNotes(notes);
+                        errorMessage.innerHTML = `Note "${noteName}" deleted.`;
+                    } else {
+                        errorMessage.innerHTML = "ERROR: Note not found.";
+                    }
+                } else if (command === "help notes") {
+                    errorMessage.innerHTML = `
+                        Available commands:<br>
+                        - create note <name> <content>: Create a new note.<br>
+                        - edit note <name> <new content>: Edit an existing note.<br>
+                        - show note <name>: Display a specific note.<br>
+                        - show notes or notes: Display all notes.<br>
+                        - delete note <name>: Delete a specific note.<br>
+                    `;
                 } else {
                     errorMessage.innerHTML = "ERROR: Command not recognized.";
                 }
