@@ -2,6 +2,7 @@
 const USERS = {
     "admin": "password123",
     "user": "123"
+    "lane": "johnson"
 };
 
 let currentUser = "";
