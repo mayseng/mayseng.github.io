@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <! -- Login Form Section --> 
+    <!-- Login Form Section -->
     <div id="login-container">
         <h1>Login</h1>
         <input type="text" id="username" placeholder="Username" required>
@@ -16,11 +16,11 @@
         <div id="error-message">ERROR: Invalid login credentials</div>
     </div>
 
-    <!-- Command Section (visible after login)  -->
+    <!-- Command Section (visible after login) -->
     <div id="command-section" style="display: none;">
         <span id="prompt">C:\> </span>
         <input type="text" id="command-input" onkeydown="checkCommand(event)" autofocus>
-        <div id="notes-container" style="display: none;"></div>
+        <div id="notes-container"></div>
         <div id="error-message-command" style="color: red;"></div>
     </div>
 
