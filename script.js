@@ -1,4 +1,4 @@
-// Hardcoded user credentials
+// Hardcoded user credential
 const USERS = {
     "admin": "password123",
     "user": "1234",
