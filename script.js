@@ -1,7 +1,7 @@
 // Set up hardcoded user credentials (username and password)
 const USERS = {
     "admin": "password123",
-    "user": "1234"
+    "user": "123"
 };
 
 let currentUser = "";
@@ -16,7 +16,7 @@ function login() {
         document.getElementById("login-container").style.display = "none";
         document.getElementById("command-section").style.display = "block";
         document.getElementById("command-input").focus();
-        document.getElementById("prompt").innerText = `C:\${currentUser}> `;
+        document.getElementById("prompt").innerText = `C:\\${currentUser}> `;
     } else {
         document.getElementById("error-message").style.display = "block";
     }
@@ -27,7 +27,6 @@ function checkCommand(event) {
     if (event.key === "Enter") {
         let command = document.getElementById("command-input").value.trim();
         let errorMessage = document.getElementById("error-message-command");
-        let notesContainer = document.getElementById("notes-container");
 
         errorMessage.innerHTML = '';
 
@@ -54,30 +53,14 @@ function checkCommand(event) {
             const noteName = parts[2];
             const noteContent = parts.slice(3).join(" ");
             let notes = loadNotes();
-            notes[noteName] = { content: noteContent, tags: [] };
+            notes[noteName] = noteContent;
             saveNotes(notes);
             errorMessage.innerHTML = `Note '${noteName}' created.`;
-        } else if (command.startsWith("edit note")) {
-            const parts = command.split(" ");
-            if (parts.length < 4) {
-                errorMessage.innerHTML = "ERROR: Please provide a name and new content for your note.";
-                return;
-            }
-            const noteName = parts[2];
-            const newContent = parts.slice(3).join(" ");
-            let notes = loadNotes();
-            if (notes[noteName]) {
-                notes[noteName].content = newContent;
-                saveNotes(notes);
-                errorMessage.innerHTML = `Note '${noteName}' updated.`;
-            } else {
-                errorMessage.innerHTML = "ERROR: Note not found.";
-            }
         } else if (command.startsWith("show note")) {
             const noteName = command.slice(10).trim();
             let notes = loadNotes();
             if (notes[noteName]) {
-                errorMessage.innerHTML = `<strong>${noteName}:</strong> ${notes[noteName].content}`;
+                errorMessage.innerHTML = `<strong>${noteName}:</strong> ${notes[noteName]}`;
             } else {
                 errorMessage.innerHTML = "ERROR: Note not found.";
             }
@@ -86,7 +69,34 @@ function checkCommand(event) {
             if (Object.keys(notes).length === 0) {
                 errorMessage.innerHTML = "No notes found.";
             } else {
-                errorMessage.innerHTML = Object.keys(notes).map(name => `<strong>${name}:</strong> ${notes[name].content}`).join("<br>");
+                errorMessage.innerHTML = Object.entries(notes).map(([name, content]) => `<strong>${name}:</strong> ${content}`).join("<br>");
+            }
+        } else if (command.startsWith("school test set")) {
+            const parts = command.split(" ");
+            if (parts.length < 5) {
+                errorMessage.innerHTML = "ERROR: Please provide a class and a date.";
+                return;
+            }
+            const className = parts[3];
+            const testDate = parts[4];
+
+            let schoolData = loadSchoolData();
+            if (!schoolData.tests[className]) {
+                schoolData.tests[className] = [];
+            }
+            schoolData.tests[className].push(testDate);
+            saveSchoolData(schoolData);
+
+            errorMessage.innerHTML = `Test for '${className}' set on ${testDate}.`;
+        } else if (command === "school test all") {
+            let schoolData = loadSchoolData();
+            if (Object.keys(schoolData.tests).length === 0) {
+                errorMessage.innerHTML = "No test reminders found.";
+            } else {
+                errorMessage.innerHTML = "<strong>Test Reminders:</strong><br>";
+                for (let className in schoolData.tests) {
+                    errorMessage.innerHTML += `<strong>${className}:</strong> ${schoolData.tests[className].join(", ")}<br>`;
+                }
             }
         } else {
             errorMessage.innerHTML = "ERROR: Command not recognized.";
@@ -104,6 +114,16 @@ function loadNotes() {
 // Function to save notes to local storage
 function saveNotes(notes) {
     localStorage.setItem('notes', JSON.stringify(notes));
+}
+
+// Function to load school reminders
+function loadSchoolData() {
+    return JSON.parse(localStorage.getItem('schoolData')) || { tests: {}, assignments: {} };
+}
+
+// Function to save school reminders
+function saveSchoolData(data) {
+    localStorage.setItem('schoolData', JSON.stringify(data));
 }
 
 // Ensure the login form is always shown on page load
