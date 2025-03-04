@@ -10,17 +10,28 @@ let currentUser = "";
 
 // Function to handle the login process
 function login() {
-    const username = document.getElementById("username").value;
-    const password = document.getElementById("password").value;
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value.trim();
+    const errorMessage = document.getElementById("error-message");
 
     if (USERS[username] && USERS[username] === password) {
         currentUser = username;
+
+        // Hide login form & show command section
         document.getElementById("login-container").style.display = "none";
         document.getElementById("command-section").style.display = "block";
-        document.getElementById("command-input").focus();
+
+        // Update the prompt to include the logged-in user's name
         document.getElementById("prompt").innerText = `C:\\${currentUser}> `;
+
+        // Focus on command input field
+        document.getElementById("command-input").focus();
+
+        // Hide error message in case it was previously displayed
+        errorMessage.style.display = "none";
     } else {
-        document.getElementById("error-message").style.display = "block";
+        // Show error message for invalid login
+        errorMessage.style.display = "block";
     }
 }
 
