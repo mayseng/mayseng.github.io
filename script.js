@@ -1,4 +1,4 @@
-// Hardcoded user credential
+// Hardcoded user credentials
 const USERS = {
     "admin": "password123",
     "user": "1234",
@@ -129,7 +129,7 @@ function checkCommand(event) {
                 errorMessage.innerHTML = "ERROR: Assignment not found.";
             }
         } else if (command === "school calendar show") {
-            displayCalendar();
+            showCalendar();
         } else {
             errorMessage.innerHTML = "ERROR: Command not recognized.";
         }
@@ -138,21 +138,30 @@ function checkCommand(event) {
     }
 }
 
-// Function to display the calendar
-function displayCalendar() {
+// Function to show calendar with events
+function showCalendar() {
     document.getElementById("calendar-section").style.display = "block";
-    let calendar = document.getElementById("calendar");
-    calendar.innerHTML = "<h3>Upcoming Events</h3>";
+    let calendarDiv = document.getElementById("calendar");
+    calendarDiv.innerHTML = "<h3>Upcoming Events</h3>";
     
     let tests = loadTests();
     let assignments = loadAssignments();
     
-    for (let test in tests) {
-        calendar.innerHTML += `<p>Test: ${test} - ${tests[test]}</p>`;
+    if (Object.keys(tests).length === 0 && Object.keys(assignments).length === 0) {
+        calendarDiv.innerHTML += "<p>No upcoming tests or assignments.</p>";
+    } else {
+        for (let test in tests) {
+            calendarDiv.innerHTML += `<p>Test: ${test} on ${tests[test]}</p>`;
+        }
+        for (let assignment in assignments) {
+            calendarDiv.innerHTML += `<p>Assignment: ${assignment} due on ${assignments[assignment]}</p>`;
+        }
     }
-    for (let assignment in assignments) {
-        calendar.innerHTML += `<p>Assignment: ${assignment} - ${assignments[assignment]}</p>`;
-    }
+}
+
+// Function to close calendar
+function closeCalendar() {
+    document.getElementById("calendar-section").style.display = "none";
 }
 
 // Local storage functions
