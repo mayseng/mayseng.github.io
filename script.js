@@ -44,15 +44,15 @@ function checkUpcomingEvents() {
     let tests = loadTests();
     let assignments = loadAssignments();
 
-    for (let test in tests) {
-        if (tests[test] === today) {
-            reminders += `Reminder: Test for ${test} is today!\n`;
+    for (let className in tests) {
+        if (tests[className] === today) {
+            reminders += `Reminder: Test for ${className} is today!\n`;
         }
     }
 
-    for (let assignment in assignments) {
-        if (assignments[assignment] === today) {
-            reminders += `Reminder: Assignment for ${assignment} is due today!\n`;
+    for (let className in assignments) {
+        if (assignments[className] === today) {
+            reminders += `Reminder: Assignment for ${className} is due today!\n`;
         }
     }
 
@@ -70,7 +70,7 @@ function checkCommand(event) {
 
         if (command.startsWith("school test set")) {
             const parts = command.split(" ");
-            if (parts.length < 4) {
+            if (parts.length < 5) {
                 errorMessage.innerHTML = "ERROR: Please provide a class and date.";
                 return;
             }
@@ -100,7 +100,7 @@ function checkCommand(event) {
             }
         } else if (command.startsWith("school assignment set")) {
             const parts = command.split(" ");
-            if (parts.length < 4) {
+            if (parts.length < 5) {
                 errorMessage.innerHTML = "ERROR: Please provide a class and due date.";
                 return;
             }
@@ -155,7 +155,7 @@ function showCalendar() {
             calendarDiv.innerHTML += "<h3>📚 Assignments</h3><ul>";
             for (let className in assignments) {
                 let dueDate = assignments[className];
-                calendarDiv.innerHTML += `<li>${className}: <b>Due ${dueDate}</b></li>`;
+                calendarDiv.innerHTML += `<li><b>${className}</b>: Due <b>${dueDate}</b></li>`;
             }
             calendarDiv.innerHTML += "</ul>";
         }
@@ -163,7 +163,7 @@ function showCalendar() {
             calendarDiv.innerHTML += "<h3>📝 Tests</h3><ul>";
             for (let className in tests) {
                 let testDate = tests[className];
-                calendarDiv.innerHTML += `<li>${className}: <b>${testDate}</b></li>`;
+                calendarDiv.innerHTML += `<li><b>${className}</b>: <b>${testDate}</b></li>`;
             }
             calendarDiv.innerHTML += "</ul>";
         }
@@ -180,7 +180,8 @@ function closeCalendar() {
 
 // Local storage functions
 function loadTests() {
-    return JSON.parse(localStorage.getItem(`${currentUser}_tests`)) || {};
+    let tests = localStorage.getItem(`${currentUser}_tests`);
+    return tests ? JSON.parse(tests) : {};
 }
 
 function saveTests(tests) {
@@ -188,7 +189,8 @@ function saveTests(tests) {
 }
 
 function loadAssignments() {
-    return JSON.parse(localStorage.getItem(`${currentUser}_assignments`)) || {};
+    let assignments = localStorage.getItem(`${currentUser}_assignments`);
+    return assignments ? JSON.parse(assignments) : {};
 }
 
 function saveAssignments(assignments) {
