@@ -54,21 +54,24 @@ function showCalendar() {
         calendarSection.id = "calendar-section";
         calendarSection.style.display = "block";
         calendarSection.style.backgroundColor = "#2a2a2a";
-        calendarSection.style.padding = "10px";
-        calendarSection.style.marginTop = "10px";
+        calendarSection.style.padding = "20px";
+        calendarSection.style.marginTop = "20px";
         calendarSection.style.border = "1px solid white";
         calendarSection.style.color = "white";
+        calendarSection.style.textAlign = "center";
+        calendarSection.style.width = "80%";
+        calendarSection.style.marginLeft = "auto";
+        calendarSection.style.marginRight = "auto";
 
         let title = document.createElement("h2");
         title.innerText = "Calendar";
-        title.style.textAlign = "center";
+        title.style.marginBottom = "10px";
 
         let calendar = document.createElement("div");
         calendar.id = "calendar";
         calendar.style.display = "grid";
         calendar.style.gridTemplateColumns = "repeat(7, 1fr)";
         calendar.style.gap = "5px";
-        calendar.style.marginTop = "10px";
 
         calendarSection.appendChild(title);
         calendarSection.appendChild(calendar);
@@ -87,17 +90,46 @@ function closeCalendar() {
 
 function generateCalendar() {
     const calendar = document.getElementById("calendar");
+    if (!calendar) return;
+
     calendar.innerHTML = ""; // Clear previous calendar
 
     let daysInMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate();
-    
+    let weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+    // Add weekdays labels
+    weekdays.forEach(day => {
+        let dayLabel = document.createElement("div");
+        dayLabel.innerText = day;
+        dayLabel.style.fontWeight = "bold";
+        dayLabel.style.borderBottom = "1px solid white";
+        dayLabel.style.padding = "5px";
+        calendar.appendChild(dayLabel);
+    });
+
+    // Get first day of the month
+    let firstDay = new Date(new Date().getFullYear(), new Date().getMonth(), 1).getDay();
+
+    // Fill in empty spaces before first day
+    for (let i = 0; i < firstDay; i++) {
+        let emptySlot = document.createElement("div");
+        emptySlot.innerText = "";
+        calendar.appendChild(emptySlot);
+    }
+
+    // Fill in the days of the month
     for (let i = 1; i <= daysInMonth; i++) {
         let day = document.createElement("div");
-        day.classList.add("calendar-day");
         day.innerText = i;
         day.style.border = "1px solid white";
         day.style.padding = "10px";
         day.style.textAlign = "center";
+        day.style.cursor = "pointer";
+
+        day.addEventListener("click", () => {
+            alert(`You selected ${i}/${new Date().getMonth() + 1}/${new Date().getFullYear()}`);
+        });
+
         calendar.appendChild(day);
     }
 }
