@@ -1,4 +1,3 @@
-// Hardcoded user credentials
 const USERS = {
     "admin": "password123",
     "user": "1234",
@@ -8,60 +7,41 @@ const USERS = {
 
 let currentUser = "";
 
-// Function to handle the login process
 function login() {
-    console.log("Login button clicked!");
-
     const username = document.getElementById("username").value.trim();
     const password = document.getElementById("password").value.trim();
-
-    if (!username || !password) {
-        console.log("Username or password field is empty.");
-        return;
-    }
-
+    
+    if (!username || !password) return;
+    
     if (USERS[username] && USERS[username] === password) {
         currentUser = username;
-        console.log("Login successful for:", currentUser);
-
         document.getElementById("login-container").style.display = "none";
         document.getElementById("command-section").style.display = "block";
         document.getElementById("command-input").focus();
         document.getElementById("prompt").innerText = `C:\\${currentUser}> `;
-
         checkUpcomingEvents();
     } else {
-        console.log("Invalid login credentials.");
         document.getElementById("error-message").style.display = "block";
     }
 }
 
-// Function to check upcoming tests and assignments
 function checkUpcomingEvents() {
     const today = new Date().toISOString().split("T")[0];
     let reminders = "";
-
+    
     let tests = loadTests();
     let assignments = loadAssignments();
-
+    
     for (let test in tests) {
-        if (tests[test] === today) {
-            reminders += `Reminder: Test for ${test} is today!\n`;
-        }
+        if (tests[test] === today) reminders += `Reminder: Test for ${test} is today!\n`;
     }
-
     for (let assignment in assignments) {
-        if (assignments[assignment] === today) {
-            reminders += `Reminder: Assignment for ${assignment} is due today!\n`;
-        }
+        if (assignments[assignment] === today) reminders += `Reminder: Assignment for ${assignment} is due today!\n`;
     }
-
-    if (reminders) {
-        alert(reminders);
-    }
+    
+    if (reminders) alert(reminders);
 }
 
-// Function to handle commands
 function checkCommand(event) {
     if (event.key === "Enter") {
         let command = document.getElementById("command-input").value.trim();
@@ -70,8 +50,8 @@ function checkCommand(event) {
 
         if (command.startsWith("school test set")) {
             const parts = command.split(" ");
-            if (parts.length < 4) {
-                errorMessage.innerHTML = "ERROR: Please provide a class and date.";
+            if (parts.length < 5) {
+                errorMessage.innerHTML = "ERROR: Provide a class and date.";
                 return;
             }
             let className = parts[3];
@@ -86,7 +66,7 @@ function checkCommand(event) {
         } else if (command.startsWith("school test delete")) {
             const parts = command.split(" ");
             if (parts.length < 4) {
-                errorMessage.innerHTML = "ERROR: Please provide a class and date.";
+                errorMessage.innerHTML = "ERROR: Provide a class.";
                 return;
             }
             let className = parts[3];
@@ -100,8 +80,8 @@ function checkCommand(event) {
             }
         } else if (command.startsWith("school assignment set")) {
             const parts = command.split(" ");
-            if (parts.length < 4) {
-                errorMessage.innerHTML = "ERROR: Please provide a class and due date.";
+            if (parts.length < 5) {
+                errorMessage.innerHTML = "ERROR: Provide a class and due date.";
                 return;
             }
             let className = parts[3];
@@ -116,7 +96,7 @@ function checkCommand(event) {
         } else if (command.startsWith("school assignment delete")) {
             const parts = command.split(" ");
             if (parts.length < 4) {
-                errorMessage.innerHTML = "ERROR: Please provide a class.";
+                errorMessage.innerHTML = "ERROR: Provide a class.";
                 return;
             }
             let className = parts[3];
@@ -128,10 +108,9 @@ function checkCommand(event) {
             } else {
                 errorMessage.innerHTML = "ERROR: Assignment not found.";
             }
-        } else if (command === "help school") {
-            errorMessage.innerHTML = "Available school commands:<br>school test set [class] [date]<br>school test all<br>school test delete [class]<br>school assignment set [class] [date]<br>school assignment all<br>school assignment delete [class]";
-        } else if (command === "help notes") {
-            errorMessage.innerHTML = "Available notes commands:<br>notes add [note]<br>notes all<br>notes delete [note]";
+        } else if (command === "show calendar") {
+            showCalendar();
+            errorMessage.innerHTML = "📅 Calendar displayed.";
         } else {
             errorMessage.innerHTML = "ERROR: Command not recognized.";
         }
@@ -140,22 +119,54 @@ function checkCommand(event) {
     }
 }
 
-// Local storage functions
-function loadTests() {
-    return JSON.parse(localStorage.getItem(`${currentUser}_tests`)) || {};
-}
-function saveTests(tests) {
-    localStorage.setItem(`${currentUser}_tests`, JSON.stringify(tests));
+function showCalendar() {
+    const calendarContainer = document.getElementById("calendar-container");
+    const calendarBody = document.querySelector("#calendar tbody");
+
+    calendarBody.innerHTML = "";
+
+    const today = new Date();
+    const currentYear = today.getFullYear();
+    const currentMonth = today.getMonth();
+
+    const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+    const lastDate = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+    let date = 1;
+    for (let i = 0; i < 6; i++) {
+        let row = document.createElement("tr");
+
+        for (let j = 0; j < 7; j++) {
+            let cell = document.createElement("td");
+
+            if (i === 0 && j < firstDay) {
+                cell.innerHTML = "";
+            } else if (date > lastDate) {
+                break;
+            } else {
+                cell.innerHTML = date;
+                let formattedDate = `${currentYear}-${(currentMonth + 1).toString().padStart(2, '0')}-${date.toString().padStart(2, '0')}`;
+                let tests = loadTests();
+                let assignments = loadAssignments();
+
+                if (Object.values(tests).includes(formattedDate)) cell.style.backgroundColor = "red";
+                if (Object.values(assignments).includes(formattedDate)) cell.style.backgroundColor = "blue";
+
+                date++;
+            }
+            row.appendChild(cell);
+        }
+        calendarBody.appendChild(row);
+    }
+
+    calendarContainer.style.display = "block";
 }
 
-function loadAssignments() {
-    return JSON.parse(localStorage.getItem(`${currentUser}_assignments`)) || {};
-}
-function saveAssignments(assignments) {
-    localStorage.setItem(`${currentUser}_assignments`, JSON.stringify(assignments));
-}
+function loadTests() { return JSON.parse(localStorage.getItem(`${currentUser}_tests`)) || {}; }
+function saveTests(tests) { localStorage.setItem(`${currentUser}_tests`, JSON.stringify(tests)); }
+function loadAssignments() { return JSON.parse(localStorage.getItem(`${currentUser}_assignments`)) || {}; }
+function saveAssignments(assignments) { localStorage.setItem(`${currentUser}_assignments`, JSON.stringify(assignments)); }
 
-// Ensure login form is shown on page load
 window.onload = function() {
     document.getElementById("login-container").style.display = "block";
     document.getElementById("command-section").style.display = "none";
