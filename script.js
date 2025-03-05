@@ -1,4 +1,4 @@
-// Hardcoded user credentials
+// Hardcoded user credential
 const USERS = {
     "admin": "password123",
     "user": "1234",
@@ -7,6 +7,21 @@ const USERS = {
 };
 
 let currentUser = "";
+
+// Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyDA8p0gn75hpg_nWMGCmVvwMhPFN5H8ETU",
+  authDomain: "secretministration.firebaseapp.com",
+  projectId: "secretministration",
+  storageBucket: "secretministration.appspot.com",
+  messagingSenderId: "944614356878",
+  appId: "1:944614356878:web:53b8f0b17fa72735cbd6df",
+  measurementId: "G-S7PHLY2VVZ"
+};
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const database = firebase.database();
 
 // Function to handle the login process
 function login() {
@@ -61,6 +76,18 @@ function checkUpcomingEvents() {
     }
 }
 
+// Function to save user data to Firebase
+tfunction saveUserData(username, data) {
+    database.ref("users/" + username).set(data);
+}
+
+// Function to retrieve user data from Firebase
+function getUserData(username) {
+    database.ref("users/" + username).once("value", function(snapshot) {
+        console.log(snapshot.val()); // Shows the user's data
+    });
+}
+
 // Function to handle commands
 function checkCommand(event) {
     if (event.key === "Enter") {
@@ -68,22 +95,7 @@ function checkCommand(event) {
         let errorMessage = document.getElementById("error-message-command");
         errorMessage.innerHTML = "";
 
-        if (command === "help school") {
-            errorMessage.innerHTML = "<strong>School Commands:</strong><br>"
-                + "school test set [class] [date] - Set a test date<br>"
-                + "school test all - Show all test dates<br>"
-                + "school test delete [class] - Delete a test<br>"
-                + "school assignment set [class] [date] - Set an assignment due date<br>"
-                + "school assignment all - Show all assignments<br>"
-                + "school assignment delete [class] - Delete an assignment";
-        } else if (command === "help notes") {
-            errorMessage.innerHTML = "<strong>Note Commands:</strong><br>"
-                + "create note [name] [content] - Create a new note<br>"
-                + "edit note [name] [new content] - Edit an existing note<br>"
-                + "show note [name] - Show a note's content<br>"
-                + "show notes - Show all notes<br>"
-                + "delete note [name] - Delete a note";
-        } else if (command.startsWith("school test set")) {
+        if (command.startsWith("school test set")) {
             const parts = command.split(" ");
             if (parts.length < 4) {
                 errorMessage.innerHTML = "ERROR: Please provide a class and date.";
@@ -94,6 +106,7 @@ function checkCommand(event) {
             let tests = loadTests();
             tests[className] = date;
             saveTests(tests);
+            saveUserData(currentUser, { tests }); // Save to Firebase
             errorMessage.innerHTML = `Test for ${className} set on ${date}.`;
         } else if (command === "school test all") {
             let tests = loadTests();
@@ -101,7 +114,7 @@ function checkCommand(event) {
         } else if (command.startsWith("school test delete")) {
             const parts = command.split(" ");
             if (parts.length < 4) {
-                errorMessage.innerHTML = "ERROR: Please provide a class.";
+                errorMessage.innerHTML = "ERROR: Please provide a class and date.";
                 return;
             }
             let className = parts[3];
@@ -109,39 +122,10 @@ function checkCommand(event) {
             if (tests[className]) {
                 delete tests[className];
                 saveTests(tests);
+                saveUserData(currentUser, { tests }); // Save to Firebase
                 errorMessage.innerHTML = `Test for ${className} deleted.`;
             } else {
                 errorMessage.innerHTML = "ERROR: Test not found.";
-            }
-        } else if (command.startsWith("school assignment set")) {
-            const parts = command.split(" ");
-            if (parts.length < 4) {
-                errorMessage.innerHTML = "ERROR: Please provide a class and due date.";
-                return;
-            }
-            let className = parts[3];
-            let date = parts[4];
-            let assignments = loadAssignments();
-            assignments[className] = date;
-            saveAssignments(assignments);
-            errorMessage.innerHTML = `Assignment for ${className} due on ${date}.`;
-        } else if (command === "school assignment all") {
-            let assignments = loadAssignments();
-            errorMessage.innerHTML = Object.keys(assignments).length === 0 ? "No assignments scheduled." : JSON.stringify(assignments);
-        } else if (command.startsWith("school assignment delete")) {
-            const parts = command.split(" ");
-            if (parts.length < 4) {
-                errorMessage.innerHTML = "ERROR: Please provide a class.";
-                return;
-            }
-            let className = parts[3];
-            let assignments = loadAssignments();
-            if (assignments[className]) {
-                delete assignments[className];
-                saveAssignments(assignments);
-                errorMessage.innerHTML = `Assignment for ${className} deleted.`;
-            } else {
-                errorMessage.innerHTML = "ERROR: Assignment not found.";
             }
         } else {
             errorMessage.innerHTML = "ERROR: Command not recognized.";
