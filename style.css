@@ -117,3 +117,29 @@ button:hover {
 #error-message-command {
     margin-top: 10px;
 }
+
+#calendar-container {
+    display: none;
+    width: 80%;
+    background-color: #222;
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+    margin-top: 20px;
+}
+
+.calendar-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.calendar-table th, .calendar-table td {
+    border: 1px solid white;
+    padding: 10px;
+    text-align: center;
+}
+
+.calendar-table th {
+    background-color: #444;
+}
