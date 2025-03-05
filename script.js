@@ -47,23 +47,23 @@ function checkCommand(event) {
 }
 
 function showCalendar() {
-    let calendarSection = document.getElementById("calendar-section");
+    let calendarContainer = document.getElementById("calendar-container");
 
-    if (!calendarSection) {
-        calendarSection = document.createElement("div");
-        calendarSection.id = "calendar-section";
-        calendarSection.style.display = "block";
-        calendarSection.style.backgroundColor = "#2a2a2a";
-        calendarSection.style.padding = "20px";
-        calendarSection.style.marginTop = "20px";
-        calendarSection.style.border = "1px solid white";
-        calendarSection.style.color = "white";
-        calendarSection.style.textAlign = "center";
-        calendarSection.style.width = "60%";
-        calendarSection.style.marginLeft = "auto";
-        calendarSection.style.marginRight = "auto";
-        calendarSection.style.borderRadius = "8px";
-        calendarSection.style.boxShadow = "0px 0px 10px rgba(255, 255, 255, 0.2)";
+    if (!calendarContainer) {
+        calendarContainer = document.createElement("div");
+        calendarContainer.id = "calendar-container";
+        calendarContainer.style.display = "block";
+        calendarContainer.style.backgroundColor = "#2a2a2a";
+        calendarContainer.style.padding = "20px";
+        calendarContainer.style.marginTop = "20px";
+        calendarContainer.style.border = "1px solid white";
+        calendarContainer.style.color = "white";
+        calendarContainer.style.textAlign = "center";
+        calendarContainer.style.width = "60%";
+        calendarContainer.style.marginLeft = "auto";
+        calendarContainer.style.marginRight = "auto";
+        calendarContainer.style.borderRadius = "8px";
+        calendarContainer.style.boxShadow = "0px 0px 10px rgba(255, 255, 255, 0.2)";
 
         let title = document.createElement("h2");
         title.innerText = "Calendar";
@@ -76,20 +76,18 @@ function showCalendar() {
         calendar.style.gap = "5px";
         calendar.style.marginTop = "10px";
 
-        calendarSection.appendChild(title);
-        calendarSection.appendChild(calendar);
-
-        // Append to the body so it's visible
-        document.body.appendChild(calendarSection);
+        calendarContainer.appendChild(title);
+        calendarContainer.appendChild(calendar);
+        document.body.appendChild(calendarContainer);
     }
 
     generateCalendar();
 }
 
 function closeCalendar() {
-    let calendarSection = document.getElementById("calendar-section");
-    if (calendarSection) {
-        calendarSection.remove();
+    let calendarContainer = document.getElementById("calendar-container");
+    if (calendarContainer) {
+        calendarContainer.remove();
     }
 }
 
