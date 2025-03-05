@@ -1,3 +1,4 @@
+// Hardcoded user credentials
 const USERS = {
     "admin": "password123",
     "user": "1234",
@@ -7,130 +8,172 @@ const USERS = {
 
 let currentUser = "";
 
+// Function to handle login
 function login() {
+    console.log("Login button clicked!");
+    
     const username = document.getElementById("username").value.trim();
     const password = document.getElementById("password").value.trim();
-
-    if (!username || !password) return;
-
+    
+    if (!username || !password) {
+        console.log("Username or password field is empty.");
+        return;
+    }
+    
     if (USERS[username] && USERS[username] === password) {
         currentUser = username;
+        console.log("Login successful for:", currentUser);
+
         document.getElementById("login-container").style.display = "none";
         document.getElementById("command-section").style.display = "block";
         document.getElementById("command-input").focus();
         document.getElementById("prompt").innerText = `C:\\${currentUser}> `;
+
+        checkUpcomingEvents();
     } else {
+        console.log("Invalid login credentials.");
         document.getElementById("error-message").style.display = "block";
     }
 }
 
+// Function to check upcoming tests & assignments
+function checkUpcomingEvents() {
+    const today = new Date().toISOString().split("T")[0];
+    let reminders = [];
+    
+    let tests = loadTests();
+    let assignments = loadAssignments();
+    
+    for (let className in tests) {
+        if (tests[className] === today) {
+            reminders.push(`🔔 Test for ${className} is today!`);
+        }
+    }
+
+    for (let className in assignments) {
+        if (assignments[className] === today) {
+            reminders.push(`📌 Assignment for ${className} is due today!`);
+        }
+    }
+    
+    if (reminders.length > 0) {
+        alert(reminders.join("\n"));
+    }
+}
+
+// Function to handle commands
 function checkCommand(event) {
     if (event.key === "Enter") {
-        let commandInput = document.getElementById("command-input");
-        let command = commandInput.value.trim().toLowerCase();
-        let output = document.getElementById("error-message-command");
+        let command = document.getElementById("command-input").value.trim();
+        let errorMessage = document.getElementById("error-message-command");
+        errorMessage.innerHTML = "";
 
-        output.innerHTML = ""; // Clear previous errors
+        const parts = command.split(" ");
 
-        if (command === "show calendar") {
-            showCalendar();
-        } else if (command === "close calendar") {
-            closeCalendar();
+        if (command.startsWith("school test set")) {
+            if (parts.length < 5) {
+                errorMessage.innerHTML = "ERROR: Please provide a class and date (YYYY-MM-DD).";
+                return;
+            }
+            let className = parts[3];
+            let date = parts[4];
+            if (!isValidDate(date)) {
+                errorMessage.innerHTML = "ERROR: Invalid date format. Use YYYY-MM-DD.";
+                return;
+            }
+            let tests = loadTests();
+            tests[className] = date;
+            saveTests(tests);
+            errorMessage.innerHTML = `✅ Test for ${className} set on ${date}.`;
+        } else if (command === "school test all") {
+            let tests = loadTests();
+            errorMessage.innerHTML = Object.keys(tests).length === 0 ? "No tests scheduled." : formatList(tests);
+        } else if (command.startsWith("school test delete")) {
+            if (parts.length < 4) {
+                errorMessage.innerHTML = "ERROR: Please provide a class to delete.";
+                return;
+            }
+            let className = parts[3];
+            let tests = loadTests();
+            if (tests[className]) {
+                delete tests[className];
+                saveTests(tests);
+                errorMessage.innerHTML = `🗑️ Test for ${className} deleted.`;
+            } else {
+                errorMessage.innerHTML = "ERROR: Test not found.";
+            }
+        } else if (command.startsWith("school assignment set")) {
+            if (parts.length < 5) {
+                errorMessage.innerHTML = "ERROR: Please provide a class and due date (YYYY-MM-DD).";
+                return;
+            }
+            let className = parts[3];
+            let date = parts[4];
+            if (!isValidDate(date)) {
+                errorMessage.innerHTML = "ERROR: Invalid date format. Use YYYY-MM-DD.";
+                return;
+            }
+            let assignments = loadAssignments();
+            assignments[className] = date;
+            saveAssignments(assignments);
+            errorMessage.innerHTML = `✅ Assignment for ${className} due on ${date}.`;
+        } else if (command === "school assignment all") {
+            let assignments = loadAssignments();
+            errorMessage.innerHTML = Object.keys(assignments).length === 0 ? "No assignments scheduled." : formatList(assignments);
+        } else if (command.startsWith("school assignment delete")) {
+            if (parts.length < 4) {
+                errorMessage.innerHTML = "ERROR: Please provide a class to delete.";
+                return;
+            }
+            let className = parts[3];
+            let assignments = loadAssignments();
+            if (assignments[className]) {
+                delete assignments[className];
+                saveAssignments(assignments);
+                errorMessage.innerHTML = `🗑️ Assignment for ${className} deleted.`;
+            } else {
+                errorMessage.innerHTML = "ERROR: Assignment not found.";
+            }
         } else {
-            output.innerHTML = `ERROR: Command "${command}" not recognized.`;
+            errorMessage.innerHTML = "ERROR: Command not recognized.";
         }
 
-        commandInput.value = ""; // Clear input field
+        document.getElementById("command-input").value = "";
     }
 }
 
-function showCalendar() {
-    let calendarContainer = document.getElementById("calendar-container");
-
-    if (!calendarContainer) {
-        calendarContainer = document.createElement("div");
-        calendarContainer.id = "calendar-container";
-        calendarContainer.style.display = "block";
-        calendarContainer.style.backgroundColor = "#2a2a2a";
-        calendarContainer.style.color = "white";
-        calendarContainer.style.padding = "20px";
-        calendarContainer.style.marginTop = "20px";
-        calendarContainer.style.border = "1px solid white";
-        calendarContainer.style.textAlign = "center";
-        calendarContainer.style.width = "80%";
-        calendarContainer.style.marginLeft = "auto";
-        calendarContainer.style.marginRight = "auto";
-        calendarContainer.style.borderRadius = "8px";
-        calendarContainer.style.boxShadow = "0px 0px 10px rgba(255, 255, 255, 0.2)";
-
-        let title = document.createElement("h2");
-        title.innerText = "Calendar";
-        title.style.marginBottom = "10px";
-
-        let calendar = document.createElement("div");
-        calendar.id = "calendar";
-        calendar.style.display = "grid";
-        calendar.style.gridTemplateColumns = "repeat(7, 1fr)";
-        calendar.style.gap = "5px";
-        calendar.style.marginTop = "10px";
-
-        calendarContainer.appendChild(title);
-        calendarContainer.appendChild(calendar);
-        document.getElementById("command-section").appendChild(calendarContainer);
-    }
-
-    generateCalendar();
+// Function to validate date format (YYYY-MM-DD)
+function isValidDate(dateString) {
+    const regex = /^\d{4}-\d{2}-\d{2}$/;
+    return regex.test(dateString);
 }
 
-function closeCalendar() {
-    let calendarContainer = document.getElementById("calendar-container");
-    if (calendarContainer) {
-        calendarContainer.remove();
+// Function to format test/assignment lists
+function formatList(data) {
+    let output = "<ul>";
+    for (let key in data) {
+        output += `<li>${key}: ${data[key]}</li>`;
     }
+    output += "</ul>";
+    return output;
 }
 
-function generateCalendar() {
-    const calendar = document.getElementById("calendar");
-    if (!calendar) return;
-
-    calendar.innerHTML = ""; // Clear previous calendar
-
-    let daysInMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate();
-    let weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-
-    weekdays.forEach(day => {
-        let dayLabel = document.createElement("div");
-        dayLabel.innerText = day;
-        dayLabel.style.fontWeight = "bold";
-        dayLabel.style.borderBottom = "1px solid white";
-        dayLabel.style.padding = "5px";
-        calendar.appendChild(dayLabel);
-    });
-
-    let firstDay = new Date(new Date().getFullYear(), new Date().getMonth(), 1).getDay();
-
-    for (let i = 0; i < firstDay; i++) {
-        let emptySlot = document.createElement("div");
-        emptySlot.innerText = "";
-        calendar.appendChild(emptySlot);
-    }
-
-    for (let i = 1; i <= daysInMonth; i++) {
-        let day = document.createElement("div");
-        day.innerText = i;
-        day.style.border = "1px solid white";
-        day.style.padding = "10px";
-        day.style.textAlign = "center";
-        day.style.cursor = "pointer";
-
-        day.addEventListener("click", () => {
-            alert(`You selected ${i}/${new Date().getMonth() + 1}/${new Date().getFullYear()}`);
-        });
-
-        calendar.appendChild(day);
-    }
+// Local storage functions (User-specific)
+function loadTests() {
+    return JSON.parse(localStorage.getItem(`${currentUser}_tests`)) || {};
+}
+function saveTests(tests) {
+    localStorage.setItem(`${currentUser}_tests`, JSON.stringify(tests));
 }
 
+function loadAssignments() {
+    return JSON.parse(localStorage.getItem(`${currentUser}_assignments`)) || {};
+}
+function saveAssignments(assignments) {
+    localStorage.setItem(`${currentUser}_assignments`, JSON.stringify(assignments));
+}
+
+// Ensure login form is shown on page load
 window.onload = function() {
     document.getElementById("login-container").style.display = "block";
     document.getElementById("command-section").style.display = "none";
