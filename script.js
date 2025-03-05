@@ -8,21 +8,6 @@ const USERS = {
 
 let currentUser = "";
 
-// Firebase configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyDA8p0gn75hpg_nWMGCmVvwMhPFN5H8ETU",
-  authDomain: "secretministration.firebaseapp.com",
-  projectId: "secretministration",
-  storageBucket: "secretministration.appspot.com",
-  messagingSenderId: "944614356878",
-  appId: "1:944614356878:web:53b8f0b17fa72735cbd6df",
-  measurementId: "G-S7PHLY2VVZ"
-};
-
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-const database = firebase.database();
-
 // Function to handle the login process
 function login() {
     console.log("Login button clicked!");
@@ -76,18 +61,6 @@ function checkUpcomingEvents() {
     }
 }
 
-// Function to save user data to Firebase
-tfunction saveUserData(username, data) {
-    database.ref("users/" + username).set(data);
-}
-
-// Function to retrieve user data from Firebase
-function getUserData(username) {
-    database.ref("users/" + username).once("value", function(snapshot) {
-        console.log(snapshot.val()); // Shows the user's data
-    });
-}
-
 // Function to handle commands
 function checkCommand(event) {
     if (event.key === "Enter") {
@@ -95,7 +68,9 @@ function checkCommand(event) {
         let errorMessage = document.getElementById("error-message-command");
         errorMessage.innerHTML = "";
 
-        if (command.startsWith("school test set")) {
+        if (command === "show calendar") {
+            showCalendar();
+        } else if (command.startsWith("school test set")) {
             const parts = command.split(" ");
             if (parts.length < 4) {
                 errorMessage.innerHTML = "ERROR: Please provide a class and date.";
@@ -106,27 +81,7 @@ function checkCommand(event) {
             let tests = loadTests();
             tests[className] = date;
             saveTests(tests);
-            saveUserData(currentUser, { tests }); // Save to Firebase
             errorMessage.innerHTML = `Test for ${className} set on ${date}.`;
-        } else if (command === "school test all") {
-            let tests = loadTests();
-            errorMessage.innerHTML = Object.keys(tests).length === 0 ? "No tests scheduled." : JSON.stringify(tests);
-        } else if (command.startsWith("school test delete")) {
-            const parts = command.split(" ");
-            if (parts.length < 4) {
-                errorMessage.innerHTML = "ERROR: Please provide a class and date.";
-                return;
-            }
-            let className = parts[3];
-            let tests = loadTests();
-            if (tests[className]) {
-                delete tests[className];
-                saveTests(tests);
-                saveUserData(currentUser, { tests }); // Save to Firebase
-                errorMessage.innerHTML = `Test for ${className} deleted.`;
-            } else {
-                errorMessage.innerHTML = "ERROR: Test not found.";
-            }
         } else {
             errorMessage.innerHTML = "ERROR: Command not recognized.";
         }
@@ -148,6 +103,39 @@ function loadAssignments() {
 }
 function saveAssignments(assignments) {
     localStorage.setItem(`${currentUser}_assignments`, JSON.stringify(assignments));
+}
+
+// Function to show the calendar
+function showCalendar() {
+    document.getElementById("calendar").style.display = "block";
+    renderCalendar();
+}
+
+// Function to render calendar with events
+function renderCalendar() {
+    var calendarEl = document.getElementById('calendar');
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        events: loadCalendarEvents()
+    });
+    calendar.render();
+}
+
+// Function to load events from local storage
+function loadCalendarEvents() {
+    let events = [];
+    let tests = loadTests();
+    let assignments = loadAssignments();
+
+    for (let subject in tests) {
+        events.push({ title: `Test: ${subject}`, start: tests[subject], color: 'red' });
+    }
+
+    for (let subject in assignments) {
+        events.push({ title: `Assignment: ${subject}`, start: assignments[subject], color: 'blue' });
+    }
+
+    return events;
 }
 
 // Ensure login form is shown on page load
