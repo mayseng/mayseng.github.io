@@ -8,7 +8,7 @@ const USERS = {
 
 let currentUser = "";
 
-// Function to handle the login process
+// Function to handle login
 function login() {
     console.log("Login button clicked!");
 
@@ -36,7 +36,7 @@ function login() {
     }
 }
 
-// Function to check upcoming tests and assignments
+// Function to check upcoming events
 function checkUpcomingEvents() {
     const today = new Date().toISOString().split("T")[0];
     let reminders = "";
@@ -82,7 +82,7 @@ function checkCommand(event) {
             errorMessage.innerHTML = `Test for ${className} set on ${date}.`;
         } else if (command === "school test all") {
             let tests = loadTests();
-            errorMessage.innerHTML = Object.keys(tests).length === 0 ? "No tests scheduled." : JSON.stringify(tests);
+            errorMessage.innerHTML = Object.keys(tests).length === 0 ? "No tests scheduled." : formatEventList(tests);
         } else if (command.startsWith("school test delete")) {
             const parts = command.split(" ");
             if (parts.length < 4) {
@@ -112,7 +112,7 @@ function checkCommand(event) {
             errorMessage.innerHTML = `Assignment for ${className} due on ${date}.`;
         } else if (command === "school assignment all") {
             let assignments = loadAssignments();
-            errorMessage.innerHTML = Object.keys(assignments).length === 0 ? "No assignments scheduled." : JSON.stringify(assignments);
+            errorMessage.innerHTML = Object.keys(assignments).length === 0 ? "No assignments scheduled." : formatEventList(assignments);
         } else if (command.startsWith("school assignment delete")) {
             const parts = command.split(" ");
             if (parts.length < 4) {
@@ -153,16 +153,14 @@ function showCalendar() {
     } else {
         if (Object.keys(assignments).length > 0) {
             calendarDiv.innerHTML += "<h3>📚 Assignments</h3><ul>";
-            for (let className in assignments) {
-                let dueDate = assignments[className];
+            for (let [className, dueDate] of Object.entries(assignments)) {
                 calendarDiv.innerHTML += `<li><b>${className}</b>: Due <b>${dueDate}</b></li>`;
             }
             calendarDiv.innerHTML += "</ul>";
         }
         if (Object.keys(tests).length > 0) {
             calendarDiv.innerHTML += "<h3>📝 Tests</h3><ul>";
-            for (let className in tests) {
-                let testDate = tests[className];
+            for (let [className, testDate] of Object.entries(tests)) {
                 calendarDiv.innerHTML += `<li><b>${className}</b>: <b>${testDate}</b></li>`;
             }
             calendarDiv.innerHTML += "</ul>";
@@ -195,6 +193,13 @@ function loadAssignments() {
 
 function saveAssignments(assignments) {
     localStorage.setItem(`${currentUser}_assignments`, JSON.stringify(assignments));
+}
+
+// Function to format assignments and tests
+function formatEventList(events) {
+    return Object.entries(events)
+        .map(([className, date]) => `<b>${className}</b>: Due <b>${date}</b>`)
+        .join("<br>");
 }
 
 // Ensure login form is shown on page load
