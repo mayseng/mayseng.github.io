@@ -1,4 +1,4 @@
-// Hardcoded user credentials
+// Hardcoded user credential
 const USERS = {
     "admin": "password123",
     "user": "1234",
@@ -68,11 +68,8 @@ function checkCommand(event) {
         let errorMessage = document.getElementById("error-message-command");
         errorMessage.innerHTML = "";
 
-        const parts = command.split(" ");
-
-        if (command === "help school") {
-            errorMessage.innerHTML = "Available commands: school test set <class> <date>, school test all, school test delete <class>, school assignment set <class> <date>, school assignment all, school assignment delete <class>, school calendar show, school calendar close";
-        } else if (command.startsWith("school test set")) {
+        if (command.startsWith("school test set")) {
+            const parts = command.split(" ");
             if (parts.length < 4) {
                 errorMessage.innerHTML = "ERROR: Please provide a class and date.";
                 return;
@@ -87,8 +84,9 @@ function checkCommand(event) {
             let tests = loadTests();
             errorMessage.innerHTML = Object.keys(tests).length === 0 ? "No tests scheduled." : JSON.stringify(tests);
         } else if (command.startsWith("school test delete")) {
+            const parts = command.split(" ");
             if (parts.length < 4) {
-                errorMessage.innerHTML = "ERROR: Please provide a class.";
+                errorMessage.innerHTML = "ERROR: Please provide a class and date.";
                 return;
             }
             let className = parts[3];
@@ -101,6 +99,7 @@ function checkCommand(event) {
                 errorMessage.innerHTML = "ERROR: Test not found.";
             }
         } else if (command.startsWith("school assignment set")) {
+            const parts = command.split(" ");
             if (parts.length < 4) {
                 errorMessage.innerHTML = "ERROR: Please provide a class and due date.";
                 return;
@@ -115,6 +114,7 @@ function checkCommand(event) {
             let assignments = loadAssignments();
             errorMessage.innerHTML = Object.keys(assignments).length === 0 ? "No assignments scheduled." : JSON.stringify(assignments);
         } else if (command.startsWith("school assignment delete")) {
+            const parts = command.split(" ");
             if (parts.length < 4) {
                 errorMessage.innerHTML = "ERROR: Please provide a class.";
                 return;
@@ -129,14 +129,29 @@ function checkCommand(event) {
                 errorMessage.innerHTML = "ERROR: Assignment not found.";
             }
         } else if (command === "school calendar show") {
-            document.getElementById("calendar-section").style.display = "block";
-        } else if (command === "school calendar close") {
-            document.getElementById("calendar-section").style.display = "none";
+            displayCalendar();
         } else {
             errorMessage.innerHTML = "ERROR: Command not recognized.";
         }
 
         document.getElementById("command-input").value = "";
+    }
+}
+
+// Function to display the calendar
+function displayCalendar() {
+    document.getElementById("calendar-section").style.display = "block";
+    let calendar = document.getElementById("calendar");
+    calendar.innerHTML = "<h3>Upcoming Events</h3>";
+    
+    let tests = loadTests();
+    let assignments = loadAssignments();
+    
+    for (let test in tests) {
+        calendar.innerHTML += `<p>Test: ${test} - ${tests[test]}</p>`;
+    }
+    for (let assignment in assignments) {
+        calendar.innerHTML += `<p>Assignment: ${assignment} - ${assignments[assignment]}</p>`;
     }
 }
 
