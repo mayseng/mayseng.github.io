@@ -11,9 +11,7 @@ function login() {
     const username = document.getElementById("username").value.trim();
     const password = document.getElementById("password").value.trim();
 
-    if (!username || !password) {
-        return;
-    }
+    if (!username || !password) return;
 
     if (USERS[username] && USERS[username] === password) {
         currentUser = username;
@@ -47,17 +45,17 @@ function checkCommand(event) {
 }
 
 function showCalendar() {
-    let calendarContainer = document.getElementById("calendar-container");
+    let existingCalendar = document.getElementById("calendar-container");
 
-    if (!calendarContainer) {
-        calendarContainer = document.createElement("div");
+    if (!existingCalendar) {
+        let calendarContainer = document.createElement("div");
         calendarContainer.id = "calendar-container";
         calendarContainer.style.display = "block";
         calendarContainer.style.backgroundColor = "#2a2a2a";
+        calendarContainer.style.color = "white";
         calendarContainer.style.padding = "20px";
         calendarContainer.style.marginTop = "20px";
         calendarContainer.style.border = "1px solid white";
-        calendarContainer.style.color = "white";
         calendarContainer.style.textAlign = "center";
         calendarContainer.style.width = "60%";
         calendarContainer.style.marginLeft = "auto";
@@ -100,7 +98,6 @@ function generateCalendar() {
     let daysInMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate();
     let weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-    // Add weekdays labels
     weekdays.forEach(day => {
         let dayLabel = document.createElement("div");
         dayLabel.innerText = day;
@@ -110,17 +107,14 @@ function generateCalendar() {
         calendar.appendChild(dayLabel);
     });
 
-    // Get first day of the month
     let firstDay = new Date(new Date().getFullYear(), new Date().getMonth(), 1).getDay();
 
-    // Fill in empty spaces before first day
     for (let i = 0; i < firstDay; i++) {
         let emptySlot = document.createElement("div");
         emptySlot.innerText = "";
         calendar.appendChild(emptySlot);
     }
 
-    // Fill in the days of the month
     for (let i = 1; i <= daysInMonth; i++) {
         let day = document.createElement("div");
         day.innerText = i;
@@ -137,7 +131,6 @@ function generateCalendar() {
     }
 }
 
-// Show login form on page load
 window.onload = function() {
     document.getElementById("login-container").style.display = "block";
     document.getElementById("command-section").style.display = "none";
