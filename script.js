@@ -1,14 +1,22 @@
-// Hardcoded user credential
-const USERS = {
-    "admin": "password123",
-    "user": "1234",
-    "lane": "johnson",
-    "maysen": "graber"
+// Firebase Configuration
+const firebaseConfig = {
+    apiKey: "AIzaSyDA8p0gn75hpg_nWMGCmVvwMhPFN5H8ETU",
+    authDomain: "secretministration.firebaseapp.com",
+    projectId: "secretministration",
+    storageBucket: "secretministration.firebasestorage.app",
+    messagingSenderId: "944614356878",
+    appId: "1:944614356878:web:53b8f0b17fa72735cbd6df",
+    measurementId: "G-S7PHLY2VVZ"
 };
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const database = firebase.database();
+const auth = firebase.auth();
 
 let currentUser = "";
 
-// Function to handle the login process
+// Function to handle login
 function login() {
     console.log("Login button clicked!");
     
@@ -20,23 +28,25 @@ function login() {
         return;
     }
     
-    if (USERS[username] && USERS[username] === password) {
-        currentUser = username;
-        console.log("Login successful for:", currentUser);
+    auth.signInWithEmailAndPassword(username, password)
+        .then(userCredential => {
+            currentUser = userCredential.user.uid;
+            console.log("Login successful for:", currentUser);
 
-        document.getElementById("login-container").style.display = "none";
-        document.getElementById("command-section").style.display = "block";
-        document.getElementById("command-input").focus();
-        document.getElementById("prompt").innerText = `C:\\${currentUser}> `;
+            document.getElementById("login-container").style.display = "none";
+            document.getElementById("command-section").style.display = "block";
+            document.getElementById("command-input").focus();
+            document.getElementById("prompt").innerText = `C:\\${username}> `;
 
-        checkUpcomingEvents();
-    } else {
-        console.log("Invalid login credentials.");
-        document.getElementById("error-message").style.display = "block";
-    }
+            checkUpcomingEvents();
+        })
+        .catch(error => {
+            console.log("Invalid login credentials.");
+            document.getElementById("error-message").style.display = "block";
+        });
 }
 
-// Function to check upcoming tests and assignments
+// Function to check upcoming events
 function checkUpcomingEvents() {
     const today = new Date().toISOString().split("T")[0];
     let reminders = "";
@@ -68,9 +78,7 @@ function checkCommand(event) {
         let errorMessage = document.getElementById("error-message-command");
         errorMessage.innerHTML = "";
 
-        if (command === "show calendar") {
-            showCalendar();
-        } else if (command.startsWith("school test set")) {
+        if (command.startsWith("school test set")) {
             const parts = command.split(" ");
             if (parts.length < 4) {
                 errorMessage.innerHTML = "ERROR: Please provide a class and date.";
@@ -78,10 +86,21 @@ function checkCommand(event) {
             }
             let className = parts[3];
             let date = parts[4];
-            let tests = loadTests();
-            tests[className] = date;
-            saveTests(tests);
+            saveTests(className, date);
             errorMessage.innerHTML = `Test for ${className} set on ${date}.`;
+        } else if (command === "school test all") {
+            loadTests(tests => {
+                errorMessage.innerHTML = Object.keys(tests).length === 0 ? "No tests scheduled." : JSON.stringify(tests);
+            });
+        } else if (command.startsWith("school test delete")) {
+            const parts = command.split(" ");
+            if (parts.length < 4) {
+                errorMessage.innerHTML = "ERROR: Please provide a class.";
+                return;
+            }
+            let className = parts[3];
+            deleteTest(className);
+            errorMessage.innerHTML = `Test for ${className} deleted.`;
         } else {
             errorMessage.innerHTML = "ERROR: Command not recognized.";
         }
@@ -90,52 +109,19 @@ function checkCommand(event) {
     }
 }
 
-// Local storage functions
-function loadTests() {
-    return JSON.parse(localStorage.getItem(`${currentUser}_tests`)) || {};
-}
-function saveTests(tests) {
-    localStorage.setItem(`${currentUser}_tests`, JSON.stringify(tests));
+// Firebase Database Functions
+function saveTests(className, date) {
+    database.ref(`users/${currentUser}/tests/${className}`).set(date);
 }
 
-function loadAssignments() {
-    return JSON.parse(localStorage.getItem(`${currentUser}_assignments`)) || {};
-}
-function saveAssignments(assignments) {
-    localStorage.setItem(`${currentUser}_assignments`, JSON.stringify(assignments));
-}
-
-// Function to show the calendar
-function showCalendar() {
-    document.getElementById("calendar").style.display = "block";
-    renderCalendar();
-}
-
-// Function to render calendar with events
-function renderCalendar() {
-    var calendarEl = document.getElementById('calendar');
-    var calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'dayGridMonth',
-        events: loadCalendarEvents()
+function loadTests(callback) {
+    database.ref(`users/${currentUser}/tests`).once('value').then(snapshot => {
+        callback(snapshot.val() || {});
     });
-    calendar.render();
 }
 
-// Function to load events from local storage
-function loadCalendarEvents() {
-    let events = [];
-    let tests = loadTests();
-    let assignments = loadAssignments();
-
-    for (let subject in tests) {
-        events.push({ title: `Test: ${subject}`, start: tests[subject], color: 'red' });
-    }
-
-    for (let subject in assignments) {
-        events.push({ title: `Assignment: ${subject}`, start: assignments[subject], color: 'blue' });
-    }
-
-    return events;
+function deleteTest(className) {
+    database.ref(`users/${currentUser}/tests/${className}`).remove();
 }
 
 // Ensure login form is shown on page load
