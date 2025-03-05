@@ -1,4 +1,4 @@
-// Hardcoded user credential
+// Hardcoded user credentials
 const USERS = {
     "admin": "password123",
     "user": "1234",
@@ -68,7 +68,22 @@ function checkCommand(event) {
         let errorMessage = document.getElementById("error-message-command");
         errorMessage.innerHTML = "";
 
-        if (command.startsWith("school test set")) {
+        if (command === "help school") {
+            errorMessage.innerHTML = "<strong>School Commands:</strong><br>"
+                + "school test set [class] [date] - Set a test date<br>"
+                + "school test all - Show all test dates<br>"
+                + "school test delete [class] - Delete a test<br>"
+                + "school assignment set [class] [date] - Set an assignment due date<br>"
+                + "school assignment all - Show all assignments<br>"
+                + "school assignment delete [class] - Delete an assignment";
+        } else if (command === "help notes") {
+            errorMessage.innerHTML = "<strong>Note Commands:</strong><br>"
+                + "create note [name] [content] - Create a new note<br>"
+                + "edit note [name] [new content] - Edit an existing note<br>"
+                + "show note [name] - Show a note's content<br>"
+                + "show notes - Show all notes<br>"
+                + "delete note [name] - Delete a note";
+        } else if (command.startsWith("school test set")) {
             const parts = command.split(" ");
             if (parts.length < 4) {
                 errorMessage.innerHTML = "ERROR: Please provide a class and date.";
@@ -86,7 +101,7 @@ function checkCommand(event) {
         } else if (command.startsWith("school test delete")) {
             const parts = command.split(" ");
             if (parts.length < 4) {
-                errorMessage.innerHTML = "ERROR: Please provide a class and date.";
+                errorMessage.innerHTML = "ERROR: Please provide a class.";
                 return;
             }
             let className = parts[3];
