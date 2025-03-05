@@ -75,7 +75,9 @@ function showCalendar() {
 
         calendarSection.appendChild(title);
         calendarSection.appendChild(calendar);
-        document.body.appendChild(calendarSection);
+
+        // Append to the command section so it's inside the main interface
+        document.getElementById("command-section").appendChild(calendarSection);
     }
 
     generateCalendar();
