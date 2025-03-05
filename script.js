@@ -1,4 +1,4 @@
-// Hardcoded user c redential
+// Hardcoded user credentials
 const USERS = {
     "admin": "password123",
     "user": "1234",
@@ -11,15 +11,15 @@ let currentUser = "";
 // Function to handle the login process
 function login() {
     console.log("Login button clicked!");
-    
+
     const username = document.getElementById("username").value.trim();
     const password = document.getElementById("password").value.trim();
-    
+
     if (!username || !password) {
         console.log("Username or password field is empty.");
         return;
     }
-    
+
     if (USERS[username] && USERS[username] === password) {
         currentUser = username;
         console.log("Login successful for:", currentUser);
@@ -40,10 +40,10 @@ function login() {
 function checkUpcomingEvents() {
     const today = new Date().toISOString().split("T")[0];
     let reminders = "";
-    
+
     let tests = loadTests();
     let assignments = loadAssignments();
-    
+
     for (let test in tests) {
         if (tests[test] === today) {
             reminders += `Reminder: Test for ${test} is today!\n`;
@@ -55,7 +55,7 @@ function checkUpcomingEvents() {
             reminders += `Reminder: Assignment for ${assignment} is due today!\n`;
         }
     }
-    
+
     if (reminders) {
         alert(reminders);
     }
@@ -128,6 +128,10 @@ function checkCommand(event) {
             } else {
                 errorMessage.innerHTML = "ERROR: Assignment not found.";
             }
+        } else if (command === "help school") {
+            errorMessage.innerHTML = "Available school commands:<br>school test set [class] [date]<br>school test all<br>school test delete [class]<br>school assignment set [class] [date]<br>school assignment all<br>school assignment delete [class]";
+        } else if (command === "help notes") {
+            errorMessage.innerHTML = "Available notes commands:<br>notes add [note]<br>notes all<br>notes delete [note]";
         } else {
             errorMessage.innerHTML = "ERROR: Command not recognized.";
         }
