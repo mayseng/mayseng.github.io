@@ -11,15 +11,15 @@ let currentUser = "";
 // Function to handle the login process
 function login() {
     console.log("Login button clicked!");
-    
+
     const username = document.getElementById("username").value.trim();
     const password = document.getElementById("password").value.trim();
-    
+
     if (!username || !password) {
         console.log("Username or password field is empty.");
         return;
     }
-    
+
     if (USERS[username] && USERS[username] === password) {
         currentUser = username;
         console.log("Login successful for:", currentUser);
@@ -40,10 +40,10 @@ function login() {
 function checkUpcomingEvents() {
     const today = new Date().toISOString().split("T")[0];
     let reminders = "";
-    
+
     let tests = loadTests();
     let assignments = loadAssignments();
-    
+
     for (let test in tests) {
         if (tests[test] === today) {
             reminders += `Reminder: Test for ${test} is today!\n`;
@@ -55,7 +55,7 @@ function checkUpcomingEvents() {
             reminders += `Reminder: Assignment for ${assignment} is due today!\n`;
         }
     }
-    
+
     if (reminders) {
         alert(reminders);
     }
@@ -138,7 +138,7 @@ function checkCommand(event) {
     }
 }
 
-// Function to show the calendar with assignments and tests
+// Function to show the calendar
 function showCalendar() {
     let calendarSection = document.getElementById("calendar-section");
     let calendarDiv = document.getElementById("calendar");
@@ -154,22 +154,22 @@ function showCalendar() {
         if (Object.keys(assignments).length > 0) {
             calendarDiv.innerHTML += "<h3>📚 Assignments</h3><ul>";
             for (let className in assignments) {
-                calendarDiv.innerHTML += `<li>${className}: <b>Due ${assignments[className]}</b></li>`;
+                let dueDate = assignments[className];
+                calendarDiv.innerHTML += `<li>${className}: <b>Due ${dueDate}</b></li>`;
             }
             calendarDiv.innerHTML += "</ul>";
         }
         if (Object.keys(tests).length > 0) {
             calendarDiv.innerHTML += "<h3>📝 Tests</h3><ul>";
             for (let className in tests) {
-                calendarDiv.innerHTML += `<li>${className}: <b>${tests[className]}</b></li>`;
+                let testDate = tests[className];
+                calendarDiv.innerHTML += `<li>${className}: <b>${testDate}</b></li>`;
             }
             calendarDiv.innerHTML += "</ul>";
         }
     }
 
-    // Add the close button
     calendarDiv.innerHTML += '<button onclick="closeCalendar()">Close Calendar</button>';
-    
     calendarSection.style.display = "block";
 }
 
@@ -182,6 +182,7 @@ function closeCalendar() {
 function loadTests() {
     return JSON.parse(localStorage.getItem(`${currentUser}_tests`)) || {};
 }
+
 function saveTests(tests) {
     localStorage.setItem(`${currentUser}_tests`, JSON.stringify(tests));
 }
@@ -189,6 +190,7 @@ function saveTests(tests) {
 function loadAssignments() {
     return JSON.parse(localStorage.getItem(`${currentUser}_assignments`)) || {};
 }
+
 function saveAssignments(assignments) {
     localStorage.setItem(`${currentUser}_assignments`, JSON.stringify(assignments));
 }
