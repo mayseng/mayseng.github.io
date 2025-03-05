@@ -45,10 +45,10 @@ function checkCommand(event) {
 }
 
 function showCalendar() {
-    let existingCalendar = document.getElementById("calendar-container");
+    let calendarContainer = document.getElementById("calendar-container");
 
-    if (!existingCalendar) {
-        let calendarContainer = document.createElement("div");
+    if (!calendarContainer) {
+        calendarContainer = document.createElement("div");
         calendarContainer.id = "calendar-container";
         calendarContainer.style.display = "block";
         calendarContainer.style.backgroundColor = "#2a2a2a";
@@ -57,7 +57,7 @@ function showCalendar() {
         calendarContainer.style.marginTop = "20px";
         calendarContainer.style.border = "1px solid white";
         calendarContainer.style.textAlign = "center";
-        calendarContainer.style.width = "60%";
+        calendarContainer.style.width = "80%";
         calendarContainer.style.marginLeft = "auto";
         calendarContainer.style.marginRight = "auto";
         calendarContainer.style.borderRadius = "8px";
@@ -76,7 +76,7 @@ function showCalendar() {
 
         calendarContainer.appendChild(title);
         calendarContainer.appendChild(calendar);
-        document.body.appendChild(calendarContainer);
+        document.getElementById("command-section").appendChild(calendarContainer);
     }
 
     generateCalendar();
