@@ -1,22 +1,14 @@
-// Firebase Configuration
-const firebaseConfig = {
-    apiKey: "AIzaSyDA8p0gn75hpg_nWMGCmVvwMhPFN5H8ETU",
-    authDomain: "secretministration.firebaseapp.com",
-    projectId: "secretministration",
-    storageBucket: "secretministration.firebasestorage.app",
-    messagingSenderId: "944614356878",
-    appId: "1:944614356878:web:53b8f0b17fa72735cbd6df",
-    measurementId: "G-S7PHLY2VVZ"
+// Hardcoded user credential
+const USERS = {
+    "admin": "password123",
+    "user": "1234",
+    "lane": "johnson",
+    "maysen": "graber"
 };
-
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-const database = firebase.database();
-const auth = firebase.auth();
 
 let currentUser = "";
 
-// Function to handle login
+// Function to handle the login process
 function login() {
     console.log("Login button clicked!");
     
@@ -28,25 +20,23 @@ function login() {
         return;
     }
     
-    auth.signInWithEmailAndPassword(username, password)
-        .then(userCredential => {
-            currentUser = userCredential.user.uid;
-            console.log("Login successful for:", currentUser);
+    if (USERS[username] && USERS[username] === password) {
+        currentUser = username;
+        console.log("Login successful for:", currentUser);
 
-            document.getElementById("login-container").style.display = "none";
-            document.getElementById("command-section").style.display = "block";
-            document.getElementById("command-input").focus();
-            document.getElementById("prompt").innerText = `C:\\${username}> `;
+        document.getElementById("login-container").style.display = "none";
+        document.getElementById("command-section").style.display = "block";
+        document.getElementById("command-input").focus();
+        document.getElementById("prompt").innerText = `C:\\${currentUser}> `;
 
-            checkUpcomingEvents();
-        })
-        .catch(error => {
-            console.log("Invalid login credentials.");
-            document.getElementById("error-message").style.display = "block";
-        });
+        checkUpcomingEvents();
+    } else {
+        console.log("Invalid login credentials.");
+        document.getElementById("error-message").style.display = "block";
+    }
 }
 
-// Function to check upcoming events
+// Function to check upcoming tests and assignments
 function checkUpcomingEvents() {
     const today = new Date().toISOString().split("T")[0];
     let reminders = "";
@@ -86,21 +76,58 @@ function checkCommand(event) {
             }
             let className = parts[3];
             let date = parts[4];
-            saveTests(className, date);
+            let tests = loadTests();
+            tests[className] = date;
+            saveTests(tests);
             errorMessage.innerHTML = `Test for ${className} set on ${date}.`;
         } else if (command === "school test all") {
-            loadTests(tests => {
-                errorMessage.innerHTML = Object.keys(tests).length === 0 ? "No tests scheduled." : JSON.stringify(tests);
-            });
+            let tests = loadTests();
+            errorMessage.innerHTML = Object.keys(tests).length === 0 ? "No tests scheduled." : JSON.stringify(tests);
         } else if (command.startsWith("school test delete")) {
+            const parts = command.split(" ");
+            if (parts.length < 4) {
+                errorMessage.innerHTML = "ERROR: Please provide a class and date.";
+                return;
+            }
+            let className = parts[3];
+            let tests = loadTests();
+            if (tests[className]) {
+                delete tests[className];
+                saveTests(tests);
+                errorMessage.innerHTML = `Test for ${className} deleted.`;
+            } else {
+                errorMessage.innerHTML = "ERROR: Test not found.";
+            }
+        } else if (command.startsWith("school assignment set")) {
+            const parts = command.split(" ");
+            if (parts.length < 4) {
+                errorMessage.innerHTML = "ERROR: Please provide a class and due date.";
+                return;
+            }
+            let className = parts[3];
+            let date = parts[4];
+            let assignments = loadAssignments();
+            assignments[className] = date;
+            saveAssignments(assignments);
+            errorMessage.innerHTML = `Assignment for ${className} due on ${date}.`;
+        } else if (command === "school assignment all") {
+            let assignments = loadAssignments();
+            errorMessage.innerHTML = Object.keys(assignments).length === 0 ? "No assignments scheduled." : JSON.stringify(assignments);
+        } else if (command.startsWith("school assignment delete")) {
             const parts = command.split(" ");
             if (parts.length < 4) {
                 errorMessage.innerHTML = "ERROR: Please provide a class.";
                 return;
             }
             let className = parts[3];
-            deleteTest(className);
-            errorMessage.innerHTML = `Test for ${className} deleted.`;
+            let assignments = loadAssignments();
+            if (assignments[className]) {
+                delete assignments[className];
+                saveAssignments(assignments);
+                errorMessage.innerHTML = `Assignment for ${className} deleted.`;
+            } else {
+                errorMessage.innerHTML = "ERROR: Assignment not found.";
+            }
         } else {
             errorMessage.innerHTML = "ERROR: Command not recognized.";
         }
@@ -109,19 +136,19 @@ function checkCommand(event) {
     }
 }
 
-// Firebase Database Functions
-function saveTests(className, date) {
-    database.ref(`users/${currentUser}/tests/${className}`).set(date);
+// Local storage functions
+function loadTests() {
+    return JSON.parse(localStorage.getItem(`${currentUser}_tests`)) || {};
+}
+function saveTests(tests) {
+    localStorage.setItem(`${currentUser}_tests`, JSON.stringify(tests));
 }
 
-function loadTests(callback) {
-    database.ref(`users/${currentUser}/tests`).once('value').then(snapshot => {
-        callback(snapshot.val() || {});
-    });
+function loadAssignments() {
+    return JSON.parse(localStorage.getItem(`${currentUser}_assignments`)) || {};
 }
-
-function deleteTest(className) {
-    database.ref(`users/${currentUser}/tests/${className}`).remove();
+function saveAssignments(assignments) {
+    localStorage.setItem(`${currentUser}_assignments`, JSON.stringify(assignments));
 }
 
 // Ensure login form is shown on page load
