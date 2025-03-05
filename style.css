@@ -1,5 +1,5 @@
 body {
-    background-color: #121212; /* Dark background for a modern, sleek look */
+    background-color: #121212; /* Dark background */
     color: white;
     font-family: 'Courier New', monospace;
     font-weight: bold;
@@ -11,7 +11,7 @@ body {
     padding: 20px;
     overflow: hidden;
     text-align: center;
-    background: linear-gradient(135deg, #121212, #1f1f1f); /* Soft gradient background */
+    background: linear-gradient(135deg, #121212, #1f1f1f);
 }
 
 #login-container {
@@ -19,15 +19,15 @@ body {
     width: 400px;
     text-align: left;
     padding: 20px;
-    background-color: #2a2a2a; /* Darker background for the login form */
-    border: 2px solid #444; /* Subtle border */
+    background-color: #2a2a2a;
+    border: 2px solid #444;
     border-radius: 8px;
     box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
 }
 
 #login-container h1 {
     font-size: 24px;
-    color: #f1f1f1;  /* Soft white for the heading */
+    color: #f1f1f1;
     margin-bottom: 20px;
     text-align: center;
 }
@@ -36,26 +36,20 @@ body {
     width: 100%;
     padding: 10px;
     margin: 10px 0;
-    background-color: #333;  /* Dark input background */
+    background-color: #333;
     color: white;
-    border: 1px solid #555;  /* Dark border for input fields */
+    border: 1px solid #555;
     font-size: 16px;
     letter-spacing: 1px;
     box-sizing: border-box;
-    font-family: 'Courier New', monospace;
-}
-
-#username:focus, #password:focus {
-    border-color: #888;  /* Lighter border on focus */
-    outline: none;
 }
 
 button {
     width: 100%;
     padding: 10px;
-    background-color: #444;  /* Dark background for button */
+    background-color: #444;
     color: white;
-    border: 1px solid #666;  /* Subtle border */
+    border: 1px solid #666;
     cursor: pointer;
     font-size: 18px;
     font-weight: bold;
@@ -65,14 +59,14 @@ button {
 }
 
 button:hover {
-    background-color: #555;  /* Slightly lighter background on hover */
+    background-color: #555;
 }
 
 #error-message {
     color: red;
     margin-top: 10px;
     font-size: 14px;
-    display: none;  /* Hide error message by default */
+    display: none;
 }
 
 #command-section {
@@ -81,12 +75,8 @@ button:hover {
     text-align: left;
 }
 
-#prompt {
-    color: white;  /* White prompt text */
-}
-
 #command-input {
-    background-color: #333;  /* Dark background for command input */
+    background-color: #333;
     border: none;
     color: white;
     font-size: 18px;
@@ -99,47 +89,29 @@ button:hover {
     padding: 0;
 }
 
-#notes-container {
+#calendar-section {
     display: none;
-    background-color: #333;  /* Dark background for notes */
-    color: white;
-    margin-top: 10px;
-    width: 100%;
-}
-
-.note {
-    color: white;
-    padding: 10px;
-    margin-top: 10px;
-    border: 1px solid white;
-}
-
-#error-message-command {
-    margin-top: 10px;
-}
-
-#calendar-container {
-    display: none;
-    width: 80%;
     background-color: #222;
-    color: white;
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
-    margin-top: 20px;
-}
-
-.calendar-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.calendar-table th, .calendar-table td {
-    border: 1px solid white;
-    padding: 10px;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);
     text-align: center;
 }
 
-.calendar-table th {
-    background-color: #444;
+#calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+    padding: 10px;
+}
+
+.calendar-day {
+    background-color: #333;
+    padding: 15px;
+    text-align: center;
+    border-radius: 5px;
 }
