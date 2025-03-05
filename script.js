@@ -8,7 +8,7 @@ const USERS = {
 
 let currentUser = "";
 
-// Function to handle login
+// Function to handle the login process
 function login() {
     console.log("Login button clicked!");
     
@@ -36,28 +36,28 @@ function login() {
     }
 }
 
-// Function to check upcoming tests & assignments
+// Function to check upcoming tests and assignments
 function checkUpcomingEvents() {
     const today = new Date().toISOString().split("T")[0];
-    let reminders = [];
+    let reminders = "";
     
     let tests = loadTests();
     let assignments = loadAssignments();
     
-    for (let className in tests) {
-        if (tests[className] === today) {
-            reminders.push(`🔔 Test for ${className} is today!`);
+    for (let test in tests) {
+        if (tests[test] === today) {
+            reminders += `Reminder: Test for ${test} is today!\n`;
         }
     }
 
-    for (let className in assignments) {
-        if (assignments[className] === today) {
-            reminders.push(`📌 Assignment for ${className} is due today!`);
+    for (let assignment in assignments) {
+        if (assignments[assignment] === today) {
+            reminders += `Reminder: Assignment for ${assignment} is due today!\n`;
         }
     }
     
-    if (reminders.length > 0) {
-        alert(reminders.join("\n"));
+    if (reminders) {
+        alert(reminders);
     }
 }
 
@@ -70,44 +70,68 @@ function checkCommand(event) {
 
         const parts = command.split(" ");
 
-        if (command === "school calendar show") {
-            showCalendar();
-            errorMessage.innerHTML = "📅 Calendar is now visible.";
-        } else if (command === "school calendar close") {
-            closeCalendar();
-            errorMessage.innerHTML = "📅 Calendar is now hidden.";
+        if (command === "help school") {
+            errorMessage.innerHTML = "Available commands: school test set <class> <date>, school test all, school test delete <class>, school assignment set <class> <date>, school assignment all, school assignment delete <class>, school calendar show, school calendar close";
         } else if (command.startsWith("school test set")) {
-            if (parts.length < 5) {
-                errorMessage.innerHTML = "ERROR: Please provide a class and date (YYYY-MM-DD).";
+            if (parts.length < 4) {
+                errorMessage.innerHTML = "ERROR: Please provide a class and date.";
                 return;
             }
             let className = parts[3];
             let date = parts[4];
-            if (!isValidDate(date)) {
-                errorMessage.innerHTML = "ERROR: Invalid date format. Use YYYY-MM-DD.";
-                return;
-            }
             let tests = loadTests();
             tests[className] = date;
             saveTests(tests);
-            errorMessage.innerHTML = `✅ Test for ${className} set on ${date}.`;
-            updateCalendar();
+            errorMessage.innerHTML = `Test for ${className} set on ${date}.`;
+        } else if (command === "school test all") {
+            let tests = loadTests();
+            errorMessage.innerHTML = Object.keys(tests).length === 0 ? "No tests scheduled." : JSON.stringify(tests);
+        } else if (command.startsWith("school test delete")) {
+            if (parts.length < 4) {
+                errorMessage.innerHTML = "ERROR: Please provide a class.";
+                return;
+            }
+            let className = parts[3];
+            let tests = loadTests();
+            if (tests[className]) {
+                delete tests[className];
+                saveTests(tests);
+                errorMessage.innerHTML = `Test for ${className} deleted.`;
+            } else {
+                errorMessage.innerHTML = "ERROR: Test not found.";
+            }
         } else if (command.startsWith("school assignment set")) {
-            if (parts.length < 5) {
-                errorMessage.innerHTML = "ERROR: Please provide a class and due date (YYYY-MM-DD).";
+            if (parts.length < 4) {
+                errorMessage.innerHTML = "ERROR: Please provide a class and due date.";
                 return;
             }
             let className = parts[3];
             let date = parts[4];
-            if (!isValidDate(date)) {
-                errorMessage.innerHTML = "ERROR: Invalid date format. Use YYYY-MM-DD.";
-                return;
-            }
             let assignments = loadAssignments();
             assignments[className] = date;
             saveAssignments(assignments);
-            errorMessage.innerHTML = `✅ Assignment for ${className} due on ${date}.`;
-            updateCalendar();
+            errorMessage.innerHTML = `Assignment for ${className} due on ${date}.`;
+        } else if (command === "school assignment all") {
+            let assignments = loadAssignments();
+            errorMessage.innerHTML = Object.keys(assignments).length === 0 ? "No assignments scheduled." : JSON.stringify(assignments);
+        } else if (command.startsWith("school assignment delete")) {
+            if (parts.length < 4) {
+                errorMessage.innerHTML = "ERROR: Please provide a class.";
+                return;
+            }
+            let className = parts[3];
+            let assignments = loadAssignments();
+            if (assignments[className]) {
+                delete assignments[className];
+                saveAssignments(assignments);
+                errorMessage.innerHTML = `Assignment for ${className} deleted.`;
+            } else {
+                errorMessage.innerHTML = "ERROR: Assignment not found.";
+            }
+        } else if (command === "school calendar show") {
+            document.getElementById("calendar-section").style.display = "block";
+        } else if (command === "school calendar close") {
+            document.getElementById("calendar-section").style.display = "none";
         } else {
             errorMessage.innerHTML = "ERROR: Command not recognized.";
         }
@@ -116,51 +140,7 @@ function checkCommand(event) {
     }
 }
 
-// Function to show the calendar
-function showCalendar() {
-    document.getElementById("calendar-section").style.display = "block";
-    updateCalendar();
-}
-
-// Function to close the calendar
-function closeCalendar() {
-    document.getElementById("calendar-section").style.display = "none";
-}
-
-// Function to update the calendar with test & assignment dates
-function updateCalendar() {
-    let calendarDiv = document.getElementById("calendar");
-    calendarDiv.innerHTML = "<h3>Upcoming Events</h3>";
-    
-    let tests = loadTests();
-    let assignments = loadAssignments();
-    
-    if (Object.keys(tests).length === 0 && Object.keys(assignments).length === 0) {
-        calendarDiv.innerHTML += "<p>No upcoming events.</p>";
-        return;
-    }
-
-    let eventList = "<ul>";
-    
-    for (let className in tests) {
-        eventList += `<li>📝 Test for <b>${className}</b> on <b>${tests[className]}</b></li>`;
-    }
-
-    for (let className in assignments) {
-        eventList += `<li>📂 Assignment for <b>${className}</b> due on <b>${assignments[className]}</b></li>`;
-    }
-
-    eventList += "</ul>";
-    calendarDiv.innerHTML += eventList;
-}
-
-// Function to validate date format (YYYY-MM-DD)
-function isValidDate(dateString) {
-    const regex = /^\d{4}-\d{2}-\d{2}$/;
-    return regex.test(dateString);
-}
-
-// Local storage functions (User-specific)
+// Local storage functions
 function loadTests() {
     return JSON.parse(localStorage.getItem(`${currentUser}_tests`)) || {};
 }
