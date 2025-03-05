@@ -70,7 +70,13 @@ function checkCommand(event) {
 
         const parts = command.split(" ");
 
-        if (command.startsWith("school test set")) {
+        if (command === "school calendar show") {
+            showCalendar();
+            errorMessage.innerHTML = "📅 Calendar is now visible.";
+        } else if (command === "school calendar close") {
+            closeCalendar();
+            errorMessage.innerHTML = "📅 Calendar is now hidden.";
+        } else if (command.startsWith("school test set")) {
             if (parts.length < 5) {
                 errorMessage.innerHTML = "ERROR: Please provide a class and date (YYYY-MM-DD).";
                 return;
@@ -85,23 +91,7 @@ function checkCommand(event) {
             tests[className] = date;
             saveTests(tests);
             errorMessage.innerHTML = `✅ Test for ${className} set on ${date}.`;
-        } else if (command === "school test all") {
-            let tests = loadTests();
-            errorMessage.innerHTML = Object.keys(tests).length === 0 ? "No tests scheduled." : formatList(tests);
-        } else if (command.startsWith("school test delete")) {
-            if (parts.length < 4) {
-                errorMessage.innerHTML = "ERROR: Please provide a class to delete.";
-                return;
-            }
-            let className = parts[3];
-            let tests = loadTests();
-            if (tests[className]) {
-                delete tests[className];
-                saveTests(tests);
-                errorMessage.innerHTML = `🗑️ Test for ${className} deleted.`;
-            } else {
-                errorMessage.innerHTML = "ERROR: Test not found.";
-            }
+            updateCalendar();
         } else if (command.startsWith("school assignment set")) {
             if (parts.length < 5) {
                 errorMessage.innerHTML = "ERROR: Please provide a class and due date (YYYY-MM-DD).";
@@ -117,23 +107,7 @@ function checkCommand(event) {
             assignments[className] = date;
             saveAssignments(assignments);
             errorMessage.innerHTML = `✅ Assignment for ${className} due on ${date}.`;
-        } else if (command === "school assignment all") {
-            let assignments = loadAssignments();
-            errorMessage.innerHTML = Object.keys(assignments).length === 0 ? "No assignments scheduled." : formatList(assignments);
-        } else if (command.startsWith("school assignment delete")) {
-            if (parts.length < 4) {
-                errorMessage.innerHTML = "ERROR: Please provide a class to delete.";
-                return;
-            }
-            let className = parts[3];
-            let assignments = loadAssignments();
-            if (assignments[className]) {
-                delete assignments[className];
-                saveAssignments(assignments);
-                errorMessage.innerHTML = `🗑️ Assignment for ${className} deleted.`;
-            } else {
-                errorMessage.innerHTML = "ERROR: Assignment not found.";
-            }
+            updateCalendar();
         } else {
             errorMessage.innerHTML = "ERROR: Command not recognized.";
         }
@@ -142,20 +116,48 @@ function checkCommand(event) {
     }
 }
 
+// Function to show the calendar
+function showCalendar() {
+    document.getElementById("calendar-section").style.display = "block";
+    updateCalendar();
+}
+
+// Function to close the calendar
+function closeCalendar() {
+    document.getElementById("calendar-section").style.display = "none";
+}
+
+// Function to update the calendar with test & assignment dates
+function updateCalendar() {
+    let calendarDiv = document.getElementById("calendar");
+    calendarDiv.innerHTML = "<h3>Upcoming Events</h3>";
+    
+    let tests = loadTests();
+    let assignments = loadAssignments();
+    
+    if (Object.keys(tests).length === 0 && Object.keys(assignments).length === 0) {
+        calendarDiv.innerHTML += "<p>No upcoming events.</p>";
+        return;
+    }
+
+    let eventList = "<ul>";
+    
+    for (let className in tests) {
+        eventList += `<li>📝 Test for <b>${className}</b> on <b>${tests[className]}</b></li>`;
+    }
+
+    for (let className in assignments) {
+        eventList += `<li>📂 Assignment for <b>${className}</b> due on <b>${assignments[className]}</b></li>`;
+    }
+
+    eventList += "</ul>";
+    calendarDiv.innerHTML += eventList;
+}
+
 // Function to validate date format (YYYY-MM-DD)
 function isValidDate(dateString) {
     const regex = /^\d{4}-\d{2}-\d{2}$/;
     return regex.test(dateString);
-}
-
-// Function to format test/assignment lists
-function formatList(data) {
-    let output = "<ul>";
-    for (let key in data) {
-        output += `<li>${key}: ${data[key]}</li>`;
-    }
-    output += "</ul>";
-    return output;
 }
 
 // Local storage functions (User-specific)
