@@ -59,9 +59,11 @@ function showCalendar() {
         calendarSection.style.border = "1px solid white";
         calendarSection.style.color = "white";
         calendarSection.style.textAlign = "center";
-        calendarSection.style.width = "80%";
+        calendarSection.style.width = "60%";
         calendarSection.style.marginLeft = "auto";
         calendarSection.style.marginRight = "auto";
+        calendarSection.style.borderRadius = "8px";
+        calendarSection.style.boxShadow = "0px 0px 10px rgba(255, 255, 255, 0.2)";
 
         let title = document.createElement("h2");
         title.innerText = "Calendar";
@@ -72,12 +74,13 @@ function showCalendar() {
         calendar.style.display = "grid";
         calendar.style.gridTemplateColumns = "repeat(7, 1fr)";
         calendar.style.gap = "5px";
+        calendar.style.marginTop = "10px";
 
         calendarSection.appendChild(title);
         calendarSection.appendChild(calendar);
 
-        // Append to the command section so it's inside the main interface
-        document.getElementById("command-section").appendChild(calendarSection);
+        // Append to the body so it's visible
+        document.body.appendChild(calendarSection);
     }
 
     generateCalendar();
