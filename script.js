@@ -86,7 +86,7 @@ function checkCommand(event) {
         } else if (command.startsWith("school test delete")) {
             const parts = command.split(" ");
             if (parts.length < 4) {
-                errorMessage.innerHTML = "ERROR: Please provide a class and date.";
+                errorMessage.innerHTML = "ERROR: Please provide a class.";
                 return;
             }
             let className = parts[3];
@@ -138,28 +138,42 @@ function checkCommand(event) {
     }
 }
 
-// Function to show calendar with events
+// Function to show the calendar with assignments and tests
 function showCalendar() {
-    document.getElementById("calendar-section").style.display = "block";
+    let calendarSection = document.getElementById("calendar-section");
     let calendarDiv = document.getElementById("calendar");
-    calendarDiv.innerHTML = "<h3>Upcoming Events</h3>";
-    
+
     let tests = loadTests();
     let assignments = loadAssignments();
-    
+
+    calendarDiv.innerHTML = "<h2>📅 Upcoming Events</h2>";
+
     if (Object.keys(tests).length === 0 && Object.keys(assignments).length === 0) {
-        calendarDiv.innerHTML += "<p>No upcoming tests or assignments.</p>";
+        calendarDiv.innerHTML += "<p>No upcoming events.</p>";
     } else {
-        for (let test in tests) {
-            calendarDiv.innerHTML += `<p>Test: ${test} on ${tests[test]}</p>`;
+        if (Object.keys(assignments).length > 0) {
+            calendarDiv.innerHTML += "<h3>📚 Assignments</h3><ul>";
+            for (let className in assignments) {
+                calendarDiv.innerHTML += `<li>${className}: <b>Due ${assignments[className]}</b></li>`;
+            }
+            calendarDiv.innerHTML += "</ul>";
         }
-        for (let assignment in assignments) {
-            calendarDiv.innerHTML += `<p>Assignment: ${assignment} due on ${assignments[assignment]}</p>`;
+        if (Object.keys(tests).length > 0) {
+            calendarDiv.innerHTML += "<h3>📝 Tests</h3><ul>";
+            for (let className in tests) {
+                calendarDiv.innerHTML += `<li>${className}: <b>${tests[className]}</b></li>`;
+            }
+            calendarDiv.innerHTML += "</ul>";
         }
     }
+
+    // Add the close button
+    calendarDiv.innerHTML += '<button onclick="closeCalendar()">Close Calendar</button>';
+    
+    calendarSection.style.display = "block";
 }
 
-// Function to close calendar
+// Function to close the calendar
 function closeCalendar() {
     document.getElementById("calendar-section").style.display = "none";
 }
