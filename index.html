@@ -3,46 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Command-Based Note App</title>
-    <style>
-        body { font-family: Arial, sans-serif; }
-        #command-section { display: none; }
-        #calendar-container { display: none; }
-        table { width: 100%; border-collapse: collapse; }
-        td, th { border: 1px solid black; padding: 10px; text-align: center; }
-    </style>
+    <title>Terminal Notes</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+    <!-- Login Form Section -->
     <div id="login-container">
-        <h2>Login</h2>
-        <input type="text" id="username" placeholder="Username">
-        <input type="password" id="password" placeholder="Password">
+        <h1>Login</h1>
+        <input type="text" id="username" placeholder="Username" required>
+        <input type="password" id="password" placeholder="Password" required>
         <button onclick="login()">Login</button>
-        <p id="error-message" style="color: red; display: none;">Invalid login.</p>
+        <div id="error-message">ERROR: Invalid login credentials</div>
     </div>
 
-    <div id="command-section">
-        <p id="prompt">C:\User></p>
-        <input type="text" id="command-input" onkeydown="checkCommand(event)">
-        <p id="error-message-command" style="color: red;"></p>
+    <!-- Command Section (visible after login) -->
+    <div id="command-section" style="display: none;">
+        <span id="prompt">C:\> </span>
+        <input type="text" id="command-input" onkeydown="checkCommand(event)" autofocus>
+        <div id="notes-container"></div>
+        <div id="error-message-command" style="color: red;"></div>
+    </div>
 
-        <div id="calendar-container">
-            <h2>📅 Calendar</h2>
-            <table id="calendar">
-                <thead>
-                    <tr>
-                        <th>Sun</th>
-                        <th>Mon</th>
-                        <th>Tue</th>
-                        <th>Wed</th>
-                        <th>Thu</th>
-                        <th>Fri</th>
-                        <th>Sat</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </div>
+    <!-- Calendar Section (Hidden by Default) -->
+    <div id="calendar-section" style="display: none;">
+        <h2>Calendar</h2>
+        <div id="calendar"></div>
+        <button onclick="closeCalendar()">Close Calendar</button>
     </div>
 
     <script src="script.js"></script>
