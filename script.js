@@ -82,7 +82,7 @@ function checkCommand(event) {
             errorMessage.innerHTML = `Test for ${className} set on ${date}.`;
         } else if (command === "school test all") {
             let tests = loadTests();
-            errorMessage.innerHTML = Object.keys(tests).length === 0 ? "No tests scheduled." : formatEventList(tests);
+            errorMessage.innerHTML = formatEventList(tests, "Test");
         } else if (command.startsWith("school test delete")) {
             const parts = command.split(" ");
             if (parts.length < 4) {
@@ -112,7 +112,7 @@ function checkCommand(event) {
             errorMessage.innerHTML = `Assignment for ${className} due on ${date}.`;
         } else if (command === "school assignment all") {
             let assignments = loadAssignments();
-            errorMessage.innerHTML = Object.keys(assignments).length === 0 ? "No assignments scheduled." : formatEventList(assignments);
+            errorMessage.innerHTML = formatEventList(assignments, "Assignment");
         } else if (command.startsWith("school assignment delete")) {
             const parts = command.split(" ");
             if (parts.length < 4) {
@@ -153,15 +153,15 @@ function showCalendar() {
     } else {
         if (Object.keys(assignments).length > 0) {
             calendarDiv.innerHTML += "<h3>📚 Assignments</h3><ul>";
-            for (let [className, dueDate] of Object.entries(assignments)) {
-                calendarDiv.innerHTML += `<li><b>${className}</b>: Due <b>${dueDate}</b></li>`;
+            for (let className in assignments) {
+                calendarDiv.innerHTML += `<li><b>${className}</b>: Due <b>${assignments[className]}</b></li>`;
             }
             calendarDiv.innerHTML += "</ul>";
         }
         if (Object.keys(tests).length > 0) {
             calendarDiv.innerHTML += "<h3>📝 Tests</h3><ul>";
-            for (let [className, testDate] of Object.entries(tests)) {
-                calendarDiv.innerHTML += `<li><b>${className}</b>: <b>${testDate}</b></li>`;
+            for (let className in tests) {
+                calendarDiv.innerHTML += `<li><b>${className}</b>: <b>${tests[className]}</b></li>`;
             }
             calendarDiv.innerHTML += "</ul>";
         }
@@ -178,8 +178,8 @@ function closeCalendar() {
 
 // Local storage functions
 function loadTests() {
-    let tests = localStorage.getItem(`${currentUser}_tests`);
-    return tests ? JSON.parse(tests) : {};
+    let storedTests = localStorage.getItem(`${currentUser}_tests`);
+    return storedTests ? JSON.parse(storedTests) : {};
 }
 
 function saveTests(tests) {
@@ -187,8 +187,8 @@ function saveTests(tests) {
 }
 
 function loadAssignments() {
-    let assignments = localStorage.getItem(`${currentUser}_assignments`);
-    return assignments ? JSON.parse(assignments) : {};
+    let storedAssignments = localStorage.getItem(`${currentUser}_assignments`);
+    return storedAssignments ? JSON.parse(storedAssignments) : {};
 }
 
 function saveAssignments(assignments) {
@@ -196,7 +196,8 @@ function saveAssignments(assignments) {
 }
 
 // Function to format assignments and tests
-function formatEventList(events) {
+function formatEventList(events, type) {
+    if (Object.keys(events).length === 0) return `No ${type.toLowerCase()}s scheduled.`;
     return Object.entries(events)
         .map(([className, date]) => `<b>${className}</b>: Due <b>${date}</b>`)
         .join("<br>");
