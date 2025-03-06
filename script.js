@@ -8,18 +8,18 @@ const USERS = {
 
 let currentUser = "";
 
-// Function to handle login
+// Function to handle the login process
 function login() {
     console.log("Login button clicked!");
-
+    
     const username = document.getElementById("username").value.trim();
     const password = document.getElementById("password").value.trim();
-
+    
     if (!username || !password) {
         console.log("Username or password field is empty.");
         return;
     }
-
+    
     if (USERS[username] && USERS[username] === password) {
         currentUser = username;
         console.log("Login successful for:", currentUser);
@@ -36,26 +36,26 @@ function login() {
     }
 }
 
-// Function to check upcoming events
+// Function to check upcoming tests and assignments
 function checkUpcomingEvents() {
     const today = new Date().toISOString().split("T")[0];
     let reminders = "";
-
+    
     let tests = loadTests();
     let assignments = loadAssignments();
-
-    for (let className in tests) {
-        if (tests[className] === today) {
-            reminders += `Reminder: Test for ${className} is today!\n`;
+    
+    for (let test in tests) {
+        if (tests[test] === today) {
+            reminders += `Reminder: Test for ${test} is today!\n`;
         }
     }
 
-    for (let className in assignments) {
-        if (assignments[className] === today) {
-            reminders += `Reminder: Assignment for ${className} is due today!\n`;
+    for (let assignment in assignments) {
+        if (assignments[assignment] === today) {
+            reminders += `Reminder: Assignment for ${assignment} is due today!\n`;
         }
     }
-
+    
     if (reminders) {
         alert(reminders);
     }
@@ -70,7 +70,7 @@ function checkCommand(event) {
 
         if (command.startsWith("school test set")) {
             const parts = command.split(" ");
-            if (parts.length < 5) {
+            if (parts.length < 4) {
                 errorMessage.innerHTML = "ERROR: Please provide a class and date.";
                 return;
             }
@@ -82,7 +82,7 @@ function checkCommand(event) {
             errorMessage.innerHTML = `Test for ${className} set on ${date}.`;
         } else if (command === "school test all") {
             let tests = loadTests();
-            errorMessage.innerHTML = formatEventList(tests, "Test");
+            errorMessage.innerHTML = Object.keys(tests).length === 0 ? "No tests scheduled." : JSON.stringify(tests);
         } else if (command.startsWith("school test delete")) {
             const parts = command.split(" ");
             if (parts.length < 4) {
@@ -100,7 +100,7 @@ function checkCommand(event) {
             }
         } else if (command.startsWith("school assignment set")) {
             const parts = command.split(" ");
-            if (parts.length < 5) {
+            if (parts.length < 4) {
                 errorMessage.innerHTML = "ERROR: Please provide a class and due date.";
                 return;
             }
@@ -112,7 +112,7 @@ function checkCommand(event) {
             errorMessage.innerHTML = `Assignment for ${className} due on ${date}.`;
         } else if (command === "school assignment all") {
             let assignments = loadAssignments();
-            errorMessage.innerHTML = formatEventList(assignments, "Assignment");
+            errorMessage.innerHTML = Object.keys(assignments).length === 0 ? "No assignments scheduled." : JSON.stringify(assignments);
         } else if (command.startsWith("school assignment delete")) {
             const parts = command.split(" ");
             if (parts.length < 4) {
@@ -138,40 +138,49 @@ function checkCommand(event) {
     }
 }
 
-// Function to show the calendar
 function showCalendar() {
     let calendarSection = document.getElementById("calendar-section");
-    let calendarDiv = document.getElementById("calendar");
-
+    let calendarContent = document.getElementById("calendar");
+    calendarSection.style.display = "block";
+    
     let tests = loadTests();
     let assignments = loadAssignments();
-
-    calendarDiv.innerHTML = "<h2>📅 Upcoming Events</h2>";
-
-    if (Object.keys(tests).length === 0 && Object.keys(assignments).length === 0) {
-        calendarDiv.innerHTML += "<p>No upcoming events.</p>";
+    let calendarHTML = "<h2>📅 Upcoming Events</h2>";
+    
+    if (Object.keys(assignments).length === 0 && Object.keys(tests).length === 0) {
+        calendarHTML += "<p>No upcoming events.</p>";
     } else {
-        if (Object.keys(assignments).length > 0) {
-            calendarDiv.innerHTML += "<h3>📚 Assignments</h3><ul>";
-            for (let className in assignments) {
-                calendarDiv.innerHTML += `<li><b>${className}</b>: Due on <b>${assignments[className]}</b></li>`;
-            }
-            calendarDiv.innerHTML += "</ul>";
+        calendarHTML += "<h3>📚 Assignments</h3>";
+        for (let [subject, date] of Object.entries(assignments)) {
+            calendarHTML += `<p>${subject}: Due on ${date}</p>`;
         }
-        if (Object.keys(tests).length > 0) {
-            calendarDiv.innerHTML += "<h3>📝 Tests</h3><ul>";
-            for (let className in tests) {
-                calendarDiv.innerHTML += `<li><b>${className}</b>: Test on <b>${tests[className]}</b></li>`;
-            }
-            calendarDiv.innerHTML += "</ul>";
+        calendarHTML += "<h3>📝 Tests</h3>";
+        for (let [subject, date] of Object.entries(tests)) {
+            calendarHTML += `<p>${subject}: Test on ${date}</p>`;
         }
     }
-
-    calendarDiv.innerHTML += '<button onclick="closeCalendar()">Close Calendar</button>';
-    calendarSection.style.display = "block";
+    calendarContent.innerHTML = calendarHTML;
 }
 
-// Function to close the calendar
 function closeCalendar() {
     document.getElementById("calendar-section").style.display = "none";
 }
+
+function loadTests() {
+    return JSON.parse(localStorage.getItem(`${currentUser}_tests`)) || {};
+}
+function saveTests(tests) {
+    localStorage.setItem(`${currentUser}_tests`, JSON.stringify(tests));
+}
+
+function loadAssignments() {
+    return JSON.parse(localStorage.getItem(`${currentUser}_assignments`)) || {};
+}
+function saveAssignments(assignments) {
+    localStorage.setItem(`${currentUser}_assignments`, JSON.stringify(assignments));
+}
+
+window.onload = function() {
+    document.getElementById("login-container").style.display = "block";
+    document.getElementById("command-section").style.display = "none";
+};
