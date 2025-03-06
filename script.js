@@ -154,14 +154,14 @@ function showCalendar() {
         if (Object.keys(assignments).length > 0) {
             calendarDiv.innerHTML += "<h3>📚 Assignments</h3><ul>";
             for (let className in assignments) {
-                calendarDiv.innerHTML += `<li><b>${className}</b>: Due <b>${assignments[className]}</b></li>`;
+                calendarDiv.innerHTML += `<li><b>${className}</b>: Due on <b>${assignments[className]}</b></li>`;
             }
             calendarDiv.innerHTML += "</ul>";
         }
         if (Object.keys(tests).length > 0) {
             calendarDiv.innerHTML += "<h3>📝 Tests</h3><ul>";
             for (let className in tests) {
-                calendarDiv.innerHTML += `<li><b>${className}</b>: <b>${tests[className]}</b></li>`;
+                calendarDiv.innerHTML += `<li><b>${className}</b>: Test on <b>${tests[className]}</b></li>`;
             }
             calendarDiv.innerHTML += "</ul>";
         }
@@ -175,36 +175,3 @@ function showCalendar() {
 function closeCalendar() {
     document.getElementById("calendar-section").style.display = "none";
 }
-
-// Local storage functions
-function loadTests() {
-    let storedTests = localStorage.getItem(`${currentUser}_tests`);
-    return storedTests ? JSON.parse(storedTests) : {};
-}
-
-function saveTests(tests) {
-    localStorage.setItem(`${currentUser}_tests`, JSON.stringify(tests));
-}
-
-function loadAssignments() {
-    let storedAssignments = localStorage.getItem(`${currentUser}_assignments`);
-    return storedAssignments ? JSON.parse(storedAssignments) : {};
-}
-
-function saveAssignments(assignments) {
-    localStorage.setItem(`${currentUser}_assignments`, JSON.stringify(assignments));
-}
-
-// Function to format assignments and tests
-function formatEventList(events, type) {
-    if (Object.keys(events).length === 0) return `No ${type.toLowerCase()}s scheduled.`;
-    return Object.entries(events)
-        .map(([className, date]) => `<b>${className}</b>: Due <b>${date}</b>`)
-        .join("<br>");
-}
-
-// Ensure login form is shown on page load
-window.onload = function() {
-    document.getElementById("login-container").style.display = "block";
-    document.getElementById("command-section").style.display = "none";
-};
