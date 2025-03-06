@@ -1,4 +1,4 @@
-// Hardcoded user credentials
+// Hardcoded user credential
 const USERS = {
     "admin": "password123",
     "user": "1234",
@@ -68,7 +68,20 @@ function checkCommand(event) {
         let errorMessage = document.getElementById("error-message-command");
         errorMessage.innerHTML = "";
 
-        if (command.startsWith("school test set")) {
+        if (command === "help school") {
+            errorMessage.innerHTML = "Available school commands:<br>" +
+                "- school test set <class> <date><br>" +
+                "- school test all<br>" +
+                "- school test delete <class><br>" +
+                "- school assignment set <class> <date><br>" +
+                "- school assignment all<br>" +
+                "- school assignment delete <class>";
+        } else if (command === "help notes") {
+            errorMessage.innerHTML = "Available notes commands:<br>" +
+                "- notes add <note><br>" +
+                "- notes all<br>" +
+                "- notes delete <note>";
+        } else if (command.startsWith("school test set")) {
             const parts = command.split(" ");
             if (parts.length < 4) {
                 errorMessage.innerHTML = "ERROR: Please provide a class and date.";
@@ -86,7 +99,7 @@ function checkCommand(event) {
         } else if (command.startsWith("school test delete")) {
             const parts = command.split(" ");
             if (parts.length < 4) {
-                errorMessage.innerHTML = "ERROR: Please provide a class.";
+                errorMessage.innerHTML = "ERROR: Please provide a class and date.";
                 return;
             }
             let className = parts[3];
@@ -98,38 +111,6 @@ function checkCommand(event) {
             } else {
                 errorMessage.innerHTML = "ERROR: Test not found.";
             }
-        } else if (command.startsWith("school assignment set")) {
-            const parts = command.split(" ");
-            if (parts.length < 4) {
-                errorMessage.innerHTML = "ERROR: Please provide a class and due date.";
-                return;
-            }
-            let className = parts[3];
-            let date = parts[4];
-            let assignments = loadAssignments();
-            assignments[className] = date;
-            saveAssignments(assignments);
-            errorMessage.innerHTML = `Assignment for ${className} due on ${date}.`;
-        } else if (command === "school assignment all") {
-            let assignments = loadAssignments();
-            errorMessage.innerHTML = Object.keys(assignments).length === 0 ? "No assignments scheduled." : JSON.stringify(assignments);
-        } else if (command.startsWith("school assignment delete")) {
-            const parts = command.split(" ");
-            if (parts.length < 4) {
-                errorMessage.innerHTML = "ERROR: Please provide a class.";
-                return;
-            }
-            let className = parts[3];
-            let assignments = loadAssignments();
-            if (assignments[className]) {
-                delete assignments[className];
-                saveAssignments(assignments);
-                errorMessage.innerHTML = `Assignment for ${className} deleted.`;
-            } else {
-                errorMessage.innerHTML = "ERROR: Assignment not found.";
-            }
-        } else if (command === "school calendar show") {
-            showCalendar();
         } else {
             errorMessage.innerHTML = "ERROR: Command not recognized.";
         }
@@ -138,34 +119,7 @@ function checkCommand(event) {
     }
 }
 
-function showCalendar() {
-    let calendarSection = document.getElementById("calendar-section");
-    let calendarContent = document.getElementById("calendar");
-    calendarSection.style.display = "block";
-    
-    let tests = loadTests();
-    let assignments = loadAssignments();
-    let calendarHTML = "<h2>📅 Upcoming Events</h2>";
-    
-    if (Object.keys(assignments).length === 0 && Object.keys(tests).length === 0) {
-        calendarHTML += "<p>No upcoming events.</p>";
-    } else {
-        calendarHTML += "<h3>📚 Assignments</h3>";
-        for (let [subject, date] of Object.entries(assignments)) {
-            calendarHTML += `<p>${subject}: Due on ${date}</p>`;
-        }
-        calendarHTML += "<h3>📝 Tests</h3>";
-        for (let [subject, date] of Object.entries(tests)) {
-            calendarHTML += `<p>${subject}: Test on ${date}</p>`;
-        }
-    }
-    calendarContent.innerHTML = calendarHTML;
-}
-
-function closeCalendar() {
-    document.getElementById("calendar-section").style.display = "none";
-}
-
+// Local storage functions
 function loadTests() {
     return JSON.parse(localStorage.getItem(`${currentUser}_tests`)) || {};
 }
@@ -180,6 +134,7 @@ function saveAssignments(assignments) {
     localStorage.setItem(`${currentUser}_assignments`, JSON.stringify(assignments));
 }
 
+// Ensure login form is shown on page load
 window.onload = function() {
     document.getElementById("login-container").style.display = "block";
     document.getElementById("command-section").style.display = "none";
