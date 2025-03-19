@@ -3,17 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Secret Ministration</title>
+    <title>Secret Ministration - FBI Cyber Division</title>
     <link rel="stylesheet" href="style.css">
     <script src="script.js" defer></script>
 </head>
 <body>
-    <div class="container">
-        <div class="terminal">
-            <div class="header">SECRET MINISTRATION - ACCESS TERMINAL</div>
-            <div class="output" id="output"></div>
-            <input type="text" id="commandInput" placeholder="Enter command..." autofocus>
-        </div>
+    <header>
+        <h1>Federal Bureau of Investigation</h1>
+        <h2>Cyber Division - Secure Operations</h2>
+    </header>
+    
+    <div class="dashboard">
+        <aside class="sidebar">
+            <h3>Navigation</h3>
+            <ul>
+                <li><a href="#">Dashboard</a></li>
+                <li><a href="#threat-map">Threat Map</a></li>
+                <li><a href="#logs">Live Logs</a></li>
+                <li><a href="#network">Network Monitor</a></li>
+                <li><a href="#encryption">Encryption Tools</a></li>
+            </ul>
+        </aside>
+        
+        <main class="content">
+            <section id="threat-map">
+                <h2>Global Threat Map</h2>
+                <div id="map-container"></div>
+            </section>
+            
+            <section id="logs">
+                <h2>Live Intrusion Logs</h2>
+                <div class="logs-container" id="log-output"></div>
+            </section>
+            
+            <section id="network">
+                <h2>Network Monitor</h2>
+                <pre id="network-data">Loading network activity...</pre>
+            </section>
+            
+            <section id="encryption">
+                <h2>Encryption Tools</h2>
+                <textarea id="encrypt-input" placeholder="Enter text to encrypt..."></textarea>
+                <button onclick="encryptText()">Encrypt</button>
+                <p>Output: <span id="encrypt-output"></span></p>
+            </section>
+        </main>
     </div>
 </body>
 </html>
