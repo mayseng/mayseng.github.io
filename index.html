@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ecret Ministration - Cyber Intelligence Hub</title>
+    <title>Secret Ministration - Cyber Intelligence Hub</title>
     <link rel="stylesheet" href="style.css">
     <script src="script.js" defer></script>
+    <script src="extra.js" defer></script>
 </head>
 <body>
     <header>
@@ -26,6 +27,7 @@
                 <li><a href="#intrusion-reports">Intrusion Reports</a></li>
                 <li><a href="#system-status">System Status</a></li>
                 <li><a href="#security-audit">Security Audit</a></li>
+                <li><a href="#alerts">Alerts</a></li>
             </ul>
         </aside>
         
@@ -77,6 +79,11 @@
             <section id="security-audit">
                 <h2>Security Audit</h2>
                 <div class="logs-container" id="audit-log-output"></div>
+            </section>
+
+            <section id="alerts">
+                <h2>Alerts</h2>
+                <div class="logs-container" id="alert-output"></div>
             </section>
         </main>
     </div>
