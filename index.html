@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Secret Ministration - FBI Cyber Division</title>
+    <title>Secret Ministration - Cyber Intelligence Hub</title>
     <link rel="stylesheet" href="style.css">
     <script src="script.js" defer></script>
 </head>
 <body>
     <header>
-        <h1>Federal Bureau of Investigation</h1>
-        <h2>Cyber Division - Secure Operations</h2>
+        <h1>Secret Ministration</h1>
+        <h2>Cyber Intelligence Hub</h2>
     </header>
     
     <div class="dashboard">
@@ -22,6 +22,11 @@
                 <li><a href="#logs">Live Logs</a></li>
                 <li><a href="#network">Network Monitor</a></li>
                 <li><a href="#encryption">Encryption Tools</a></li>
+                <li><a href="#data-analysis">Data Analysis</a></li>
+                <li><a href="#user-access">User  Access Logs</a></li>
+                <li><a href="#intrusion-reports">Intrusion Reports</a></li>
+                <li><a href="#system-status">System Status</a></li>
+                <li><a href="#security-audit">Security Audit</a></li>
             </ul>
         </aside>
         
@@ -46,6 +51,33 @@
                 <textarea id="encrypt-input" placeholder="Enter text to encrypt..."></textarea>
                 <button onclick="encryptText()">Encrypt</button>
                 <p>Output: <span id="encrypt-output"></span></p>
+            </section>
+            
+            <section id="data-analysis">
+                <h2>AI Data Analysis</h2>
+                <textarea id="data-input" placeholder="Enter data for analysis..."></textarea>
+                <button onclick="analyzeData()">Analyze</button>
+                <div id="data-output"></div>
+            </section>
+
+            <section id="user-access">
+                <h2>User Access Logs</h2>
+                <div class="logs-container" id="user-log-output"></div>
+            </section>
+
+            <section id="intrusion-reports">
+                <h2>Intrusion Reports</h2>
+                <div class="logs-container" id="intrusion-log-output"></div>
+            </section>
+
+            <section id="system-status">
+                <h2>System Status</h2>
+                <pre id="system-status-output">Loading system status...</pre>
+            </section>
+
+            <section id="security-audit">
+                <h2>Security Audit</h2>
+                <div class="logs-container" id="audit-log-output"></div>
             </section>
         </main>
     </div>
