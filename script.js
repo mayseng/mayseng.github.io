@@ -5,8 +5,8 @@ document.addEventListener("DOMContentLoaded", () => {
     scanDatabase();
     updateSystemStatus();
     simulateIntrusionReports();
-    updateSecurityAudit();
     logUser Access();
+    updateSecurityAudit();
 });
 
 function startLiveLogs() {
