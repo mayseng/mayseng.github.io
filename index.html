@@ -1,46 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Cool website with a ton of awesome features!">
-    <title>Cool Website</title>
+    <meta name="description" content="Cool and interactive website with amazing features!">
+    <title>Interactive Cool Website</title>
     <link rel="stylesheet" href="styles.css">
     <script defer src="scripts.js"></script>
 </head>
+
 <body>
+    <!-- Navbar -->
     <header>
-        <nav>
+        <nav id="navbar">
             <ul>
                 <li><a href="#home">Home</a></li>
                 <li><a href="#gallery">Gallery</a></li>
+                <li><a href="#weather">Weather</a></li>
                 <li><a href="#contact">Contact</a></li>
-                <li><a href="#about">About</a></li>
                 <li><button id="theme-toggle">🌙</button></li>
             </ul>
         </nav>
     </header>
-    
-    <section id="home" class="hero">
-        <h1>Welcome to Our Cool Website!</h1>
-        <p>Explore cool features and fun stuff!</p>
+
+    <!-- Landing Section (Full-screen) -->
+    <section id="home" class="full-screen">
+        <div class="content">
+            <h1>Welcome to the Coolest Website</h1>
+            <p>Explore amazing features, animations, and much more!</p>
+        </div>
     </section>
 
+    <!-- Gallery Section with Lightbox -->
     <section id="gallery">
-        <h2>Gallery</h2>
-        <div class="gallery">
-            <div class="image-container">
-                <img src="https://via.placeholder.com/300" alt="image 1">
+        <h2>Image Gallery</h2>
+        <div class="gallery-container">
+            <div class="gallery-item">
+                <img src="https://via.placeholder.com/400" alt="Gallery Image 1">
             </div>
-            <div class="image-container">
-                <img src="https://via.placeholder.com/300" alt="image 2">
+            <div class="gallery-item">
+                <img src="https://via.placeholder.com/400" alt="Gallery Image 2">
             </div>
-            <div class="image-container">
-                <img src="https://via.placeholder.com/300" alt="image 3">
+            <div class="gallery-item">
+                <img src="https://via.placeholder.com/400" alt="Gallery Image 3">
             </div>
         </div>
     </section>
 
+    <!-- Weather Section -->
+    <section id="weather">
+        <h2>Current Weather</h2>
+        <div id="weather-display">
+            <p>Loading weather...</p>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
     <section id="contact">
         <h2>Contact Us</h2>
         <form id="contact-form">
@@ -54,10 +70,25 @@
         </form>
     </section>
 
+    <!-- Social Media Section -->
+    <section id="social">
+        <h2>Follow Us</h2>
+        <div class="social-icons">
+            <a href="https://twitter.com" target="_blank">Twitter</a>
+            <a href="https://github.com" target="_blank">GitHub</a>
+            <a href="https://facebook.com" target="_blank">Facebook</a>
+        </div>
+    </section>
+
+    <!-- Back to Top Button -->
+    <button class="back-to-top" id="backToTopBtn">⬆️</button>
+
+    <!-- Footer -->
     <footer>
         <p>&copy; 2025 Cool Website</p>
+        <p><a href="https://github.com/yourusername">GitHub</a> | <a href="#home">Back to Top</a></p>
     </footer>
 
-    <button class="back-to-top" id="backToTopBtn">⬆️</button>
 </body>
+
 </html>
