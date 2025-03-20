@@ -3,89 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Secret Ministration - Cyber Intelligence Hub</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="script.js" defer></script>
-    <script src="extra.js" defer></script>
+    <meta name="description" content="Cool website with a ton of awesome features!">
+    <title>Cool Website</title>
+    <link rel="stylesheet" href="styles.css">
+    <script defer src="scripts.js"></script>
 </head>
 <body>
     <header>
-        <h1>Secret Ministration</h1>
-        <h2>Cyber Intelligence Hub</h2>
+        <nav>
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#gallery">Gallery</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li><a href="#about">About</a></li>
+                <li><button id="theme-toggle">🌙</button></li>
+            </ul>
+        </nav>
     </header>
     
-    <div class="dashboard">
-        <aside class="sidebar">
-            <h3>Navigation</h3>
-            <ul>
-                <li><a href="#threat-map">Threat Map</a></li>
-                <li><a href="#logs">Live Logs</a></li>
-                <li><a href="#network">Network Monitor</a></li>
-                <li><a href="#encryption">Encryption Tools</a></li>
-                <li><a href="#data-analysis">Data Analysis</a></li>
-                <li><a href="#user-access">User  Access Logs</a></li>
-                <li><a href="#intrusion-reports">Intrusion Reports</a></li>
-                <li><a href="#system-status">System Status</a></li>
-                <li><a href="#security-audit">Security Audit</a></li>
-                <li><a href="#alerts">Alerts</a></li>
-            </ul>
-        </aside>
-        
-        <main class="content">
-            <section id="threat-map">
-                <h2>Global Threat Map</h2>
-                <div id="map-container"></div>
-            </section>
-            
-            <section id="logs">
-                <h2>Live Intrusion Logs</h2>
-                <div class="logs-container" id="log-output"></div>
-            </section>
-            
-            <section id="network">
-                <h2>Network Monitor</h2>
-                <pre id="network-data">Loading network activity...</pre>
-            </section>
-            
-            <section id="encryption">
-                <h2>Encryption Tools</h2>
-                <textarea id="encrypt-input" placeholder="Enter text to encrypt..."></textarea>
-                <button onclick="encryptText()">Encrypt</button>
-                <p>Output: <span id="encrypt-output"></span></p>
-            </section>
-            
-            <section id="data-analysis">
-                <h2>AI Data Analysis</h2>
-                <textarea id="data-input" placeholder="Enter data for analysis..."></textarea>
-                <button onclick="analyzeData()">Analyze</button>
-                <div id="data-output"></div>
-            </section>
+    <section id="home" class="hero">
+        <h1>Welcome to Our Cool Website!</h1>
+        <p>Explore cool features and fun stuff!</p>
+    </section>
 
-            <section id="user-access">
-                <h2>User Access Logs</h2>
-                <div class="logs-container" id="user-log-output"></div>
-            </section>
+    <section id="gallery">
+        <h2>Gallery</h2>
+        <div class="gallery">
+            <div class="image-container">
+                <img src="https://via.placeholder.com/300" alt="image 1">
+            </div>
+            <div class="image-container">
+                <img src="https://via.placeholder.com/300" alt="image 2">
+            </div>
+            <div class="image-container">
+                <img src="https://via.placeholder.com/300" alt="image 3">
+            </div>
+        </div>
+    </section>
 
-            <section id="intrusion-reports">
-                <h2>Intrusion Reports</h2>
-                <div class="logs-container" id="intrusion-log-output"></div>
-            </section>
+    <section id="contact">
+        <h2>Contact Us</h2>
+        <form id="contact-form">
+            <label for="name">Your Name:</label>
+            <input type="text" id="name" required>
+            <label for="email">Your Email:</label>
+            <input type="email" id="email" required>
+            <label for="message">Your Message:</label>
+            <textarea id="message" required></textarea>
+            <button type="submit">Send</button>
+        </form>
+    </section>
 
-            <section id="system-status">
-                <h2>System Status</h2>
-                <pre id="system-status-output">Loading system status...</pre>
-            </section>
+    <footer>
+        <p>&copy; 2025 Cool Website</p>
+    </footer>
 
-            <section id="security-audit">
-                <h2>Security Audit</h2>
-                <div class="logs-container" id="audit-log-output"></div>
-            </section>
-
-            <section id="alerts">
-                <h2>Alerts</h2>
-                <div class="logs-container" id="alert-output"></div>
-            </section>
-        </main>
-    </div>
+    <button class="back-to-top" id="backToTopBtn">⬆️</button>
 </body>
 </html>
