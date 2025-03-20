@@ -1,112 +1,150 @@
-/* Reset some default styles */
+/* Reset and Global Styles */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-/* Global styles */
 body {
-    font-family: Arial, sans-serif;
-    line-height: 1.6;
+    font-family: 'Arial', sans-serif;
     transition: background-color 0.3s, color 0.3s;
 }
 
-/* Dark mode styles */
+/* Dark Mode */
 body.dark-mode {
     background-color: #121212;
     color: white;
 }
 
+/* Navbar */
 header {
-    background-color: #333;
-    color: white;
-    padding: 10px 0;
+    position: sticky;
+    top: 0;
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 15px;
+    z-index: 1000;
+    transition: all 0.3s;
 }
 
-nav ul {
+header #navbar ul {
     list-style: none;
     display: flex;
     justify-content: center;
     gap: 20px;
 }
 
-nav ul li a {
+header #navbar ul li a {
+    color: white;
     text-decoration: none;
-    color: white;
+    padding: 10px;
+    font-weight: bold;
 }
 
-button {
-    background: none;
-    border: none;
-    color: white;
-    cursor: pointer;
+header #navbar ul li a:hover {
+    color: #f39c12;
 }
 
-/* Hero Section */
-.hero {
-    background: url('https://via.placeholder.com/1500x800') no-repeat center center/cover;
-    padding: 100px 20px;
+/* Full-screen Section */
+.full-screen {
+    height: 100vh;
+    background: url('https://via.placeholder.com/1500x1000') no-repeat center center/cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     text-align: center;
     color: white;
+}
+
+.full-screen .content h1 {
+    font-size: 3rem;
+    margin-bottom: 10px;
+}
+
+.full-screen .content p {
+    font-size: 1.5rem;
 }
 
 /* Gallery Section */
 #gallery {
     padding: 50px;
-    background: #f4f4f4;
+    background-color: #f4f4f4;
+    text-align: center;
 }
 
-.gallery {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
+.gallery-container {
+    display: flex;
+    justify-content: space-around;
     gap: 20px;
 }
 
-.image-container {
-    overflow: hidden;
-    border-radius: 10px;
-    transition: transform 0.3s ease;
+.gallery-item img {
+    width: 300px;
+    height: 200px;
+    object-fit: cover;
+    transition: transform 0.3s;
 }
 
-.image-container img {
-    width: 100%;
-    height: auto;
-}
-
-.image-container:hover {
+.gallery-item img:hover {
     transform: scale(1.1);
 }
 
-/* Contact Form Section */
+/* Weather Section */
+#weather {
+    padding: 50px;
+    background-color: #e9e9e9;
+    text-align: center;
+}
+
+#weather-display {
+    font-size: 1.5rem;
+    margin-top: 20px;
+}
+
+/* Contact Section */
 #contact {
     padding: 50px;
-    background: #e9e9e9;
+    background-color: #ffffff;
+    text-align: center;
 }
 
-#contact label {
-    display: block;
-    margin: 10px 0 5px;
-}
-
-#contact input, #contact textarea {
-    width: 100%;
+#contact form input,
+#contact form textarea {
+    width: 80%;
     padding: 10px;
     margin-bottom: 10px;
     border-radius: 5px;
     border: 1px solid #ddd;
 }
 
-#contact button {
+#contact form button {
+    padding: 10px 20px;
+    border: none;
     background-color: #333;
     color: white;
-    padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
 }
 
-#contact button:hover {
+#contact form button:hover {
     background-color: #555;
+}
+
+/* Social Media Section */
+#social {
+    background-color: #333;
+    padding: 30px;
+    text-align: center;
+}
+
+#social .social-icons a {
+    color: white;
+    margin: 0 15px;
+    text-decoration: none;
+    font-size: 1.2rem;
+}
+
+#social .social-icons a:hover {
+    color: #f39c12;
 }
 
 /* Back to Top Button */
@@ -123,8 +161,8 @@ button {
 }
 
 footer {
-    text-align: center;
-    padding: 20px;
     background-color: #333;
     color: white;
+    text-align: center;
+    padding: 20px;
 }
