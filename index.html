@@ -1,23 +1,25 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Secret Ministration</title>
+    <title>Secret Ministration - 90s Chatroom</title>
     <link rel="stylesheet" href="style.css">
+    <script defer src="script.js"></script>
 </head>
 <body>
-    <div class="chatroom">
-        <h1>Secret Ministration</h1>
-        <div class="user-input">
-            <input type="text" id="username" placeholder="Enter your name" />
-            <button id="setName">Set Name</button>
+    <div id="chat-container">
+        <div id="login-screen">
+            <h1>Welcome to Secret Ministration</h1>
+            <input type="text" id="username" placeholder="Enter your username">
+            <button id="enter-chat">Enter Chat</button>
         </div>
-        <div class="messages" id="messages"></div>
-        <input type="text" id="messageInput" placeholder="Type your message..." />
-        <button id="sendMessage">Send</button>
+        <div id="chat-room" class="hidden">
+            <div id="chat-header">Secret Ministration Chatroom</div>
+            <div id="chat-box"></div>
+            <input type="text" id="message-input" placeholder="Type your message...">
+            <button id="send-message">Send</button>
+        </div>
     </div>
-    <script src="script.js"></script>
 </body>
 </html>
