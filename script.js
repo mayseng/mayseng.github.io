@@ -1,35 +1,18 @@
-const socket = io();
+document.getElementById('send').addEventListener('click', function() {
+    const nameInput = document.getElementById('name');
+    const messageInput = document.getElementById('message');
+    const messagesDiv = document.getElementById('messages');
 
-const loginButton = document.getElementById('loginButton');
-const registerButton = document.getElementById('registerButton');
-const chatDiv = document.getElementById('chat');
-const messagesDiv = document.getElementById('messages');
-const messageInput = document.getElementById('messageInput');
-const sendButton = document.getElementById('sendButton');
+    const name = nameInput.value.trim();
+    const message = messageInput.value.trim();
 
-loginButton.addEventListener('click', () => {
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
-
-    fetch('http://localhost:3000/api/login', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ username, password })
-    })
-    .then(response => {
-        if (response.ok) {
-            chatDiv.style.display = 'block';
-            document.getElementById('login').style.display = 'none';
-        } else {
-            alert('Login failed');
-        }
-    });
+    if (name && message) {
+        const messageElement = document.createElement('div');
+        messageElement.textContent = `${name}: ${message}`;
+        messagesDiv.appendChild(messageElement);
+        messageInput.value = '';
+        messagesDiv.scrollTop = messagesDiv.scrollHeight; // Scroll to the bottom
+    } else {
+        alert('Please enter both your name and a message.');
+    }
 });
-
-registerButton.addEventListener('click', () => {
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
-
-    fetch('http://localhost:3000
