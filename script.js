@@ -1,18 +1,27 @@
-document.getElementById('send').addEventListener('click', function() {
-    const nameInput = document.getElementById('name');
-    const messageInput = document.getElementById('message');
-    const messagesDiv = document.getElementById('messages');
-
-    const name = nameInput.value.trim();
-    const message = messageInput.value.trim();
-
-    if (name && message) {
-        const messageElement = document.createElement('div');
-        messageElement.textContent = `${name}: ${message}`;
-        messagesDiv.appendChild(messageElement);
-        messageInput.value = '';
-        messagesDiv.scrollTop = messagesDiv.scrollHeight; // Scroll to the bottom
+// script.js
+document.getElementById('setName').addEventListener('click', function() {
+    const username = document.getElementById('username').value;
+    if (username) {
+        localStorage.setItem('username', username);
+        alert(`Welcome, ${username}!`);
+        document.getElementById('username').style.display = 'none';
+        document.getElementById('setName').style.display = 'none';
     } else {
-        alert('Please enter both your name and a message.');
+        alert('Please enter a name.');
+    }
+});
+
+document.getElementById('sendMessage').addEventListener('click', function() {
+    const messageInput = document.getElementById('messageInput');
+    const messagesDiv = document.getElementById('messages');
+    const username = localStorage.getItem('username') || 'Anonymous';
+
+    if (messageInput.value) {
+        const message = document.createElement('div');
+        message.textContent = `${username}: ${messageInput.value}`;
+        messagesDiv.appendChild(message);
+        messageInput.value = '';
+    } else {
+        alert('Please enter a message.');
     }
 });
