@@ -1,47 +1,41 @@
+/* style.css */
 body {
-    background-color: #f0f0f0;
-    font-family: 'Comic Sans MS', cursive, sans-serif;
-    color: #333;
+    background-color: #000;
+    color: #00ff00;
+    font-family: 'Courier New', Courier, monospace;
+    text-align: center;
 }
 
 .chatroom {
+    border: 2px solid #00ff00;
+    padding: 20px;
     width: 400px;
     margin: 50px auto;
-    padding: 20px;
-    border: 2px solid #000;
-    background-color: #fff;
-    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+    background-color: #111;
+    box-shadow: 0 0 10px #00ff00;
 }
 
-h1 {
-    text-align: center;
-    color: #ff00ff;
-}
-
-.messages {
-    height: 300px;
-    overflow-y: scroll;
-    border: 1px solid #000;
-    margin-bottom: 10px;
-    padding: 10px;
-    background-color: #e0e0e0;
+.user-input, .messages {
+    margin: 10px 0;
 }
 
 input[type="text"] {
-    width: calc(100% - 22px);
+    width: 70%;
     padding: 10px;
-    margin: 5px 0;
+    border: 1px solid #00ff00;
+    background-color: #222;
+    color: #00ff00;
 }
 
 button {
-    width: 100%;
     padding: 10px;
-    background-color: #ff00ff;
-    color: white;
-    border: none;
+    border: 1px solid #00ff00;
+    background-color: #222;
+    color: #00ff00;
     cursor: pointer;
 }
 
 button:hover {
-    background-color: #ff66ff;
+    background-color: #00ff00;
+    color: #000;
 }
