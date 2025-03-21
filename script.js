@@ -32,4 +32,4 @@ registerButton.addEventListener('click', () => {
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
 
-    fetch('http://localhost:
+    fetch('http://localhost:3000
