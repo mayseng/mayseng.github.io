@@ -3,78 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="An interactive website with amazing features!">
-    <title>Interactive Cool Website</title>
     <link rel="stylesheet" href="styles.css">
-    <script defer src="scripts.js"></script>
+    <title>AOL Style Chat</title>
 </head>
 <body>
-    <!-- Navbar -->
-    <header>
-        <nav id="navbar">
-            <ul>
-                <li><a href="#home">Home</a></li>
-                <li><a href="#gallery">Gallery</a></li>
-                <li><a href="#weather">Weather</a></li>
-                <li><a href="#contact">Contact</a></li>
-                <li><button id="theme-toggle">🌙</button></li>
-            </ul>
-        </nav>
-    </header>
-
-    <!-- Landing Section -->
-    <section id="home" class="full-screen">
-        <div class="content">
-            <h1>Welcome to the Coolest Website</h1>
-            <p>Explore amazing features, animations, and much more!</p>
-        </div>
-    </section>
-
-    <!-- Gallery Section -->
-    <section id="gallery">
-        <h2>Image Gallery</h2>
-        <div class="gallery-container">
-            <div class="gallery-item">
-                <img src="https://via.placeholder.com/400" alt="Gallery Image 1">
-            </div>
-            <div class="gallery-item">
-                <img src="https://via.placeholder.com/400" alt="Gallery Image 2">
-            </div>
-            <div class="gallery-item">
-                <img src="https://via.placeholder.com/400" alt="Gallery Image 3">
-            </div>
-        </div>
-    </section>
-
-    <!-- Weather Section -->
-    <section id="weather">
-        <h2>Current Weather</h2>
-        <div id="weather-display">
-            <p>Loading weather...</p>
-        </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section id="contact">
-        <h2>Contact Us</h2>
-        <form id="contact-form">
-            <label for="name">Your Name:</label>
-            <input type="text" id="name" required>
-            <label for="email">Your Email:</label>
-            <input type="email" id="email" required>
-            <label for="message">Your Message:</label>
-            <textarea id="message" required></textarea>
-            <button type="submit">Send</button>
-        </form>
-    </section>
-
-    <!-- Back to Top Button -->
-    <button class="back-to-top" id="backToTopBtn">⬆️</button>
-
-    <!-- Footer -->
-    <footer>
-        <p>&copy; 2025 Cool Website</p>
-        <p><a href="https://github.com/yourusername">GitHub</a> | <a href="#home">Back to Top</a></p>
-    </footer>
+    <h1>AOL Style Chat</h1>
+    <div id="login">
+        <h2>Login</h2>
+        <input id="username" type="text" placeholder="Username" />
+        <input id="password" type="password" placeholder="Password" />
+        <button id="loginButton">Login</button>
+        <button id="registerButton">Register</button>
+    </div>
+    <div id="chat" style="display:none;">
+        <h2>Chat Room</h2>
+        <div id="messages"></div>
+        <input id="messageInput" type="text" placeholder="Type your message here..." />
+        <button id="sendButton">Send</button>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
