@@ -3,27 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secret Ministration Chatroom</title>
     <link rel="stylesheet" href="styles.css">
-    <title>AOL Style Chat</title>
 </head>
 <body>
-    <div class="container">
-        <h1>AOL Style Chat</h1>
-        <div id="login">
-            <h2>Login</h2>
-            <input id="username" type="text" placeholder="Username" />
-            <input id="password" type="password" placeholder="Password" />
-            <button id="loginButton">Login</button>
-            <button id="registerButton">Register</button>
-        </div>
-        <div id="chat" style="display:none;">
-            <h2>Chat Room</h2>
-            <div id="messages"></div>
-            <input id="messageInput" type="text" placeholder="Type your message here..." />
-            <button id="sendButton">Send</button>
-        </div>
+    <div class="chatroom">
+        <h1>Secret Ministration</h1>
+        <div id="messages" class="messages"></div>
+        <input type="text" id="name" placeholder="Enter your name" />
+        <input type="text" id="message" placeholder="Type your message..." />
+        <button id="send">Send</button>
     </div>
-    <script src="/socket.io/socket.io.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
