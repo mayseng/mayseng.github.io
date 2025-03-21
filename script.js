@@ -32,32 +32,4 @@ registerButton.addEventListener('click', () => {
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
 
-    fetch('http://localhost:3000/api/register', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ username, password })
-    })
-    .then(response => {
-        if (response.ok) {
-            alert('Registration successful');
-        } else {
-            alert('Registration failed');
-        }
-    });
-});
-
-sendButton.addEventListener('click', () => {
-    const message = messageInput.value;
-    if (message) {
-        socket.emit('newMessage', message);
-        messageInput.value = '';
-    }
-});
-
-socket.on('message', (message) => {
-    const messageElement = document.createElement('div');
-    messageElement.textContent = message;
-    messagesDiv.appendChild(messageElement);
-});
+    fetch('http://localhost:
