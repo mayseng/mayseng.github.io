@@ -1,41 +1,61 @@
-/* style.css */
+/* styles.css */
+
 body {
-    background-color: #000;
-    color: #00ff00;
-    font-family: 'Courier New', Courier, monospace;
+    font-family: Arial, sans-serif;
+    background-color: #f7f7f7;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 60%;
+    margin: 50px auto;
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+h1 {
+    color: #4CAF50;
     text-align: center;
 }
 
-.chatroom {
-    border: 2px solid #00ff00;
-    padding: 20px;
-    width: 400px;
-    margin: 50px auto;
-    background-color: #111;
-    box-shadow: 0 0 10px #00ff00;
+label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
 }
 
-.user-input, .messages {
-    margin: 10px 0;
-}
-
-input[type="text"] {
-    width: 70%;
+textarea, input[type="password"] {
+    width: 100%;
     padding: 10px;
-    border: 1px solid #00ff00;
-    background-color: #222;
-    color: #00ff00;
+    margin-top: 5px;
+    font-size: 1rem;
+    border-radius: 4px;
+    border: 1px solid #ddd;
 }
 
 button {
-    padding: 10px;
-    border: 1px solid #00ff00;
-    background-color: #222;
-    color: #00ff00;
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 15px;
+    margin-top: 15px;
+    border: none;
+    border-radius: 4px;
     cursor: pointer;
+    width: 100%;
+    font-size: 1rem;
 }
 
 button:hover {
-    background-color: #00ff00;
-    color: #000;
+    background-color: #45a049;
+}
+
+#output {
+    margin-top: 20px;
+}
+
+h2 {
+    color: #333;
 }
