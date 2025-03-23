@@ -1,27 +1,49 @@
 // script.js
-document.getElementById('setName').addEventListener('click', function() {
-    const username = document.getElementById('username').value;
-    if (username) {
-        localStorage.setItem('username', username);
-        alert(`Welcome, ${username}!`);
-        document.getElementById('username').style.display = 'none';
-        document.getElementById('setName').style.display = 'none';
-    } else {
-        alert('Please enter a name.');
-    }
-});
 
-document.getElementById('sendMessage').addEventListener('click', function() {
-    const messageInput = document.getElementById('messageInput');
-    const messagesDiv = document.getElementById('messages');
-    const username = localStorage.getItem('username') || 'Anonymous';
+// Simple Caesar cipher encryption
+function caesarCipher(str, shift) {
+    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    let result = '';
+    
+    for (let i = 0; i < str.length; i++) {
+        let char = str[i];
+        let isLower = char === char.toLowerCase();
 
-    if (messageInput.value) {
-        const message = document.createElement('div');
-        message.textContent = `${username}: ${messageInput.value}`;
-        messagesDiv.appendChild(message);
-        messageInput.value = '';
-    } else {
-        alert('Please enter a message.');
+        // Find index in alphabet
+        let idx = alphabet.indexOf(char);
+
+        // If character is in alphabet
+        if (idx !== -1) {
+            let newIdx = (idx + shift) % alphabet.length;
+            if (newIdx < 0) newIdx += alphabet.length;
+            result += alphabet[newIdx];
+        } else {
+            result += char;  // Non-alphabetic characters are not changed
+        }
     }
+    return result;
+}
+
+// Decrypt with the opposite shift
+function caesarDecipher(str, shift) {
+    return caesarCipher(str, -shift);
+}
+
+// Handle form submission
+document.getElementById('messageForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const message = document.getElementById('message').value;
+    const password = document.getElementById('password').value;
+
+    // Create a shift value based on the password length
+    const shift = password.length;
+
+    // Encrypt the message
+    const encryptedMessage = caesarCipher(message, shift);
+    document.getElementById('encryptedMessage').textContent = encryptedMessage;
+
+    // Decrypt the message
+    const decryptedMessage = caesarDecipher(encryptedMessage, shift);
+    document.getElementById('decryptedMessage').textContent = decryptedMessage;
 });
