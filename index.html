@@ -3,31 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Secret Ministration</title>
+    <title>Whispers from the Void</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
-        <h1>Secret Ministration</h1>
-        <p>Send a secret message, encrypted with your password!</p>
+        <h1>Whispers from the Void</h1>
+        <p>Send a message into the unknown, encrypted with a cryptic cipher.</p>
 
         <form id="messageForm">
-            <label for="message">Your Secret Message:</label>
-            <textarea id="message" rows="4" cols="50"></textarea>
+            <label for="message">Your Message:</label>
+            <textarea id="message" rows="4" placeholder="Whisper your secrets..."></textarea>
 
-            <label for="password">Password (for encryption):</label>
-            <input type="password" id="password" required>
+            <label for="password">Password to Summon the Message:</label>
+            <input type="password" id="password" placeholder="Enter the spell...">
 
-            <button type="submit">Encrypt & Send</button>
+            <button type="submit">Send into the Void</button>
         </form>
 
-        <div id="output">
-            <h2>Encrypted Message:</h2>
+        <div id="output" class="hidden">
+            <h2>The Whispered Message (Encrypted):</h2>
             <p id="encryptedMessage"></p>
 
-            <h2>Decrypted Message:</h2>
+            <h2>The Message Revealed:</h2>
             <p id="decryptedMessage"></p>
         </div>
+
+        <p class="footer">Beware, the void listens...</p>
     </div>
 
     <script src="script.js"></script>
