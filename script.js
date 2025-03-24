@@ -1,32 +1,77 @@
 // script.js
 
-// Simple Caesar cipher encryption
-function caesarCipher(str, shift) {
+// Audio elements for sound effects
+const whooshSound = document.getElementById('whoosh');
+const chimeSound = document.getElementById('chime');
+
+// Store previous messages in localStorage
+let messageHistory = JSON.parse(localStorage.getItem('messageHistory')) || [];
+
+function playSound(sound) {
+    sound.play();
+}
+
+// Vigenère cipher encryption
+function vigenereCipher(str, password) {
     const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
     let result = '';
-    
+    let passwordIndex = 0;
+
     for (let i = 0; i < str.length; i++) {
         let char = str[i];
-        let isLower = char === char.toLowerCase();
-
-        // Find index in alphabet
         let idx = alphabet.indexOf(char);
-
-        // If character is in alphabet
-        if (idx !== -1) {
-            let newIdx = (idx + shift) % alphabet.length;
-            if (newIdx < 0) newIdx += alphabet.length;
-            result += alphabet[newIdx];
+        if (idx === -1) {
+            result += char;
         } else {
-            result += char;  // Non-alphabetic characters are not changed
+            let shift = alphabet.indexOf(password[passwordIndex % password.length]);
+            let newIdx = (idx + shift) % alphabet.length;
+            result += alphabet[newIdx];
+            passwordIndex++;
         }
     }
     return result;
 }
 
-// Decrypt with the opposite shift
-function caesarDecipher(str, shift) {
-    return caesarCipher(str, -shift);
+// Caesar cipher encryption
+function caesarCipher(str, shift) {
+    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    let result = '';
+
+    for (let i = 0; i < str.length; i++) {
+        let char = str[i];
+        let idx = alphabet.indexOf(char);
+        if (idx === -1) {
+            result += char;
+        } else {
+            let newIdx = (idx + shift) % alphabet.length;
+            result += alphabet[newIdx];
+        }
+    }
+    return result;
+}
+
+// XOR cipher encryption
+function xorCipher(str, password) {
+    let result = '';
+    for (let i = 0; i < str.length; i++) {
+        let char = str[i];
+        result += String.fromCharCode(char.charCodeAt(0) ^ password.charCodeAt(i % password.length));
+    }
+    return result;
+}
+
+// Decryption function
+function decryptMessage(encryptedMessage, password, cipherType) {
+    switch (cipherType) {
+        case 'vigenere':
+            return vigenereCipher(encryptedMessage, password); // reverse of encryption
+        case 'caesar':
+            return caesarCipher(encryptedMessage, -password.length); // reverse shift
+        case 'xor':
+            return xorCipher(encryptedMessage, password); // same method for decryption
+        default:
+            return '';
+    }
 }
 
 // Handle form submission
@@ -35,15 +80,74 @@ document.getElementById('messageForm').addEventListener('submit', function (e) {
 
     const message = document.getElementById('message').value;
     const password = document.getElementById('password').value;
+    const cipherType = document.getElementById('cipher').value;
 
-    // Create a shift value based on the password length
-    const shift = password.length;
+    // Check for empty fields
+    if (message.trim() === "" || password.trim() === "") {
+        alert("Please fill in both the message and password.");
+        return;
+    }
 
-    // Encrypt the message
-    const encryptedMessage = caesarCipher(message, shift);
+    let encryptedMessage;
+
+    switch (cipherType) {
+        case 'vigenere':
+            encryptedMessage = vigenereCipher(message, password);
+            break;
+        case 'caesar':
+            encryptedMessage = caesarCipher(message, password.length);
+            break;
+        case 'xor':
+            encryptedMessage = xorCipher(message, password);
+            break;
+        default:
+            encryptedMessage = message;
+    }
+
+    const decryptedMessage = decryptMessage(encryptedMessage, password, cipherType);
+
+    // Update encrypted and decrypted messages in the UI
     document.getElementById('encryptedMessage').textContent = encryptedMessage;
-
-    // Decrypt the message
-    const decryptedMessage = caesarDecipher(encryptedMessage, shift);
     document.getElementById('decryptedMessage').textContent = decryptedMessage;
+
+    // Save to message history
+    const newMessage = {
+        encrypted: encryptedMessage,
+        decrypted: decryptedMessage,
+        cipher: cipherType,
+    };
+
+    messageHistory.push(newMessage);
+    localStorage.setItem('messageHistory', JSON.stringify(messageHistory));
+
+    // Play sound effects
+    playSound(whooshSound);
+    playSound(chimeSound);
+
+    // Show the output and update history display
+    document.getElementById('output').classList.remove('hidden');
+    displayMessageHistory();
 });
+
+// Function to display the message history
+function displayMessageHistory() {
+    const historyContainer = document.getElementById('messageHistory');
+    historyContainer.innerHTML = '';
+
+    if (messageHistory.length === 0) {
+        historyContainer.innerHTML = '<p>No messages yet...</p>';
+        return;
+    }
+
+    messageHistory.forEach((msg, index) => {
+        const historyItem = document.createElement('p');
+        historyItem.textContent = `Message ${index + 1}: ${msg.encrypted}`;
+        historyItem.addEventListener('click', () => {
+            alert(`Decrypted Message: ${msg.decrypted}`);
+        });
+        historyContainer.appendChild(historyItem);
+    });
+}
+
+// Display the history on initial load
+displayMessageHistory();
