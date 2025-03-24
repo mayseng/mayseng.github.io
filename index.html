@@ -9,7 +9,7 @@
 <body>
     <div class="container">
         <h1>Whispers from the Void</h1>
-        <p>Send a message into the unknown, encrypted with a cryptic cipher.</p>
+        <p>Send a message into the unknown, encrypted with one of the cryptic ciphers.</p>
 
         <form id="messageForm">
             <label for="message">Your Message:</label>
@@ -17,6 +17,13 @@
 
             <label for="password">Password to Summon the Message:</label>
             <input type="password" id="password" placeholder="Enter the spell...">
+
+            <label for="cipher">Select Cipher:</label>
+            <select id="cipher">
+                <option value="vigenere">Vigenère Cipher</option>
+                <option value="caesar">Caesar Cipher</option>
+                <option value="xor">XOR Cipher</option>
+            </select>
 
             <button type="submit">Send into the Void</button>
         </form>
@@ -29,8 +36,16 @@
             <p id="decryptedMessage"></p>
         </div>
 
+        <h3>Message History</h3>
+        <div id="messageHistory">
+            <p>No messages yet...</p>
+        </div>
+
         <p class="footer">Beware, the void listens...</p>
     </div>
+
+    <audio id="whoosh" src="whoosh.mp3"></audio>
+    <audio id="chime" src="chime.mp3"></audio>
 
     <script src="script.js"></script>
 </body>
