@@ -1,61 +1,137 @@
 /* styles.css */
 
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f7f7f7;
+* {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Courier New', Courier, monospace;
+    background-color: #111;
+    color: #fff;
+    text-align: center;
+    line-height: 1.5;
+    overflow: hidden;
 }
 
 .container {
-    width: 60%;
+    max-width: 800px;
     margin: 50px auto;
-    background-color: #fff;
+    background-color: #222;
     padding: 20px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
 }
 
 h1 {
-    color: #4CAF50;
-    text-align: center;
+    color: #bb0a2b;
+    text-shadow: 0 0 10px #bb0a2b, 0 0 20px #bb0a2b;
+    animation: pulse 2s infinite alternate;
 }
 
-label {
-    display: block;
-    margin-top: 10px;
-    font-weight: bold;
+@keyframes pulse {
+    0% {
+        text-shadow: 0 0 20px #bb0a2b, 0 0 40px #bb0a2b;
+    }
+    100% {
+        text-shadow: 0 0 10px #bb0a2b, 0 0 20px #bb0a2b;
+    }
 }
 
-textarea, input[type="password"] {
-    width: 100%;
-    padding: 10px;
-    margin-top: 5px;
-    font-size: 1rem;
-    border-radius: 4px;
-    border: 1px solid #ddd;
-}
-
-button {
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px 15px;
-    margin-top: 15px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    width: 100%;
-    font-size: 1rem;
-}
-
-button:hover {
-    background-color: #45a049;
-}
-
-#output {
+p {
+    font-size: 1.2rem;
     margin-top: 20px;
 }
 
-h2 {
-    color: #333;
+textarea, input[type="password"], select {
+    width: 100%;
+    padding: 15px;
+    margin-top: 10px;
+    border: 2px solid #444;
+    background-color: #333;
+    color: #fff;
+    font-size: 1rem;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    outline: none;
+    transition: 0.3s ease-in-out;
+}
+
+textarea:hover, input[type="password"]:hover, select:hover {
+    background-color: #444;
+    border-color: #bb0a2b;
+    box-shadow: 0 0 10px #bb0a2b;
+}
+
+button {
+    background-color: #bb0a2b;
+    color: #fff;
+    padding: 15px 30px;
+    margin-top: 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: 0.3s ease-in-out;
+    letter-spacing: 1px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+}
+
+button:hover {
+    background-color: #9b0926;
+    box-shadow: 0 0 25px rgba(255, 255, 255, 0.5);
+}
+
+.hidden {
+    display: none;
+}
+
+footer {
+    position: fixed;
+    bottom: 10px;
+    width: 100%;
+    font-size: 0.8rem;
+    color: #888;
+}
+
+#output {
+    margin-top: 30px;
+    font-family: 'Courier New', Courier, monospace;
+    color: #bbb;
+}
+
+#encryptedMessage, #decryptedMessage {
+    padding: 10px;
+    border: 1px solid #444;
+    margin-top: 15px;
+    background-color: #333;
+    color: #888;
+    word-wrap: break-word;
+}
+
+#messageHistory {
+    margin-top: 20px;
+    font-family: 'Courier New', Courier, monospace;
+    color: #bbb;
+    overflow: auto;
+    max-height: 200px;
+    border-top: 1px solid #444;
+    padding-top: 10px;
+}
+
+#messageHistory p {
+    margin: 5px;
+    cursor: pointer;
+}
+
+#messageHistory p:hover {
+    color: #bb0a2b;
+}
+
+.audio {
+    display: none;
 }
