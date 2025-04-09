@@ -6,7 +6,7 @@ const password = "password123"; // Set your password here
 let authenticated = false;
 
 // Initial login prompt
-output.innerHTML += '<div>Please enter your username and password to continue.</div>';
+output.innerHTML += '<div>Please enter your username and password in the format: username password</div>';
 
 input.addEventListener('keydown', function (event) {
     if (event.key === 'Enter') {
@@ -41,4 +41,10 @@ function handleCommand(command) {
             output.innerHTML += '<div>Available commands: help, schedule, homework, grades, exit</div>';
             break;
         case 'schedule':
-           
+            output.innerHTML += '<div>Your schedule: Math, Science, English, History</div>';
+            break;
+        case 'homework':
+            output.innerHTML += '<div>Homework: Math - Page 45, Science - Lab Report</div>';
+            break;
+        case 'grades':
+            output.innerHTML += '<div>Your grades: Math - A, Science -
