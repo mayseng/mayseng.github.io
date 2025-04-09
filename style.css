@@ -19,6 +19,7 @@ body {
     padding: 10px;
     box-sizing: border-box;
     overflow-y: auto;
+    border: 1px solid green; /* Optional: Add a border to resemble Command Prompt */
 }
 
 #output {
@@ -35,7 +36,7 @@ body {
 }
 
 #input {
-    background-color: transparent;
+    background-color: black;
     border: none;
     color: white;
     outline: none;
