@@ -1,7 +1,8 @@
 // script.js
 const output = document.getElementById('output');
 const input = document.getElementById('input');
-const passcode = '1234'; // Set your passcode here
+const username = 'user'; // Set your username here
+const password = 'pass'; // Set your password here
 let authenticated = false;
 
 input.addEventListener('keydown', function(event) {
@@ -10,12 +11,7 @@ input.addEventListener('keydown', function(event) {
         input.value = '';
 
         if (!authenticated) {
-            if (command === passcode) {
-                authenticated = true;
-                output.innerHTML += '<div>Access granted. Type "help" for a list of commands.</div>';
-            } else {
-                output.innerHTML += '<div>Incorrect passcode. Try again.</div>';
-            }
+            handleLogin(command);
         } else {
             handleCommand(command);
         }
@@ -23,6 +19,17 @@ input.addEventListener('keydown', function(event) {
         output.scrollTop = output.scrollHeight;
     }
 });
+
+function handleLogin(command) {
+    const [user, pass] = command.split(' ');
+
+    if (user === username && pass === password) {
+        authenticated = true;
+        output.innerHTML += '<div>Access granted. Type "help" for a list of commands.</div>';
+    } else {
+        output.innerHTML += '<div>Access denied. Incorrect username or password.</div>';
+    }
+}
 
 function handleCommand(command) {
     switch (command.toLowerCase()) {
@@ -40,7 +47,7 @@ function handleCommand(command) {
             break;
         case 'exit':
             authenticated = false;
-            output.innerHTML += '<div>Logged out. Enter passcode to continue.</div>';
+            output.innerHTML += '<div>Logged out. Enter username and password to continue.</div>';
             break;
         default:
             output.innerHTML += `<div>Unknown command: ${command}</div>`;
