@@ -1,19 +1,44 @@
+/* styles.css */
 body {
+    background-color: black;
+    color: white;
+    font-family: 'Courier New', Courier, monospace;
     margin: 0;
-    overflow: hidden;
-}
-
-.game-container {
-    position: relative;
-    width: 100vw;
+    padding: 0;
     height: 100vh;
-    background-color: #87CEEB; /* Sky blue */
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-#character {
-    position: absolute;
-    width: 50px;
-    height: 50px;
-    background-color: red; /* Character color */
-    border-radius: 50%; /* Make it circular */
+.terminal {
+    width: 80%;
+    height: 80%;
+    background-color: black;
+    color: white;
+    padding: 10px;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+#output {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.input-line {
+    display: flex;
+}
+
+.prompt {
+    margin-right: 5px;
+}
+
+#input {
+    background-color: transparent;
+    border: none;
+    color: white;
+    outline: none;
+    flex-grow: 1;
+    font-family: 'Courier New', Courier, monospace;
 }
