@@ -1,11 +1,14 @@
 // script.js
 const output = document.getElementById('output');
 const input = document.getElementById('input');
-const username = 'user'; // Set your username here
-const password = 'pass'; // Set your password here
+const username = "admin"; // Set your username here
+const password = "password123"; // Set your password here
 let authenticated = false;
 
-input.addEventListener('keydown', function(event) {
+// Initial login prompt
+output.innerHTML += '<div>Please enter your username and password to continue.</div>';
+
+input.addEventListener('keydown', function (event) {
     if (event.key === 'Enter') {
         const command = input.value.trim();
         input.value = '';
@@ -16,6 +19,7 @@ input.addEventListener('keydown', function(event) {
             handleCommand(command);
         }
 
+        // Scroll to the bottom of the output
         output.scrollTop = output.scrollHeight;
     }
 });
@@ -37,19 +41,4 @@ function handleCommand(command) {
             output.innerHTML += '<div>Available commands: help, schedule, homework, grades, exit</div>';
             break;
         case 'schedule':
-            output.innerHTML += '<div>Your schedule: Math, Science, English, History</div>';
-            break;
-        case 'homework':
-            output.innerHTML += '<div>Homework: Math - Page 45, Science - Lab Report</div>';
-            break;
-        case 'grades':
-            output.innerHTML += '<div>Your grades: Math - A, Science - B, English - A, History - B+</div>';
-            break;
-        case 'exit':
-            authenticated = false;
-            output.innerHTML += '<div>Logged out. Enter username and password to continue.</div>';
-            break;
-        default:
-            output.innerHTML += `<div>Unknown command: ${command}</div>`;
-    }
-}
+           
