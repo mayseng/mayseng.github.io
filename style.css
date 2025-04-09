@@ -1,8 +1,8 @@
 /* styles.css */
 body {
-    background-color: black; /* Background color of the terminal */
-    color: white; /* Default text color */
-    font-family: 'Consolas', 'Courier New', monospace; /* Monospace font for terminal */
+    background-color: black; /* Full black background */
+    color: white; /* White text */
+    font-family: 'Consolas', 'Courier New', monospace; /* Monospace font */
     margin: 0;
     padding: 0;
     height: 100vh; /* Full height */
@@ -20,7 +20,6 @@ body {
     box-sizing: border-box; /* Include padding in width/height */
     overflow-y: auto; /* Scrollable output */
     border: 1px solid #2e2e2e; /* Dark border to mimic Command Prompt */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Optional shadow for depth */
 }
 
 #output {
@@ -35,6 +34,7 @@ body {
 
 .prompt {
     margin-right: 5px; /* Space between prompt and input */
+    color: white; /* White prompt text */
 }
 
 #input {
