@@ -22,7 +22,7 @@ export function signup() {
 }
 
 export function login() {
-  // similar, show errors on page
+  // same pattern as signup
 }
 
 export function logout() {
