@@ -1,49 +1,30 @@
-/* styles.css */
 body {
-    background-color: black; /* Full black background */
-    color: white; /* White text */
-    font-family: 'Consolas', 'Courier New', monospace; /* Monospace font */
-    margin: 0;
-    padding: 0;
-    height: 100vh; /* Full height */
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  background: #111;
+  color: #0f0;
 }
 
-.terminal {
-    width: 80%; /* Width of the terminal */
-    height: 80%; /* Height of the terminal */
-    background-color: black; /* Terminal background */
-    color: white; /* Terminal text color */
-    padding: 10px; /* Padding inside the terminal */
-    box-sizing: border-box; /* Include padding in width/height */
-    overflow-y: auto; /* Scrollable output */
-    border: 1px solid #2e2e2e; /* Dark border to mimic Command Prompt */
+#chat-box {
+  border: 1px solid #0f0;
+  padding: 10px;
+  height: 400px;
+  overflow-y: scroll;
+  margin-bottom: 10px;
+  background: #000;
 }
 
-#output {
-    white-space: pre-wrap; /* Preserve whitespace */
-    word-wrap: break-word; /* Break long words */
-    line-height: 1.5; /* Line height for readability */
+input {
+  margin: 5px;
+  padding: 5px;
+  background: #222;
+  color: #0f0;
+  border: 1px solid #0f0;
 }
 
-.input-line {
-    display: flex; /* Flexbox for input line */
-}
-
-.prompt {
-    margin-right: 5px; /* Space between prompt and input */
-    color: white; /* White prompt text */
-}
-
-#input {
-    background-color: black; /* Input background */
-    border: none; /* No border */
-    color: white; /* Input text color */
-    outline: none; /* No outline */
-    flex-grow: 1; /* Take remaining space */
-    font-family: 'Consolas', 'Courier New', monospace; /* Monospace font */
-    caret-color: white; /* Cursor color */
-    font-size: 16px; /* Font size for input */
+button {
+  background: #0f0;
+  color: #000;
+  padding: 5px 10px;
+  cursor: pointer;
 }
