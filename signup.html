@@ -3,14 +3,18 @@
 <head>
   <title>Sign Up</title>
   <link rel="stylesheet" href="styles.css">
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+  <!-- Importing the script as a module -->
+  <script type="module" src="auth.js"></script>
 </head>
 <body>
   <h1>Sign Up</h1>
   <input type="email" id="email" placeholder="Email"><br>
   <input type="password" id="password" placeholder="Password"><br>
-  <button onclick="signup()">Sign Up</button>
-  <script src="auth.js"></script>
+  <button id="signup-btn">Sign Up</button>
+
+  <script type="module">
+    import { signup } from './auth.js';
+    document.getElementById('signup-btn').addEventListener('click', signup);
+  </script>
 </body>
 </html>
