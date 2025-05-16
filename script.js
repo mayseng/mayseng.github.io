@@ -2,7 +2,7 @@
 const firebaseConfig = {
   apiKey: "AIzaSyC3NzI9YQuX1auwT0Wsmis9qAC1M_LdhHI",
   authDomain: "secretministrationcom.firebaseapp.com",
-  databaseURL: "https://YOUR_PROJECT_ID.firebaseio.com",
+  databaseURL: "https://secretministrationcom.firebaseio.com",
   projectId: "secretministrationcom",
 };
 
