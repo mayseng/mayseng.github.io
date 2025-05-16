@@ -1,31 +1,32 @@
 import { auth } from './firebase-config.js';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
 
-// Exporting the function so you can import and attach it in HTML
 export function signup() {
   const email = document.getElementById('email').value;
   const password = document.getElementById('password').value;
+  const errorMsg = document.getElementById('error-message');
+  errorMsg.textContent = '';
+
+  if (!email || !password) {
+    errorMsg.textContent = 'Please enter both email and password.';
+    return;
+  }
+
   createUserWithEmailAndPassword(auth, email, password)
     .then(() => {
-      alert('Signup successful! Redirecting...');
-      window.location.href = 'chatroom.html';
+      window.location.href = '../chatroom/';
     })
-    .catch(error => alert(error.message));
+    .catch(error => {
+      errorMsg.textContent = error.message;
+    });
 }
 
 export function login() {
-  const email = document.getElementById('email').value;
-  const password = document.getElementById('password').value;
-  signInWithEmailAndPassword(auth, email, password)
-    .then(() => {
-      alert('Login successful! Redirecting...');
-      window.location.href = 'chatroom.html';
-    })
-    .catch(error => alert(error.message));
+  // similar, show errors on page
 }
 
 export function logout() {
   signOut(auth).then(() => {
-    window.location.href = 'index.html';
+    window.location.href = '../';
   });
 }
