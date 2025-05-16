@@ -1,41 +1,31 @@
-// Firebase Config
-const firebaseConfig = {
-  apiKey: "AIzaSyC3NzI9YQuX1auwT0Wsmis9qAC1M_LdhHI",
-  authDomain: "secretministrationcom.firebaseapp.com",
-  databaseURL: "https://secretministrationcom.firebaseio.com",
-  projectId: "secretministrationcom",
-};
+import { auth } from './firebase-config.js';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
 
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-
-// Signup function
-function signup() {
+// Exporting the function so you can import and attach it in HTML
+export function signup() {
   const email = document.getElementById('email').value;
   const password = document.getElementById('password').value;
-  auth.createUserWithEmailAndPassword(email, password)
+  createUserWithEmailAndPassword(auth, email, password)
     .then(() => {
-      alert('Signup successful! Redirecting to chatroom...');
+      alert('Signup successful! Redirecting...');
       window.location.href = 'chatroom.html';
     })
     .catch(error => alert(error.message));
 }
 
-// Login function
-function login() {
+export function login() {
   const email = document.getElementById('email').value;
   const password = document.getElementById('password').value;
-  auth.signInWithEmailAndPassword(email, password)
+  signInWithEmailAndPassword(auth, email, password)
     .then(() => {
-      alert('Login successful! Redirecting to chatroom...');
+      alert('Login successful! Redirecting...');
       window.location.href = 'chatroom.html';
     })
     .catch(error => alert(error.message));
 }
 
-// Logout function (used in chatroom)
-function logout() {
-  auth.signOut().then(() => {
+export function logout() {
+  signOut(auth).then(() => {
     window.location.href = 'index.html';
   });
 }
