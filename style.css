@@ -1,30 +1,66 @@
 body {
+  margin: 0;
   font-family: Arial, sans-serif;
-  padding: 20px;
-  background: #111;
-  color: #0f0;
+  background: linear-gradient(to right, #141e30, #243b55);
+  color: #fff;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-#chat-box {
-  border: 1px solid #0f0;
-  padding: 10px;
-  height: 400px;
-  overflow-y: scroll;
-  margin-bottom: 10px;
-  background: #000;
+.signup-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
 }
 
-input {
-  margin: 5px;
-  padding: 5px;
-  background: #222;
-  color: #0f0;
-  border: 1px solid #0f0;
+.signup-card {
+  background: #1f1f1f;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 4px 30px rgba(0,0,0,0.2);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
 }
 
-button {
-  background: #0f0;
-  color: #000;
-  padding: 5px 10px;
+.signup-card h2 {
+  margin-bottom: 20px;
+}
+
+.signup-card input {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+.signup-card button {
+  background-color: #00c6ff;
+  color: white;
+  border: none;
+  padding: 12px;
+  width: 100%;
+  border-radius: 8px;
   cursor: pointer;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+.signup-card button:hover {
+  background-color: #0072ff;
+}
+
+#error-message {
+  color: #ff4d4d;
+  margin-top: 10px;
+}
+
+.signup-card p a {
+  color: #00c6ff;
+  text-decoration: none;
 }
