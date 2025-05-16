@@ -1,21 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Command Prompt Interface</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <title>Secret Ministration</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
 </head>
 <body>
-    <div class="terminal">
-        <div id="output">
-            <div id="login-prompt">Please enter your username and password to continue.</div>
-        </div>
-        <div class="input-line">
-            <span class="prompt">C:\Users\YourName&gt;</span>
-            <input type="text" id="input" autofocus>
-        </div>
-    </div>
-    <script src="script.js"></script>
+  <h1>Secretministration Chatroom</h1>
+  <div id="chat-box"></div>
+  <input type="text" id="username" placeholder="Your name">
+  <input type="text" id="message" placeholder="Your message">
+  <button onclick="sendMessage()">Send</button>
+
+  <script src="chat.js"></script>
 </body>
 </html>
