@@ -1,50 +1,34 @@
-// script.js
-const output = document.getElementById('output');
-const input = document.getElementById('input');
-const username = "admin"; // Set your username here
-const password = "password123"; // Set your password here
-let authenticated = false;
+// Your Firebase config (replace this with your real config from Firebase)
+const firebaseConfig = {
+  apiKey: "AIzaSyC3NzI9YQuX1auwT0Wsmis9qAC1M_LdhHI",
+  authDomain: "secretministrationcom.firebaseapp.com",
+  databaseURL: "https://YOUR_PROJECT_ID.firebaseio.com",
+  projectId: "secretministrationcom",
+};
 
-// Initial login prompt
-output.innerHTML += '<div>Please enter your username and password in the format: username password</div>';
+// Initialize Firebase
+const app = firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+const messagesRef = db.ref("messages");
 
-input.addEventListener('keydown', function (event) {
-    if (event.key === 'Enter') {
-        const command = input.value.trim();
-        input.value = '';
-
-        if (!authenticated) {
-            handleLogin(command);
-        } else {
-            handleCommand(command);
-        }
-
-        // Scroll to the bottom of the output
-        output.scrollTop = output.scrollHeight;
-    }
-});
-
-function handleLogin(command) {
-    const [user, pass] = command.split(' ');
-
-    if (user === username && pass === password) {
-        authenticated = true;
-        output.innerHTML += '<div>Access granted. Type "help" for a list of commands.</div>';
-    } else {
-        output.innerHTML += '<div>Access denied. Incorrect username or password.</div>';
-    }
+// Send message function
+function sendMessage() {
+  const user = document.getElementById('username').value;
+  const message = document.getElementById('message').value;
+  if (user && message) {
+    messagesRef.push({
+      user: user,
+      message: message,
+      timestamp: Date.now()
+    });
+    document.getElementById('message').value = '';
+  }
 }
 
-function handleCommand(command) {
-    switch (command.toLowerCase()) {
-        case 'help':
-            output.innerHTML += '<div>Available commands: help, schedule, homework, grades, exit</div>';
-            break;
-        case 'schedule':
-            output.innerHTML += '<div>Your schedule: Math, Science, English, History</div>';
-            break;
-        case 'homework':
-            output.innerHTML += '<div>Homework: Math - Page 45, Science - Lab Report</div>';
-            break;
-        case 'grades':
-            output.innerHTML += '<div>Your grades: Math - A, Science -
+// Listen for new messages
+messagesRef.on('child_added', (snapshot) => {
+  const msg = snapshot.val();
+  const msgDiv = document.createElement('div');
+  msgDiv.textContent = msg.user + ": " + msg.message;
+  document.getElementById('chat-box').appendChild(msgDiv);
+});
