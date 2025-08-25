@@ -41,12 +41,8 @@ body {
   overflow: hidden;
   clip: rect(0, 0, 0, 0);
 }
-#title::before {
-  animation: glitchTop 2s infinite;
-}
-#title::after {
-  animation: glitchBottom 2s infinite;
-}
+#title::before { animation: glitchTop 2s infinite; }
+#title::after { animation: glitchBottom 2s infinite; }
 
 /* Heartbeat orb */
 #heartbeat {
@@ -87,7 +83,7 @@ body {
 .particles:nth-child(4) { width: 20px; height: 20px; left: 30%; top: 50%; animation-duration: 25s; }
 .particles:nth-child(5) { width: 12px; height: 12px; left: 80%; top: 70%; animation-duration: 28s; }
 
-/* Temporary energy orbs (spawned on click) */
+/* Energy orbs */
 .energy-orb {
   position: absolute;
   width: 15px;
@@ -98,6 +94,31 @@ body {
   animation: orbFloat 2.5s forwards ease-out;
   pointer-events: none;
   z-index: 3;
+}
+
+/* Eye tracker */
+#eye {
+  position: absolute;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: #00ffff;
+  box-shadow: 0 0 15px #00ffff, 0 0 25px #9d4dff;
+  pointer-events: none;
+  z-index: 4;
+  transform: translate(-50%, -50%);
+}
+
+/* Cursor trail */
+.cursor-trail {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(0, 255, 255, 0.5);
+  pointer-events: none;
+  z-index: 4;
+  animation: trailFade 0.8s forwards;
 }
 
 /* Animations */
@@ -146,4 +167,9 @@ body {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
+}
+
+@keyframes trailFade {
+  0% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(0.5); }
 }
