@@ -2,10 +2,10 @@ let lastInteraction = Date.now();
 const statusEl = document.getElementById("status");
 const titleEl = document.getElementById("title");
 
-// Apply glitch data-text to title
+// Add glitch data-text for glitch layers
 titleEl.setAttribute("data-text", titleEl.textContent);
 
-// Detect interaction
+// Detect activity
 function resetDecay() {
   lastInteraction = Date.now();
   statusEl.textContent = "It breathes with you...";
@@ -15,16 +15,20 @@ window.addEventListener("mousemove", resetDecay);
 window.addEventListener("click", resetDecay);
 window.addEventListener("keydown", resetDecay);
 
-// Decay effect if inactive
+// Decay effect
 setInterval(() => {
   let now = Date.now();
-  if (now - lastInteraction > 5000) { // 5 sec of inactivity
+  if (now - lastInteraction > 6000) { // 6 seconds inactivity
     statusEl.textContent = "It is decaying...";
     statusEl.style.color = "#ff0033";
 
-    // Add glitch effect to background
-    document.body.style.background = `radial-gradient(circle at center, #100010, #000 80%)`;
+    // Background turns darker, particles dim
+    document.body.style.background = `radial-gradient(circle at center, #150015, #000 90%)`;
+    document.querySelectorAll(".particles").forEach(p => {
+      p.style.background = "rgba(255, 0, 51, 0.3)";
+    });
   } else {
     document.body.style.background = `radial-gradient(circle at center, #0a0a0a, #000 80%)`;
-  }
-}, 1000);
+    document.querySelectorAll(".particles").forEach(p => {
+      p.style.background = "rgba(0, 255, 204, 0.3)";
+    });
