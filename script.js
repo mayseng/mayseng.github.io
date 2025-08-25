@@ -54,3 +54,38 @@ setInterval(()=>{
     document.body.style.filter="hue-rotate(0deg) brightness(1)";
   }
 },1000);
+let idle = false;
+
+// Inactivity decay
+setInterval(()=>{
+  let now = Date.now();
+  if(now-lastInteraction>6000){
+    statusEl.textContent="It is decaying...";
+    statusEl.style.color="#ff3366";
+    document.body.style.filter="hue-rotate(45deg) brightness(0.7)";
+
+    if(!idle){
+      idle = true;
+      // Start eye blink every 2 seconds when idle
+      eyeBlinkInterval = setInterval(()=>{
+        eye.style.animation = "eyeBlink 0.2s";
+        setTimeout(()=> eye.style.animation = "eyePulse 1.5s infinite", 200);
+      }, 2000);
+
+      // Change eye color
+      eye.classList.add("eye-idle");
+    }
+
+  }else{
+    statusEl.textContent="It breathes with you...";
+    statusEl.style.color="#aaa";
+    document.body.style.filter="hue-rotate(0deg) brightness(1)";
+
+    if(idle){
+      idle = false;
+      clearInterval(eyeBlinkInterval);
+      eye.style.animation = "eyePulse 1.5s infinite";
+      eye.classList.remove("eye-idle");
+    }
+  }
+},1000);
