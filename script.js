@@ -2,33 +2,40 @@ let lastInteraction = Date.now();
 const statusEl = document.getElementById("status");
 const titleEl = document.getElementById("title");
 
-// Add glitch data-text for glitch layers
+// Add glitch text
 titleEl.setAttribute("data-text", titleEl.textContent);
 
-// Detect activity
+// Reset decay on activity
 function resetDecay() {
   lastInteraction = Date.now();
   statusEl.textContent = "It breathes with you...";
   statusEl.style.color = "#aaa";
 }
 window.addEventListener("mousemove", resetDecay);
-window.addEventListener("click", resetDecay);
+window.addEventListener("click", (e) => {
+  resetDecay();
+  spawnEnergyOrb(e.pageX, e.pageY);
+});
 window.addEventListener("keydown", resetDecay);
 
-// Decay effect
+// Inactivity decay
 setInterval(() => {
   let now = Date.now();
-  if (now - lastInteraction > 6000) { // 6 seconds inactivity
+  if (now - lastInteraction > 6000) {
     statusEl.textContent = "It is decaying...";
-    statusEl.style.color = "#ff0033";
-
-    // Background turns darker, particles dim
-    document.body.style.background = `radial-gradient(circle at center, #150015, #000 90%)`;
-    document.querySelectorAll(".particles").forEach(p => {
-      p.style.background = "rgba(255, 0, 51, 0.3)";
-    });
+    statusEl.style.color = "#ff3366";
+    document.body.style.filter = "hue-rotate(45deg) brightness(0.7)";
   } else {
-    document.body.style.background = `radial-gradient(circle at center, #0a0a0a, #000 80%)`;
-    document.querySelectorAll(".particles").forEach(p => {
-      p.style.background = "rgba(0, 255, 204, 0.3)";
-    });
+    document.body.style.filter = "hue-rotate(0deg) brightness(1)";
+  }
+}, 1000);
+
+// Energy orb feature
+function spawnEnergyOrb(x, y) {
+  const orb = document.createElement("div");
+  orb.className = "energy-orb";
+  orb.style.left = `${x - 7}px`;
+  orb.style.top = `${y - 7}px`;
+  document.body.appendChild(orb);
+  setTimeout(() => orb.remove(), 2500); // remove after animation
+}
