@@ -1,34 +1,30 @@
-// Your Firebase config (replace this with your real config from Firebase)
-const firebaseConfig = {
-  apiKey: "AIzaSyC3NzI9YQuX1auwT0Wsmis9qAC1M_LdhHI",
-  authDomain: "secretministrationcom.firebaseapp.com",
-  databaseURL: "https://secretministrationcom.firebaseio.com",
-  projectId: "secretministrationcom",
-};
+let lastInteraction = Date.now();
+const statusEl = document.getElementById("status");
+const titleEl = document.getElementById("title");
 
-// Initialize Firebase
-const app = firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
-const messagesRef = db.ref("messages");
+// Apply glitch data-text to title
+titleEl.setAttribute("data-text", titleEl.textContent);
 
-// Send message function
-function sendMessage() {
-  const user = document.getElementById('username').value;
-  const message = document.getElementById('message').value;
-  if (user && message) {
-    messagesRef.push({
-      user: user,
-      message: message,
-      timestamp: Date.now()
-    });
-    document.getElementById('message').value = '';
-  }
+// Detect interaction
+function resetDecay() {
+  lastInteraction = Date.now();
+  statusEl.textContent = "It breathes with you...";
+  statusEl.style.color = "#aaa";
 }
+window.addEventListener("mousemove", resetDecay);
+window.addEventListener("click", resetDecay);
+window.addEventListener("keydown", resetDecay);
 
-// Listen for new messages
-messagesRef.on('child_added', (snapshot) => {
-  const msg = snapshot.val();
-  const msgDiv = document.createElement('div');
-  msgDiv.textContent = msg.user + ": " + msg.message;
-  document.getElementById('chat-box').appendChild(msgDiv);
-});
+// Decay effect if inactive
+setInterval(() => {
+  let now = Date.now();
+  if (now - lastInteraction > 5000) { // 5 sec of inactivity
+    statusEl.textContent = "It is decaying...";
+    statusEl.style.color = "#ff0033";
+
+    // Add glitch effect to background
+    document.body.style.background = `radial-gradient(circle at center, #100010, #000 80%)`;
+  } else {
+    document.body.style.background = `radial-gradient(circle at center, #0a0a0a, #000 80%)`;
+  }
+}, 1000);
