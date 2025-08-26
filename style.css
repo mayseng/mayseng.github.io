@@ -1,116 +1,173 @@
-/* Reset & base */
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body {
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: linear-gradient(270deg, #0a0018, #140033, #0a0018);
-  background-size: 600% 600%;
-  font-family: 'Orbitron', sans-serif;
-  overflow: hidden;
-  animation: gradientShift 30s ease infinite;
+:root{
+  --bg:#05060a;
+  --bg2:#0a0c14;
+  --fg:#d0e6ff;
+  --accent:#67ffd1;
+  --accent2:#8a7bff;
+  --danger:#ff3b6b;
+  --ok:#5cf29a;
+  --muted:#6d7a91;
 }
 
-/* Container */
-#container { text-align: center; z-index: 2; position: relative; }
-
-/* Title */
-#title {
-  font-size: 3.5rem;
-  position: relative;
-  text-shadow: 0 0 20px #9d4dff, 0 0 35px #00aaff;
-  animation: breathe 3s infinite ease-in-out;
-}
-#title::before, #title::after {
-  content: attr(data-text);
-  position: absolute;
-  top: 0; left: 0;
-  color: #b366ff;
-  overflow: hidden;
-  clip: rect(0,0,0,0);
-}
-#title::before { animation: glitchTop 2s infinite; }
-#title::after { animation: glitchBottom 2s infinite; }
-
-/* Heartbeat orb */
-#heartbeat {
-  width: 140px; height: 140px;
-  margin: 30px auto;
-  border-radius: 50%;
-  background: #9d4dff;
-  box-shadow: 0 0 25px #9d4dff, 0 0 50px #00aaff;
-  animation: heartbeat 1.5s infinite;
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  background:
+    radial-gradient(1200px 400px at 20% -10%, rgba(138,123,255,.08), transparent 60%),
+    radial-gradient(800px 500px at 120% 120%, rgba(103,255,209,.06), transparent 60%),
+    linear-gradient(180deg, var(--bg), var(--bg2) 80%);
+  color:var(--fg);
+  font-family:"IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  overflow:hidden;
 }
 
-/* Status text */
-#status { margin-top: 10px; font-size: 1.2rem; color: #aaa; transition: color 1s; }
-#hint { margin-top: 15px; font-size: 0.9rem; color: #666; font-style: italic; }
+/* Boot overlay */
+#boot{
+  position:fixed; inset:0; background: #020307;
+  color:#97ffa9;
+  padding:28px;
+  display:flex; flex-direction:column; gap:12px;
+  text-shadow:0 0 8px rgba(151,255,169,.35);
+  filter:contrast(1.05) saturate(1.2);
+}
+.boot-logo{
+  color:#97ffa9; font-weight:600; letter-spacing:.12em; opacity:.9;
+}
+#boot-log{
+  flex:1; overflow:hidden; white-space:pre-wrap; line-height:1.4;
+  border:1px solid rgba(151,255,169,.25);
+  padding:12px; background:rgba(1,8,4,.4);
+}
+.boot-hint{opacity:.6; font-size:.9rem}
+.hidden{display:none}
 
-/* Particles */
-.particles { position: absolute; border-radius: 50%; background: rgba(157,77,255,0.3); animation: float 20s infinite linear; z-index:1; }
-.particles:nth-child(1){width:10px;height:10px;left:20%;top:80%;animation-duration:20s;}
-.particles:nth-child(2){width:15px;height:15px;left:70%;top:60%;animation-duration:18s;}
-.particles:nth-child(3){width:8px;height:8px;left:50%;top:90%;animation-duration:22s;}
-.particles:nth-child(4){width:20px;height:20px;left:30%;top:50%;animation-duration:25s;}
-.particles:nth-child(5){width:12px;height:12px;left:80%;top:70%;animation-duration:28s;}
+/* Top bar */
+.topbar{
+  display:flex; justify-content:space-between; align-items:center;
+  padding:14px 16px; border-bottom:1px solid rgba(255,255,255,.06);
+  background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0));
+  backdrop-filter: blur(2px);
+}
+.title{font-weight:600; letter-spacing:.08em}
+.blink{animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
 
-/* Eye tracker */
-#eye {
-  position: absolute;
-  width: 40px; height: 40px;
-  border-radius: 50%;
-  background: radial-gradient(circle, #00ffff, #9d4dff);
-  box-shadow: 0 0 30px #00ffff, 0 0 60px #9d4dff;
-  pointer-events: none;
-  z-index: 999; /* make sure it's on top */
-  transform: translate(-50%, -50%);
-  animation: eyePulse 1.5s infinite;
+/* Buttons */
+.btn{
+  background:transparent; border:1px solid rgba(255,255,255,.18);
+  color:var(--fg); padding:8px 10px; border-radius:8px;
+  cursor:pointer; font:inherit; transition:.2s;
+}
+.btn:hover{border-color: var(--accent); box-shadow:0 0 0 2px rgba(103,255,209,.15)}
+.controls{display:flex; gap:10px}
+
+/* Status bar */
+.statusbar{
+  display:flex; align-items:center; gap:14px;
+  padding:12px 16px; border-bottom:1px dashed rgba(255,255,255,.06);
+}
+.meter{
+  flex:1; height:12px; border-radius:999px; overflow:hidden;
+  background:rgba(255,255,255,.06);
+  box-shadow:inset 0 0 12px rgba(0,0,0,.45);
+}
+.meter-fill{
+  height:100%; width:0%;
+  background:linear-gradient(90deg, var(--danger), var(--accent2));
+  box-shadow:0 0 12px rgba(255,59,107,.35);
+  transition:width .6s cubic-bezier(.2,.8,.2,1);
+}
+.meter-label{min-width:140px; text-align:right; color:var(--muted)}
+.returning{margin-left:auto; color:#97ffa9; opacity:.8}
+
+/* Layout grid */
+.grid{
+  display:grid; grid-template-columns: 280px 1fr; height: calc(100vh - 118px);
 }
 
-/* Cursor trail */
-.cursor-trail {
-  position: absolute;
-  width: 15px; height: 15px;
-  border-radius: 50%;
-  background: radial-gradient(circle, #00ffff, #9d4dff);
-  pointer-events: none;
-  z-index: 999;
-  animation: trailFade 1s forwards;
-  box-shadow: 0 0 20px #00ffff, 0 0 40px #9d4dff;
+/* Files panel */
+.files{
+  border-right:1px solid rgba(255,255,255,.06);
+  padding:14px; overflow:auto;
+  background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(0,0,0,0));
+}
+.files-title{color:var(--muted); margin-bottom:10px}
+.file{
+  padding:8px 10px; border:1px solid rgba(255,255,255,.08);
+  border-radius:8px; margin-bottom:8px; cursor:pointer;
+  transition:.15s; user-select:none;
+}
+.file:hover{border-color: var(--accent); box-shadow:0 0 0 2px rgba(103,255,209,.12)}
+.file:active{transform:scale(.98)}
+
+/* Terminal */
+.terminal{
+  position:relative; padding:16px; overflow:auto;
+}
+.output{
+  height:calc(100% - 48px); overflow:auto; padding-right:8px;
+  font-size:14px; line-height:1.5;
+}
+.input-row{
+  position:absolute; left:16px; right:16px; bottom:12px;
+  display:flex; align-items:center; gap:8px;
+  padding:8px; background:rgba(255,255,255,.02);
+  border:1px solid rgba(255,255,255,.08); border-radius:8px;
+}
+.prompt{color:var(--accent)}
+.input{
+  flex:1; background:transparent; border:0; outline:0; color:var(--fg);
+  font:inherit; padding:6px 2px;
 }
 
-/* Energy orbs */
-.energy-orb {
-  position: absolute;
-  width: 20px; height: 20px;
-  border-radius: 50%;
-  background: radial-gradient(circle, #00aaff, #9d4dff);
-  box-shadow: 0 0 25px #00aaff, 0 0 50px #9d4dff;
-  animation: orbFloat 2.5s forwards ease-out;
-  pointer-events: none;
-  z-index: 998;
+/* Crash overlay */
+.crash{
+  position:fixed; inset:0; background:#0019a6; color:#e6f0ff;
+  display:grid; place-items:center; text-shadow:none;
+}
+.crash-inner{max-width:700px; padding:28px; background:rgba(255,255,255,.06); border:2px solid rgba(255,255,255,.25)}
+.crash-title{font-size:28px; font-weight:700; margin-bottom:12px}
+.crash .small{opacity:.8; font-size:.9rem}
+
+/* Glitch pixels (cursor trail) */
+.pixel{
+  position:fixed; width:10px; height:10px; pointer-events:none; z-index:9999;
+  background:linear-gradient(135deg, var(--accent2), var(--accent));
+  mix-blend-mode:screen; opacity:.9; filter:saturate(1.6) contrast(1.2);
+  animation:pixel .6s ease-out forwards;
+}
+@keyframes pixel{
+  0%{transform:translate(0,0) scale(1)}
+  60%{opacity:.7; transform:translate(-6px,-10px) scale(1.3)}
+  100%{opacity:0; transform:translate(6px,-18px) scale(.6)}
 }
 
-/* Animations */
-@keyframes float {0%{transform:translateY(0) scale(1);opacity:0.5;}50%{transform:translateY(-300px) scale(1.2);opacity:1;}100%{transform:translateY(0) scale(1);opacity:0.5;}}
-@keyframes breathe {0%,100%{transform:scale(1);}50%{transform:scale(1.07);}}
-@keyframes heartbeat {0%{transform:scale(1);box-shadow:0 0 20px #9d4dff;}25%{transform:scale(1.15);box-shadow:0 0 30px #00aaff;}50%{transform:scale(1);box-shadow:0 0 20px #9d4dff;}75%{transform:scale(0.9);box-shadow:0 0 15px #7a3fff;}100%{transform:scale(1);box-shadow:0 0 20px #9d4dff;}}
-@keyframes glitchTop {0%{clip:rect(0,900px,0,0);}20%{clip:rect(0,900px,20px,0);left:-2px;}40%{clip:rect(0,900px,0,0);}60%{clip:rect(0,900px,15px,0);left:2px;}100%{clip:rect(0,900px,0,0);left:0;}}
-@keyframes glitchBottom {0%{clip:rect(0,900px,0,0);}20%{clip:rect(10px,900px,30px,0);left:2px;}40%{clip:rect(0,900px,0,0);}60%{clip:rect(5px,900px,25px,0);left:-2px;}100%{clip:rect(0,900px,0,0);left:0;}}
-@keyframes orbFloat {0%{transform:translate(0,0) scale(1);opacity:1;}50%{transform:translate(-20px,-80px) scale(1.5);opacity:0.8;}100%{transform:translate(20px,-150px) scale(0.5);opacity:0;}}
-@keyframes trailFade {0%{opacity:1;transform:scale(1);}100%{opacity:0;transform:scale(0.2);}}
-@keyframes gradientShift {0%{background-position:0% 50%;}50%{background-position:100% 50%;}100%{background-position:0% 50%;}}
-@keyframes eyePulse {0%,100%{transform:translate(-50%,-50%) scale(1);}50%{transform:translate(-50%,-50%) scale(1.3);}}
-/* Eye blink animation */
-@keyframes eyeBlink {
-  0%, 20%, 100% { transform: translate(-50%, -50%) scaleY(1); }
-  10% { transform: translate(-50%, -50%) scaleY(0.1); }
+/* Corruption FX */
+body.corrupt{
+  filter:hue-rotate(35deg) contrast(1.15) saturate(1.35) invert(.04);
+}
+body.corrupt .terminal{animation:shake .35s linear}
+@keyframes shake{
+  0%,100%{transform:translate(0,0)}
+  25%{transform:translate(2px,-2px)}
+  50%{transform:translate(-2px,2px)}
+  75%{transform:translate(2px,2px)}
 }
 
-/* Eye idle color change */
-.eye-idle {
-  background: radial-gradient(circle, #ff3366, #ff99cc) !important;
-  box-shadow: 0 0 40px #ff3366, 0 0 80px #ff99cc !important;
+/* Scanlines + subtle vignette */
+#app::before{
+  content:""; position:absolute; inset:0; pointer-events:none; z-index:1;
+  background:
+    repeating-linear-gradient(0deg, rgba(255,255,255,.03), rgba(255,255,255,.03) 1px, transparent 1px, transparent 3px),
+    radial-gradient(80% 120% at 50% 10%, transparent, rgba(0,0,0,.25));
 }
+#app{position:relative}
 
+/* Accessibility helpers */
+.output .line{white-space:pre-wrap}
+
+/* Scrollbars */
+*::-webkit-scrollbar{height:10px;width:10px}
+*::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12); border-radius:999px}
+*::-webkit-scrollbar-track{background:rgba(255,255,255,.04)}
