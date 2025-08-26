@@ -1,7 +1,6 @@
 const output = document.getElementById("output");
 const input = document.getElementById("command-input");
 
-// Print to terminal
 function printLine(text) {
   output.textContent += text + "\n";
   output.scrollTop = output.scrollHeight;
@@ -14,7 +13,7 @@ async function handleCommand(cmd) {
       break;
 
     case "hello":
-      printLine("Hello user. Connected to AI system.");
+      printLine("Hello user. You are connected to Secret Ministration AI.");
       break;
 
     case "clear":
@@ -36,7 +35,7 @@ async function askAI(question) {
   printLine("AI> (thinking...)");
 
   try {
-    const res = await fetch("https://your-vercel-app.vercel.app/api/ask", {
+    const res = await fetch("backend.php", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ question })
@@ -60,4 +59,4 @@ input.addEventListener("keydown", e => {
   }
 });
 
-printLine("Welcome to AI Terminal. Type 'help' for commands.");
+printLine("Welcome to Secret Ministration Terminal. Type 'help' for commands.");
