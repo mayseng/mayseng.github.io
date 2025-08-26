@@ -2,27 +2,72 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>The Living Website</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GLITCH TERMINAL</title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-  <!-- Floating background particles -->
-  <div class="particles"></div>
-  <div class="particles"></div>
-  <div class="particles"></div>
-  <div class="particles"></div>
-  <div class="particles"></div>
+  <!-- Boot sequence overlay -->
+  <div id="boot">
+    <div class="boot-logo">GLITCH//OS v0.9</div>
+    <pre id="boot-log"></pre>
+    <div class="boot-hint">Press any key to skip</div>
+  </div>
 
-  <!-- Eye tracker -->
-  <div id="eye"></div>
+  <!-- Main UI -->
+  <div id="app" class="hidden">
+    <header class="topbar">
+      <div class="title">GLITCH TERMINAL<span class="blink">_</span></div>
 
-  <div id="container">
-    <h1 id="title">The Living Website</h1>
-    <div id="heartbeat"></div>
-    <p id="status">It breathes with you...</p>
-    <p id="hint">Click anywhere to feed it with energy.</p>
+      <div class="controls">
+        <button id="noiseToggle" class="btn">Noise: OFF</button>
+        <button id="repairBtn" class="btn">Attempt Repair</button>
+      </div>
+    </header>
+
+    <section class="statusbar">
+      <div class="meter">
+        <div id="meterFill" class="meter-fill" style="width: 0%;"></div>
+      </div>
+      <div id="meterLabel" class="meter-label">Corruption: 0%</div>
+      <div id="returningNotice" class="returning"></div>
+    </section>
+
+    <main class="grid">
+      <!-- Fake desktop/files -->
+      <section class="files">
+        <div class="files-title">/system/files</div>
+        <div class="file" data-name="manifest.log">manifest.log</div>
+        <div class="file" data-name="whisper.txt">whisper.txt</div>
+        <div class="file" data-name="core.dump">core.dump</div>
+        <div class="file" data-name="secrets.asc">secrets.asc</div>
+        <div class="file" data-name="readme.md">readme.md</div>
+      </section>
+
+      <!-- Terminal -->
+      <section class="terminal">
+        <div id="termOutput" class="output" aria-live="polite"></div>
+        <div class="input-row">
+          <span class="prompt">&gt;</span>
+          <input id="termInput" class="input" type="text" spellcheck="false" autocomplete="off" autofocus placeholder="type 'help'"/>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Crash overlay (for 'shutdown') -->
+  <div id="crash" class="crash hidden">
+    <div class="crash-inner">
+      <div class="crash-title">SYSTEM HALTED</div>
+      <div class="crash-body">
+        A fatal exception 0E has occurred at 0028:C0034E2 in VXD VMM(01) + 00003E2.
+        The current application will be terminated.<br/><br/>
+        * Press <strong>R</strong> to restart the system.<br/>
+        * Any unsaved memory will be lost.<br/><br/>
+        <span class="small">GLITCH//OS : STOP CODE 0xC000021A</span>
+      </div>
+    </div>
   </div>
 
   <script src="script.js"></script>
