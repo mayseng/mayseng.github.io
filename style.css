@@ -1,173 +1,116 @@
-:root{
-  --bg:#05060a;
-  --bg2:#0a0c14;
-  --fg:#d0e6ff;
-  --accent:#67ffd1;
-  --accent2:#8a7bff;
-  --danger:#ff3b6b;
-  --ok:#5cf29a;
-  --muted:#6d7a91;
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-*{box-sizing:border-box}
-html,body{height:100%}
-body{
-  margin:0;
-  background:
-    radial-gradient(1200px 400px at 20% -10%, rgba(138,123,255,.08), transparent 60%),
-    radial-gradient(800px 500px at 120% 120%, rgba(103,255,209,.06), transparent 60%),
-    linear-gradient(180deg, var(--bg), var(--bg2) 80%);
-  color:var(--fg);
-  font-family:"IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-  overflow:hidden;
+body {
+  background: black;
+  color: #33ffcc;
+  font-family: 'Share Tech Mono', monospace;
+  overflow: hidden;
 }
 
-/* Boot overlay */
-#boot{
-  position:fixed; inset:0; background: #020307;
-  color:#97ffa9;
-  padding:28px;
-  display:flex; flex-direction:column; gap:12px;
-  text-shadow:0 0 8px rgba(151,255,169,.35);
-  filter:contrast(1.05) saturate(1.2);
-}
-.boot-logo{
-  color:#97ffa9; font-weight:600; letter-spacing:.12em; opacity:.9;
-}
-#boot-log{
-  flex:1; overflow:hidden; white-space:pre-wrap; line-height:1.4;
-  border:1px solid rgba(151,255,169,.25);
-  padding:12px; background:rgba(1,8,4,.4);
-}
-.boot-hint{opacity:.6; font-size:.9rem}
-.hidden{display:none}
-
-/* Top bar */
-.topbar{
-  display:flex; justify-content:space-between; align-items:center;
-  padding:14px 16px; border-bottom:1px solid rgba(255,255,255,.06);
-  background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0));
-  backdrop-filter: blur(2px);
-}
-.title{font-weight:600; letter-spacing:.08em}
-.blink{animation:blink 1s steps(1) infinite}
-@keyframes blink{50%{opacity:0}}
-
-/* Buttons */
-.btn{
-  background:transparent; border:1px solid rgba(255,255,255,.18);
-  color:var(--fg); padding:8px 10px; border-radius:8px;
-  cursor:pointer; font:inherit; transition:.2s;
-}
-.btn:hover{border-color: var(--accent); box-shadow:0 0 0 2px rgba(103,255,209,.15)}
-.controls{display:flex; gap:10px}
-
-/* Status bar */
-.statusbar{
-  display:flex; align-items:center; gap:14px;
-  padding:12px 16px; border-bottom:1px dashed rgba(255,255,255,.06);
-}
-.meter{
-  flex:1; height:12px; border-radius:999px; overflow:hidden;
-  background:rgba(255,255,255,.06);
-  box-shadow:inset 0 0 12px rgba(0,0,0,.45);
-}
-.meter-fill{
-  height:100%; width:0%;
-  background:linear-gradient(90deg, var(--danger), var(--accent2));
-  box-shadow:0 0 12px rgba(255,59,107,.35);
-  transition:width .6s cubic-bezier(.2,.8,.2,1);
-}
-.meter-label{min-width:140px; text-align:right; color:var(--muted)}
-.returning{margin-left:auto; color:#97ffa9; opacity:.8}
-
-/* Layout grid */
-.grid{
-  display:grid; grid-template-columns: 280px 1fr; height: calc(100vh - 118px);
+.hidden {
+  display: none;
 }
 
-/* Files panel */
-.files{
-  border-right:1px solid rgba(255,255,255,.06);
-  padding:14px; overflow:auto;
-  background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(0,0,0,0));
-}
-.files-title{color:var(--muted); margin-bottom:10px}
-.file{
-  padding:8px 10px; border:1px solid rgba(255,255,255,.08);
-  border-radius:8px; margin-bottom:8px; cursor:pointer;
-  transition:.15s; user-select:none;
-}
-.file:hover{border-color: var(--accent); box-shadow:0 0 0 2px rgba(103,255,209,.12)}
-.file:active{transform:scale(.98)}
-
-/* Terminal */
-.terminal{
-  position:relative; padding:16px; overflow:auto;
-}
-.output{
-  height:calc(100% - 48px); overflow:auto; padding-right:8px;
-  font-size:14px; line-height:1.5;
-}
-.input-row{
-  position:absolute; left:16px; right:16px; bottom:12px;
-  display:flex; align-items:center; gap:8px;
-  padding:8px; background:rgba(255,255,255,.02);
-  border:1px solid rgba(255,255,255,.08); border-radius:8px;
-}
-.prompt{color:var(--accent)}
-.input{
-  flex:1; background:transparent; border:0; outline:0; color:var(--fg);
-  font:inherit; padding:6px 2px;
+/* Boot screen */
+#boot-screen {
+  width: 100%;
+  height: 100vh;
+  background: black;
+  padding: 20px;
+  color: #33ffcc;
+  font-size: 14px;
+  white-space: pre-wrap;
+  overflow-y: auto;
 }
 
-/* Crash overlay */
-.crash{
-  position:fixed; inset:0; background:#0019a6; color:#e6f0ff;
-  display:grid; place-items:center; text-shadow:none;
-}
-.crash-inner{max-width:700px; padding:28px; background:rgba(255,255,255,.06); border:2px solid rgba(255,255,255,.25)}
-.crash-title{font-size:28px; font-weight:700; margin-bottom:12px}
-.crash .small{opacity:.8; font-size:.9rem}
-
-/* Glitch pixels (cursor trail) */
-.pixel{
-  position:fixed; width:10px; height:10px; pointer-events:none; z-index:9999;
-  background:linear-gradient(135deg, var(--accent2), var(--accent));
-  mix-blend-mode:screen; opacity:.9; filter:saturate(1.6) contrast(1.2);
-  animation:pixel .6s ease-out forwards;
-}
-@keyframes pixel{
-  0%{transform:translate(0,0) scale(1)}
-  60%{opacity:.7; transform:translate(-6px,-10px) scale(1.3)}
-  100%{opacity:0; transform:translate(6px,-18px) scale(.6)}
+/* Terminal main */
+#terminal {
+  padding: 20px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-/* Corruption FX */
-body.corrupt{
-  filter:hue-rotate(35deg) contrast(1.15) saturate(1.35) invert(.04);
-}
-body.corrupt .terminal{animation:shake .35s linear}
-@keyframes shake{
-  0%,100%{transform:translate(0,0)}
-  25%{transform:translate(2px,-2px)}
-  50%{transform:translate(-2px,2px)}
-  75%{transform:translate(2px,2px)}
+#title {
+  text-align: center;
+  color: #ff0066;
+  text-shadow: 0 0 10px #ff0066, 0 0 20px #33ffcc;
+  animation: glitch 1s infinite;
 }
 
-/* Scanlines + subtle vignette */
-#app::before{
-  content:""; position:absolute; inset:0; pointer-events:none; z-index:1;
-  background:
-    repeating-linear-gradient(0deg, rgba(255,255,255,.03), rgba(255,255,255,.03) 1px, transparent 1px, transparent 3px),
-    radial-gradient(80% 120% at 50% 10%, transparent, rgba(0,0,0,.25));
+@keyframes glitch {
+  0% { text-shadow: 2px 2px #33ffcc; }
+  20% { text-shadow: -2px -2px #ff0066; }
+  40% { text-shadow: 2px -2px #ffcc00; }
+  60% { text-shadow: -2px 2px #00ffff; }
+  80% { text-shadow: 0 0 20px red; }
+  100% { text-shadow: 0 0 10px #33ffcc; }
 }
-#app{position:relative}
 
-/* Accessibility helpers */
-.output .line{white-space:pre-wrap}
+/* Corruption bar */
+#corruption-container {
+  margin: 10px auto;
+  width: 80%;
+  height: 20px;
+  border: 1px solid #33ffcc;
+  position: relative;
+}
 
-/* Scrollbars */
-*::-webkit-scrollbar{height:10px;width:10px}
-*::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12); border-radius:999px}
-*::-webkit-scrollbar-track{background:rgba(255,255,255,.04)}
+#corruption-bar {
+  background: linear-gradient(90deg, #33ffcc, #ff0066);
+  height: 100%;
+  width: 0%;
+  transition: width 0.5s;
+}
+
+/* Output area */
+#output {
+  flex-grow: 1;
+  margin: 10px 0;
+  overflow-y: auto;
+  font-size: 14px;
+  line-height: 1.3;
+}
+
+/* Input line */
+.input-line {
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+}
+
+.input-line span {
+  margin-right: 5px;
+  color: #ff0066;
+}
+
+#command-input {
+  flex-grow: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #33ffcc;
+  font-family: inherit;
+  font-size: 16px;
+}
+
+/* Cursor glitch */
+.cursor-trail {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: #ff0066;
+  opacity: 0.7;
+  pointer-events: none;
+  animation: fadeOut 0.8s forwards;
+}
+
+@keyframes fadeOut {
+  to { opacity: 0; transform: scale(0.5); }
+}
