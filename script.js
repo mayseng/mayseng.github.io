@@ -10,7 +10,7 @@ let corruptionLevel = parseInt(localStorage.getItem("corruption")) || 0;
 let lastVisit = localStorage.getItem("lastVisit");
 let corruptionTimer;
 
-// Boot sequence text
+// Boot sequence lines
 const bootLines = [
   "[BOOT] Initializing system...",
   "[BOOT] Loading kernel modules...",
@@ -22,11 +22,12 @@ const bootLines = [
 
 let lineIndex = 0;
 
+// Boot typing effect
 function typeBootLine() {
   if (lineIndex < bootLines.length) {
     bootText.textContent += bootLines[lineIndex] + "\n";
     lineIndex++;
-    setTimeout(typeBootLine, 1000);
+    setTimeout(typeBootLine, 800);
   } else {
     setTimeout(() => {
       bootScreen.classList.add("hidden");
@@ -35,10 +36,9 @@ function typeBootLine() {
     }, 1000);
   }
 }
-
 typeBootLine();
 
-// Terminal
+// === Terminal Start ===
 function startTerminal() {
   if (lastVisit) {
     printLine(`System remembers you... Last login: ${lastVisit}`);
@@ -51,17 +51,21 @@ function startTerminal() {
   localStorage.setItem("lastVisit", new Date().toLocaleString());
   updateCorruption();
 
-  // Corruption increases over time
+  // Corruption increases slowly
   corruptionTimer = setInterval(() => {
     corruptionLevel++;
     updateCorruption();
     if (corruptionLevel % 10 === 0) glitchEvent();
   }, 5000);
 
-  // Command input
+  // FIX: command listener
   input.addEventListener("keydown", e => {
     if (e.key === "Enter") {
-      handleCommand(input.value.trim());
+      const cmd = input.value.trim();
+      if (cmd !== "") {
+        printLine("> " + cmd);
+        handleCommand(cmd);
+      }
       input.value = "";
     }
   });
@@ -100,23 +104,30 @@ function glitchEvent() {
 }
 
 function handleCommand(cmd) {
-  if (cmd === "help") {
-    printLine("Available commands: help, hello, repair, shutdown, unlock, clear");
-  } else if (cmd === "hello") {
-    printLine("...It sees you.");
-  } else if (cmd === "repair") {
-    corruptionLevel = Math.max(0, corruptionLevel - 10);
-    printLine("Repair attempt successful. Corruption reduced.");
-    updateCorruption();
-  } else if (cmd === "shutdown") {
-    printLine("System shutting down...");
-    setTimeout(() => location.reload(), 2000);
-  } else if (cmd === "unlock") {
-    printLine(">>> SECRET FILE UNLOCKED <<<");
-    printLine("Lorem ipsum corruptum est...");
-  } else if (cmd === "clear") {
-    output.innerHTML = "";
-  } else {
-    printLine("Unknown command: " + cmd);
+  switch(cmd.toLowerCase()) {
+    case "help":
+      printLine("Available commands: help, hello, repair, shutdown, unlock, clear");
+      break;
+    case "hello":
+      printLine("...It sees you.");
+      break;
+    case "repair":
+      corruptionLevel = Math.max(0, corruptionLevel - 10);
+      printLine("Repair attempt successful. Corruption reduced.");
+      updateCorruption();
+      break;
+    case "shutdown":
+      printLine("System shutting down...");
+      setTimeout(() => location.reload(), 2000);
+      break;
+    case "unlock":
+      printLine(">>> SECRET FILE UNLOCKED <<<");
+      printLine("lorem.ipsum.corruptum...");
+      break;
+    case "clear":
+      output.innerHTML = "";
+      break;
+    default:
+      printLine("Unknown command: " + cmd);
   }
 }
