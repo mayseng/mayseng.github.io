@@ -4,7 +4,7 @@ header("Content-Type: application/json");
 $input = json_decode(file_get_contents("php://input"), true);
 $question = $input["question"] ?? "Hello";
 
-$apiKey = "YOUR_OPENAI_API_KEY_HERE"; // <--- put your real key here
+$apiKey = "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"; // <--- put your real key here
 
 $ch = curl_init("https://api.openai.com/v1/chat/completions");
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
