@@ -10,26 +10,8 @@ body {
   background: black;
   color: #33ffcc;
   font-family: 'Share Tech Mono', monospace;
-  overflow: hidden;
 }
 
-.hidden {
-  display: none;
-}
-
-/* Boot screen */
-#boot-screen {
-  width: 100%;
-  height: 100vh;
-  background: black;
-  padding: 20px;
-  color: #33ffcc;
-  font-size: 14px;
-  white-space: pre-wrap;
-  overflow-y: auto;
-}
-
-/* Terminal main */
 #terminal {
   padding: 20px;
   height: 100vh;
@@ -37,52 +19,15 @@ body {
   flex-direction: column;
 }
 
-#title {
-  text-align: center;
-  color: #ff0066;
-  text-shadow: 0 0 10px #ff0066, 0 0 20px #33ffcc;
-  animation: glitch 1s infinite;
-}
-
-@keyframes glitch {
-  0% { text-shadow: 2px 2px #33ffcc; }
-  20% { text-shadow: -2px -2px #ff0066; }
-  40% { text-shadow: 2px -2px #ffcc00; }
-  60% { text-shadow: -2px 2px #00ffff; }
-  80% { text-shadow: 0 0 20px red; }
-  100% { text-shadow: 0 0 10px #33ffcc; }
-}
-
-/* Corruption bar */
-#corruption-container {
-  margin: 10px auto;
-  width: 80%;
-  height: 20px;
-  border: 1px solid #33ffcc;
-  position: relative;
-}
-
-#corruption-bar {
-  background: linear-gradient(90deg, #33ffcc, #ff0066);
-  height: 100%;
-  width: 0%;
-  transition: width 0.5s;
-}
-
-/* Output area */
 #output {
   flex-grow: 1;
-  margin: 10px 0;
   overflow-y: auto;
-  font-size: 14px;
-  line-height: 1.3;
+  white-space: pre-wrap;
 }
 
-/* Input line */
 .input-line {
   display: flex;
   align-items: center;
-  font-size: 16px;
 }
 
 .input-line span {
@@ -98,19 +43,4 @@ body {
   color: #33ffcc;
   font-family: inherit;
   font-size: 16px;
-}
-
-/* Cursor glitch */
-.cursor-trail {
-  position: absolute;
-  width: 6px;
-  height: 6px;
-  background: #ff0066;
-  opacity: 0.7;
-  pointer-events: none;
-  animation: fadeOut 0.8s forwards;
-}
-
-@keyframes fadeOut {
-  to { opacity: 0; transform: scale(0.5); }
 }
