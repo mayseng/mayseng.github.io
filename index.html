@@ -2,29 +2,17 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>SM</title>
+  <title>AI Terminal</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="boot-screen">
-    <pre id="boot-text"></pre>
-  </div>
-
-  <div id="terminal" class="hidden">
-    <h1 id="title">[ GL!TCH TERM!NAL ]</h1>
-    <div id="corruption-container">
-      <div id="corruption-bar"></div>
-    </div>
-    <div id="output"></div>
+  <div id="terminal">
+    <pre id="output"></pre>
     <div class="input-line">
       <span>&gt;</span>
       <input type="text" id="command-input" autofocus autocomplete="off">
     </div>
   </div>
-
-  <!-- Sounds -->
-  <audio id="glitch-sound" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"></audio>
-  
   <script src="script.js"></script>
 </body>
 </html>
