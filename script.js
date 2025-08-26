@@ -1,62 +1,90 @@
-const output = document.getElementById("output");
-const input = document.getElementById("command-input");
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
 
-function printLine(text) {
-  output.textContent += text + "\n";
-  output.scrollTop = output.scrollHeight;
+canvas.width = 800;
+canvas.height = 600;
+
+// --- Map setup (1 = wall, 0 = empty)
+const map = [
+  [1,1,1,1,1,1,1,1,1,1],
+  [1,0,0,0,0,0,0,0,0,1],
+  [1,0,0,1,0,1,0,0,0,1],
+  [1,0,0,1,0,1,0,0,0,1],
+  [1,0,0,1,0,0,0,0,0,1],
+  [1,0,0,0,0,1,0,1,0,1],
+  [1,0,0,0,0,1,0,1,0,1],
+  [1,0,0,0,0,0,0,0,0,1],
+  [1,0,0,0,0,0,0,0,0,1],
+  [1,1,1,1,1,1,1,1,1,1]
+];
+
+const TILE = 64; // wall size
+let posX = 2.5, posY = 2.5; // player position
+let dir = 0; // facing angle
+
+// Controls
+const keys = {};
+document.addEventListener("keydown", e => keys[e.key] = true);
+document.addEventListener("keyup", e => keys[e.key] = false);
+
+// Main game loop
+function gameLoop() {
+  update();
+  render();
+  requestAnimationFrame(gameLoop);
 }
 
-async function handleCommand(cmd) {
-  switch(cmd.toLowerCase()) {
-    case "help":
-      printLine("Commands: help, hello, clear, ask <question>");
-      break;
+function update() {
+  const speed = 0.05;
+  const rotSpeed = 0.03;
 
-    case "hello":
-      printLine("Hello user. You are connected to Secret Ministration AI.");
-      break;
+  if (keys["ArrowLeft"] || keys["a"]) dir -= rotSpeed;
+  if (keys["ArrowRight"] || keys["d"]) dir += rotSpeed;
 
-    case "clear":
-      output.textContent = "";
-      break;
-
-    default:
-      if (cmd.startsWith("ask ")) {
-        const question = cmd.slice(4);
-        await askAI(question);
-      } else {
-        printLine("Unknown command. Type 'help'.");
-      }
+  let moveX = 0, moveY = 0;
+  if (keys["ArrowUp"] || keys["w"]) {
+    moveX += Math.cos(dir) * speed;
+    moveY += Math.sin(dir) * speed;
   }
-}
-
-async function askAI(question) {
-  printLine("You asked: " + question);
-  printLine("AI> (thinking...)");
-
-  try {
-    const res = await fetch("backend.php", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ question })
-    });
-
-    const data = await res.json();
-    output.textContent = output.textContent.replace("(thinking...)", data.answer);
-  } catch (err) {
-    printLine("AI> Error: " + err.message);
+  if (keys["ArrowDown"] || keys["s"]) {
+    moveX -= Math.cos(dir) * speed;
+    moveY -= Math.sin(dir) * speed;
   }
+
+  // Collision detection
+  if (map[Math.floor(posY)][Math.floor(posX + moveX)] === 0) posX += moveX;
+  if (map[Math.floor(posY + moveY)][Math.floor(posX)] === 0) posY += moveY;
 }
 
-input.addEventListener("keydown", e => {
-  if (e.key === "Enter") {
-    const cmd = input.value.trim();
-    if (cmd !== "") {
-      printLine("> " + cmd);
-      handleCommand(cmd);
+function render() {
+  ctx.fillStyle = "black";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  const numRays = canvas.width;
+  const fov = Math.PI / 3;
+
+  for (let x = 0; x < numRays; x++) {
+    const rayAngle = dir - fov/2 + fov * (x / numRays);
+    let distance = 0;
+    let hit = false;
+
+    let rayX = posX;
+    let rayY = posY;
+
+    while (!hit && distance < 20) {
+      rayX += Math.cos(rayAngle) * 0.05;
+      rayY += Math.sin(rayAngle) * 0.05;
+      distance += 0.05;
+
+      if (map[Math.floor(rayY)]?.[Math.floor(rayX)] === 1) hit = true;
     }
-    input.value = "";
-  }
-});
 
-printLine("Welcome to Secret Ministration Terminal. Type 'help' for commands.");
+    if (hit) {
+      const wallHeight = (1 / distance) * 400;
+      ctx.fillStyle = `rgb(${100/distance*5}, ${255/distance*2}, ${150/distance*3})`;
+      ctx.fillRect(x, (canvas.height/2) - wallHeight/2, 1, wallHeight);
+    }
+  }
+}
+
+gameLoop();
