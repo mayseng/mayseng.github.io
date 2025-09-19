@@ -8,34 +8,33 @@ const TILE = 64;
 const FOV = Math.PI / 3;
 const NUM_RAYS = canvas.width;
 
-let posX = 1.5, posY = 1.5;
+let posX = 2.5, posY = 2.5;
 let dir = 0;
-let pitch = 0;
 
 const SPEED = 0.07;
 const ROT_SPEED = 0.04;
 
-// Maze 20x20 (1=wall, 0=empty, 2=exit)
+// 20x20 map with wider spaces (more 0s)
 const map = [
   [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-  [1,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,2,1],
-  [1,0,1,0,1,0,1,1,1,1,0,1,0,1,1,1,1,0,0,1],
-  [1,0,1,0,0,0,1,0,0,1,0,0,0,1,0,0,1,1,0,1],
-  [1,0,1,1,1,0,1,0,1,1,1,1,0,1,0,1,0,0,0,1],
-  [1,0,0,0,1,0,0,0,0,0,0,1,0,0,0,1,1,1,0,1],
-  [1,1,1,0,1,1,1,1,1,1,0,1,1,1,0,0,0,1,0,1],
-  [1,0,0,0,0,0,0,0,0,1,0,0,0,1,1,1,0,1,0,1],
-  [1,0,1,1,1,1,1,1,0,1,1,1,0,0,0,1,0,1,0,1],
-  [1,0,1,0,0,0,0,1,0,0,0,1,0,1,0,1,0,1,0,1],
-  [1,0,1,0,1,1,0,1,1,1,0,1,0,1,0,1,0,1,0,1],
-  [1,0,0,0,1,0,0,0,0,1,0,0,0,1,0,0,0,0,0,1],
-  [1,1,1,0,1,0,1,1,0,1,1,1,0,1,1,1,1,1,0,1],
-  [1,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,1,0,1],
-  [1,0,1,1,1,1,1,0,1,1,0,1,1,1,1,1,0,1,0,1],
-  [1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,1],
-  [1,0,1,1,1,1,1,1,1,0,1,1,1,1,0,1,1,1,0,1],
+  [1,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,2,1],
+  [1,0,1,1,1,1,0,1,0,1,0,1,0,1,1,1,1,0,0,1],
+  [1,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,1,1,0,1],
+  [1,1,1,1,0,1,1,1,0,1,1,1,1,1,1,0,0,0,0,1],
+  [1,0,0,1,0,0,0,1,0,0,0,0,0,0,1,1,1,1,0,1],
+  [1,0,0,1,1,1,0,1,1,1,0,1,1,0,0,0,0,1,0,1],
+  [1,0,0,0,0,1,0,0,0,1,0,1,0,0,1,1,0,1,0,1],
+  [1,1,1,1,0,1,1,1,0,1,1,1,0,1,0,1,0,1,0,1],
+  [1,0,0,1,0,0,0,1,0,0,0,1,0,1,0,1,0,1,0,1],
+  [1,0,0,1,1,1,0,1,1,1,0,1,0,1,0,1,0,1,0,1],
+  [1,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,0,1],
+  [1,1,1,1,0,1,0,1,0,1,1,1,0,1,1,1,1,1,0,1],
+  [1,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,1,0,1],
+  [1,0,1,1,1,1,0,1,1,1,0,1,1,1,1,1,0,1,0,1],
+  [1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,1],
+  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,0,1],
   [1,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1],
-  [1,0,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1],
+  [1,0,1,1,1,1,1,1,1,0,1,0,1,1,1,1,1,1,1,1],
   [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
 ];
 
@@ -51,11 +50,9 @@ function gameLoop() {
 }
 
 function update() {
-  // Rotation
   if (keys["arrowleft"] || keys["a"]) dir -= ROT_SPEED;
   if (keys["arrowright"] || keys["d"]) dir += ROT_SPEED;
 
-  // Movement
   let moveX = 0, moveY = 0;
   if (keys["arrowup"] || keys["w"]) {
     moveX += Math.cos(dir) * SPEED;
@@ -66,241 +63,80 @@ function update() {
     moveY -= Math.sin(dir) * SPEED;
   }
 
-  // Collision detection with wall
-  if (map[Math.floor(posY)][Math.floor(posX + moveX)] === 0 || map[Math.floor(posY)][Math.floor(posX + moveX)] === 2) {
-    posX += moveX;
-  }
-  if (map[Math.floor(posY + moveY)] && (map[Math.floor(posY + moveY)][Math.floor(posX)] === 0 || map[Math.floor(posY + moveY)][Math.floor(posX)] === 2)) {
-    posY += moveY;
-  }
+  if (map[Math.floor(posY)][Math.floor(posX + moveX)] !== 1) posX += moveX;
+  if (map[Math.floor(posY + moveY)][Math.floor(posX)] !== 1) posY += moveY;
 }
 
 function render() {
-  // Clear screen: sky and floor for immersive effect
-  drawSkyAndFloor();
-
-  // Raycasting walls
-  for (let x = 0; x < NUM_RAYS; x++) {
-    castRay(x);
-  }
-
-  drawChestIfClose();
-
-  drawMiniMap();
-
-  checkVictory();
-}
-
-function drawSkyAndFloor() {
-  // Sky (ceiling)
-  const gradientSky = ctx.createLinearGradient(0, 0, 0, canvas.height / 2);
-  gradientSky.addColorStop(0, "#87ceeb");
-  gradientSky.addColorStop(1, "#003366");
-  ctx.fillStyle = gradientSky;
+  // Sky
+  ctx.fillStyle = "#87cefa";
   ctx.fillRect(0, 0, canvas.width, canvas.height / 2);
 
   // Floor
-  const gradientFloor = ctx.createLinearGradient(0, canvas.height / 2, 0, canvas.height);
-  gradientFloor.addColorStop(0, "#555");
-  gradientFloor.addColorStop(1, "#222");
-  ctx.fillStyle = gradientFloor;
+  ctx.fillStyle = "#444";
   ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
-}
 
-function castRay(x) {
-  const rayAngle = dir - FOV / 2 + FOV * (x / NUM_RAYS);
+  for (let x = 0; x < NUM_RAYS; x++) {
+    const rayAngle = dir - FOV / 2 + FOV * (x / NUM_RAYS);
+    let distance = 0;
+    let hit = false;
+    let rayX = posX;
+    let rayY = posY;
 
-  let distance = 0;
-  let hit = false;
-  let side = 0; // 0 vertical wall, 1 horizontal wall
-  let wallType = 0;
-  let wallX;
+    while (!hit && distance < 30) {
+      rayX += Math.cos(rayAngle) * 0.05;
+      rayY += Math.sin(rayAngle) * 0.05;
+      distance += 0.05;
 
-  // DDA algorithm variables
-  let mapX = Math.floor(posX);
-  let mapY = Math.floor(posY);
-
-  const deltaDistX = Math.abs(1 / Math.cos(rayAngle));
-  const deltaDistY = Math.abs(1 / Math.sin(rayAngle));
-
-  let stepX, stepY;
-  let sideDistX, sideDistY;
-
-  if (Math.cos(rayAngle) < 0) {
-    stepX = -1;
-    sideDistX = (posX - mapX) * deltaDistX;
-  } else {
-    stepX = 1;
-    sideDistX = (mapX + 1.0 - posX) * deltaDistX;
-  }
-
-  if (Math.sin(rayAngle) < 0) {
-    stepY = -1;
-    sideDistY = (posY - mapY) * deltaDistY;
-  } else {
-    stepY = 1;
-    sideDistY = (mapY + 1.0 - posY) * deltaDistY;
-  }
-
-  // DDA loop to find wall
-  while (!hit) {
-    if (sideDistX < sideDistY) {
-      sideDistX += deltaDistX;
-      mapX += stepX;
-      side = 0;
-    } else {
-      sideDistY += deltaDistY;
-      mapY += stepY;
-      side = 1;
+      const mapValue = map[Math.floor(rayY)]?.[Math.floor(rayX)];
+      if (mapValue === 1 || mapValue === 2) hit = true;
     }
 
-    if (map[mapY] && map[mapY][mapX] > 0) {
-      hit = true;
-      wallType = map[mapY][mapX];
-    }
+    const wallHeight = (1 / distance) * 500;
 
-    // Stop if distance too far
-    if (Math.sqrt((mapX - posX) ** 2 + (mapY - posY) ** 2) > 20) break;
+    // Adjust color by depth
+    const shade = Math.max(0.2, 1 - distance / 12);
+    ctx.fillStyle = `rgba(${200 * shade}, ${255 * shade}, ${255 * shade}, 1)`;
+    ctx.fillRect(x, (canvas.height / 2) - wallHeight / 2, 1, wallHeight);
   }
 
-  // Calculate distance to wall
-  if (side === 0) {
-    distance = (mapX - posX + (1 - stepX) / 2) / Math.cos(rayAngle);
-  } else {
-    distance = (mapY - posY + (1 - stepY) / 2) / Math.sin(rayAngle);
-  }
-
-  if (distance <= 0) distance = 0.01;
-
-  // Correct fish-eye
-  const correctedDistance = distance * Math.cos(rayAngle - dir);
-
-  // Calculate wall height on screen
-  const wallHeight = Math.min(canvas.height, (TILE / correctedDistance) * 350);
-
-  // Determine color based on wall type and side for shading
-  let color;
-  if (wallType === 1) {
-    color = side === 1 ? "#4b8b8b" : "#66b2b2"; // Different shade on sides
-  } else if (wallType === 2) {
-    color = "#ffdf00"; // exit color
-  }
-
-  // Darken color with distance for depth effect
-  const shade = Math.max(0.2, 1 - correctedDistance / 12);
-  color = shadeColor(color, shade);
-
-  // Draw wall slice
-  ctx.fillStyle = color;
-  ctx.fillRect(x, (canvas.height / 2) - wallHeight / 2, 1, wallHeight);
+  drawGoal();
+  checkVictory();
 }
 
-function shadeColor(color, percent) {
-  // shade rgb hex color, percent 0-1, darker as percent -> 0
-  let f=parseInt(color.slice(1),16),
-      t=0,
-      R=f>>16,
-      G=f>>8&0x00FF,
-      B=f&0x0000FF;
-  return "#" + (0x1000000 + (Math.floor(R*percent)<<16) + (Math.floor(G*percent)<<8) + Math.floor(B*percent)).toString(16).slice(1);
-}
+function drawGoal() {
+  const goalX = 18;
+  const goalY = 1;
 
-function drawChestIfClose() {
-  const exitX = 18.5;
-  const exitY = 1.5;
+  const dx = goalX + 0.5 - posX;
+  const dy = goalY + 0.5 - posY;
+  const dist = Math.sqrt(dx * dx + dy * dy);
 
-  const dx = exitX - posX;
-  const dy = exitY - posY;
-  const dist = Math.sqrt(dx*dx + dy*dy);
+  if (dist < 5) {
+    const size = 80 + 10 * Math.sin(Date.now() * 0.005);
+    const glow = 180 + 75 * Math.sin(Date.now() * 0.01);
 
-  if (dist < 6) {
-    // Pulse effect on chest glow
-    const glow = 128 + 127 * Math.sin(Date.now() * 0.008);
-    const size = 120 + 40 * Math.sin(Date.now() * 0.01);
-
-    const cx = canvas.width / 2;
-    const cy = canvas.height / 2 + 50;
-
-    ctx.shadowColor = `rgba(${glow}, ${glow/2}, 0, 0.9)`;
-    ctx.shadowBlur = 30;
-
-    // Chest base
-    ctx.fillStyle = `rgb(${glow}, ${glow/2}, 0)`;
-    ctx.fillRect(cx - size/2, cy - size/3, size, size * 0.6);
-
-    // Chest lid (trapezoid)
+    ctx.fillStyle = `rgba(${glow}, ${glow}, 100, 0.8)`;
     ctx.beginPath();
-    ctx.moveTo(cx - size/2, cy - size/3);
-    ctx.lineTo(cx + size/2, cy - size/3);
-    ctx.lineTo(cx + size/3, cy - size/2);
-    ctx.lineTo(cx - size/3, cy - size/2);
-    ctx.closePath();
+    ctx.arc(canvas.width / 2, canvas.height / 2 + 50, size / 2, 0, Math.PI * 2);
     ctx.fill();
 
-    // Lock (small gold rectangle)
-    ctx.shadowBlur = 0;
-    ctx.fillStyle = "#ffd700";
-    ctx.fillRect(cx - size/12, cy - size/6, size/6, size/10);
-
-    // Sparkles around chest
-    for(let i=0; i<5; i++){
-      const sparkleX = cx + (Math.random()-0.5) * size;
-      const sparkleY = cy - size/3 + (Math.random()-0.5) * size/2;
-      const sparkleSize = Math.random() * 3 + 2;
-      ctx.fillStyle = `rgba(255, 255, 100, ${Math.random()})`;
-      ctx.beginPath();
-      ctx.arc(sparkleX, sparkleY, sparkleSize, 0, Math.PI * 2);
-      ctx.fill();
-    }
+    ctx.fillStyle = "#fff";
+    ctx.font = "20px sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText("✨ EXIT AHEAD ✨", canvas.width / 2, canvas.height / 2 + 100);
   }
 }
 
-function drawMiniMap() {
-  const scale = 8;
-  const offsetX = 10;
-  const offsetY = canvas.height - map.length * scale - 10;
-
-  // Background for minimap
-  ctx.fillStyle = "rgba(0,0,0,0.7)";
-  ctx.fillRect(offsetX - 2, offsetY - 2, map[0].length * scale + 4, map.length * scale + 4);
-
-  // Draw map tiles
-  for(let y=0; y<map.length; y++) {
-    for(let x=0; x<map[y].length; x++) {
-      if(map[y][x] === 1) ctx.fillStyle = "#447777";
-      else if(map[y][x] === 2) ctx.fillStyle = "#ffdf00";
-      else ctx.fillStyle = "#002222";
-
-      ctx.fillRect(offsetX + x*scale, offsetY + y*scale, scale, scale);
-    }
-  }
-
-  // Draw player dot and direction
-  ctx.fillStyle = "#00ffcc";
-  ctx.beginPath();
-  ctx.arc(offsetX + posX*scale, offsetY + posY*scale, 5, 0, Math.PI*2);
-  ctx.fill();
-
-  ctx.strokeStyle = "#00ffcc";
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  ctx.moveTo(offsetX + posX*scale, offsetY + posY*scale);
-  ctx.lineTo(offsetX + (posX + Math.cos(dir)*1.5)*scale, offsetY + (posY + Math.sin(dir)*1.5)*scale);
-  ctx.stroke();
-}
-
-// Victory check & screen
 let hasWon = false;
 function checkVictory() {
   if (hasWon) return;
-
-  if (map[Math.floor(posY)][Math.floor(posX)] === 2) {
+  const currentTile = map[Math.floor(posY)][Math.floor(posX)];
+  if (currentTile === 2) {
     hasWon = true;
-    // Show victory screen after 0.5s delay
     setTimeout(() => {
-      alert("🎉 Congratulations! You found the treasure! 🎉");
-      // You can also reset or do more here
-    }, 500);
+      alert("🎉 You reached the end of the maze! 🎉");
+    }, 300);
   }
 }
 
