@@ -1,6 +1,6 @@
 body {
   margin: 0;
-  background: black;
+  background: #000814; /* dark blue-black */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -8,6 +8,8 @@ body {
 }
 
 canvas {
-  border: 3px solid #33ffcc;
+  border: 4px solid #00fff7;
+  box-shadow: 0 0 20px #00fff7;
   image-rendering: pixelated; /* crisp retro look */
+  background: #001d3d;
 }
