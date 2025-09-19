@@ -14,7 +14,7 @@ let dir = 0;
 const SPEED = 0.07;
 const ROT_SPEED = 0.04;
 
-// 20x20 map with wider spaces (more 0s)
+// Map (20x20) with wider paths and goal at (18, 1)
 const map = [
   [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
   [1,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,2,1],
@@ -93,8 +93,6 @@ function render() {
     }
 
     const wallHeight = (1 / distance) * 500;
-
-    // Adjust color by depth
     const shade = Math.max(0.2, 1 - distance / 12);
     ctx.fillStyle = `rgba(${200 * shade}, ${255 * shade}, ${255 * shade}, 1)`;
     ctx.fillRect(x, (canvas.height / 2) - wallHeight / 2, 1, wallHeight);
@@ -107,7 +105,6 @@ function render() {
 function drawGoal() {
   const goalX = 18;
   const goalY = 1;
-
   const dx = goalX + 0.5 - posX;
   const dy = goalY + 0.5 - posY;
   const dist = Math.sqrt(dx * dx + dy * dy);
@@ -115,12 +112,10 @@ function drawGoal() {
   if (dist < 5) {
     const size = 80 + 10 * Math.sin(Date.now() * 0.005);
     const glow = 180 + 75 * Math.sin(Date.now() * 0.01);
-
     ctx.fillStyle = `rgba(${glow}, ${glow}, 100, 0.8)`;
     ctx.beginPath();
     ctx.arc(canvas.width / 2, canvas.height / 2 + 50, size / 2, 0, Math.PI * 2);
     ctx.fill();
-
     ctx.fillStyle = "#fff";
     ctx.font = "20px sans-serif";
     ctx.textAlign = "center";
