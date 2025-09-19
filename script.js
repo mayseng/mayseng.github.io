@@ -1,138 +1,135 @@
-const canvas = document.getElementById("game");
-const ctx = canvas.getContext("2d");
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
-canvas.width = 800;
-canvas.height = 600;
-
-const TILE = 64;
-const FOV = Math.PI / 3;
-const NUM_RAYS = canvas.width;
-
-let posX = 2.5, posY = 2.5;
-let dir = 0;
-
-const SPEED = 0.07;
-const ROT_SPEED = 0.04;
-
-// Map (20x20) with wider paths and goal at (18, 1)
-const map = [
-  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-  [1,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,2,1],
-  [1,0,1,1,1,1,0,1,0,1,0,1,0,1,1,1,1,0,0,1],
-  [1,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,1,1,0,1],
-  [1,1,1,1,0,1,1,1,0,1,1,1,1,1,1,0,0,0,0,1],
-  [1,0,0,1,0,0,0,1,0,0,0,0,0,0,1,1,1,1,0,1],
-  [1,0,0,1,1,1,0,1,1,1,0,1,1,0,0,0,0,1,0,1],
-  [1,0,0,0,0,1,0,0,0,1,0,1,0,0,1,1,0,1,0,1],
-  [1,1,1,1,0,1,1,1,0,1,1,1,0,1,0,1,0,1,0,1],
-  [1,0,0,1,0,0,0,1,0,0,0,1,0,1,0,1,0,1,0,1],
-  [1,0,0,1,1,1,0,1,1,1,0,1,0,1,0,1,0,1,0,1],
-  [1,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,0,1],
-  [1,1,1,1,0,1,0,1,0,1,1,1,0,1,1,1,1,1,0,1],
-  [1,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,1,0,1],
-  [1,0,1,1,1,1,0,1,1,1,0,1,1,1,1,1,0,1,0,1],
-  [1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,1],
-  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,0,1],
-  [1,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1],
-  [1,0,1,1,1,1,1,1,1,0,1,0,1,1,1,1,1,1,1,1],
-  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
-];
-
-// Controls
-const keys = {};
-document.addEventListener("keydown", e => keys[e.key.toLowerCase()] = true);
-document.addEventListener("keyup", e => keys[e.key.toLowerCase()] = false);
-
-function gameLoop() {
-  update();
-  render();
-  requestAnimationFrame(gameLoop);
-}
-
-function update() {
-  if (keys["arrowleft"] || keys["a"]) dir -= ROT_SPEED;
-  if (keys["arrowright"] || keys["d"]) dir += ROT_SPEED;
-
-  let moveX = 0, moveY = 0;
-  if (keys["arrowup"] || keys["w"]) {
-    moveX += Math.cos(dir) * SPEED;
-    moveY += Math.sin(dir) * SPEED;
-  }
-  if (keys["arrowdown"] || keys["s"]) {
-    moveX -= Math.cos(dir) * SPEED;
-    moveY -= Math.sin(dir) * SPEED;
+class Wall {
+  constructor(x1, y1, x2, y2) {
+    this.a = { x: x1, y: y1 };
+    this.b = { x: x2, y: y2 };
   }
 
-  if (map[Math.floor(posY)][Math.floor(posX + moveX)] !== 1) posX += moveX;
-  if (map[Math.floor(posY + moveY)][Math.floor(posX)] !== 1) posY += moveY;
+  draw() {
+    ctx.strokeStyle = 'white';
+    ctx.beginPath();
+    ctx.moveTo(this.a.x, this.a.y);
+    ctx.lineTo(this.b.x, this.b.y);
+    ctx.stroke();
+  }
 }
 
-function render() {
-  // Sky
-  ctx.fillStyle = "#87cefa";
-  ctx.fillRect(0, 0, canvas.width, canvas.height / 2);
+class Ray {
+  constructor(x, y, angle) {
+    this.pos = { x, y };
+    this.dir = {
+      x: Math.cos(angle),
+      y: Math.sin(angle)
+    };
+  }
 
-  // Floor
-  ctx.fillStyle = "#444";
-  ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
+  cast(wall) {
+    const x1 = wall.a.x;
+    const y1 = wall.a.y;
+    const x2 = wall.b.x;
+    const y2 = wall.b.y;
 
-  for (let x = 0; x < NUM_RAYS; x++) {
-    const rayAngle = dir - FOV / 2 + FOV * (x / NUM_RAYS);
-    let distance = 0;
-    let hit = false;
-    let rayX = posX;
-    let rayY = posY;
+    const x3 = this.pos.x;
+    const y3 = this.pos.y;
+    const x4 = this.pos.x + this.dir.x;
+    const y4 = this.pos.y + this.dir.y;
 
-    while (!hit && distance < 30) {
-      rayX += Math.cos(rayAngle) * 0.05;
-      rayY += Math.sin(rayAngle) * 0.05;
-      distance += 0.05;
+    const den = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
+    if (den === 0) return;
 
-      const mapValue = map[Math.floor(rayY)]?.[Math.floor(rayX)];
-      if (mapValue === 1 || mapValue === 2) hit = true;
+    const t = ((x1 - x3) * (y3 - y4) - (y1 - y3) * (x3 - x4)) / den;
+    const u = -((x1 - x2) * (y1 - y3) - (y1 - y2) * (x1 - x3)) / den;
+
+    if (t > 0 && t < 1 && u > 0) {
+      const pt = {
+        x: x1 + t * (x2 - x1),
+        y: y1 + t * (y2 - y1)
+      };
+      return pt;
+    }
+  }
+
+  draw(walls) {
+    let closest = null;
+    let record = Infinity;
+    for (let wall of walls) {
+      const pt = this.cast(wall);
+      if (pt) {
+        const d = Math.hypot(this.pos.x - pt.x, this.pos.y - pt.y);
+        if (d < record) {
+          record = d;
+          closest = pt;
+        }
+      }
     }
 
-    const wallHeight = (1 / distance) * 500;
-    const shade = Math.max(0.2, 1 - distance / 12);
-    ctx.fillStyle = `rgba(${200 * shade}, ${255 * shade}, ${255 * shade}, 1)`;
-    ctx.fillRect(x, (canvas.height / 2) - wallHeight / 2, 1, wallHeight);
-  }
-
-  drawGoal();
-  checkVictory();
-}
-
-function drawGoal() {
-  const goalX = 18;
-  const goalY = 1;
-  const dx = goalX + 0.5 - posX;
-  const dy = goalY + 0.5 - posY;
-  const dist = Math.sqrt(dx * dx + dy * dy);
-
-  if (dist < 5) {
-    const size = 80 + 10 * Math.sin(Date.now() * 0.005);
-    const glow = 180 + 75 * Math.sin(Date.now() * 0.01);
-    ctx.fillStyle = `rgba(${glow}, ${glow}, 100, 0.8)`;
-    ctx.beginPath();
-    ctx.arc(canvas.width / 2, canvas.height / 2 + 50, size / 2, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = "#fff";
-    ctx.font = "20px sans-serif";
-    ctx.textAlign = "center";
-    ctx.fillText("✨ EXIT AHEAD ✨", canvas.width / 2, canvas.height / 2 + 100);
+    if (closest) {
+      ctx.strokeStyle = 'rgba(255,255,0,0.3)';
+      ctx.beginPath();
+      ctx.moveTo(this.pos.x, this.pos.y);
+      ctx.lineTo(closest.x, closest.y);
+      ctx.stroke();
+    }
   }
 }
 
-let hasWon = false;
-function checkVictory() {
-  if (hasWon) return;
-  const currentTile = map[Math.floor(posY)][Math.floor(posX)];
-  if (currentTile === 2) {
-    hasWon = true;
-    setTimeout(() => {
-      alert("🎉 You reached the end of the maze! 🎉");
-    }, 300);
+class Particle {
+  constructor() {
+    this.pos = { x: canvas.width / 2, y: canvas.height / 2 };
+    this.rays = [];
+    for (let a = 0; a < 360; a += 1) {
+      this.rays.push(new Ray(this.pos.x, this.pos.y, a * Math.PI / 180));
+    }
+  }
+
+  update(x, y) {
+    this.pos.x = x;
+    this.pos.y = y;
+    for (let ray of this.rays) {
+      ray.pos.x = x;
+      ray.pos.y = y;
+    }
+  }
+
+  draw(walls) {
+    for (let ray of this.rays) {
+      ray.draw(walls);
+    }
   }
 }
 
-gameLoop();
+// Create walls
+const walls = [];
+walls.push(new Wall(100, 100, 300, 150));
+walls.push(new Wall(300, 150, 500, 300));
+walls.push(new Wall(500, 300, 600, 100));
+walls.push(new Wall(600, 100, 100, 100));
+
+// Add edges
+walls.push(new Wall(0, 0, canvas.width, 0));
+walls.push(new Wall(canvas.width, 0, canvas.width, canvas.height));
+walls.push(new Wall(canvas.width, canvas.height, 0, canvas.height));
+walls.push(new Wall(0, canvas.height, 0, 0));
+
+const particle = new Particle();
+
+function animate() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  for (let wall of walls) {
+    wall.draw();
+  }
+
+  particle.draw(walls);
+  requestAnimationFrame(animate);
+}
+
+canvas.addEventListener('mousemove', (e) => {
+  particle.update(e.clientX, e.clientY);
+});
+
+animate();
