@@ -1,3 +1,10 @@
+// You can expand this later
+document.querySelectorAll('.settings-btn')?.forEach(btn => {
+  btn.addEventListener('click', () => {
+    alert(`${btn.textContent} clicked. (This feature can be implemented later)`);
+  });
+});
+
 function goTo(page) {
   window.location.href = page;
 }
