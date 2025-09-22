@@ -1,1 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Workout Session</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1 id="workout-title">Workout</h1>
+    </header>
 
+    <main>
+      <div class="timer-display">
+        <span id="minutes">0</span>:<span id="seconds">00</span>
+      </div>
+      <button id="startStopBtn">Start Workout</button>
+      <p id="status-label">Not started</p>
+    </main>
+
+    <nav class="bottom-nav">
+      <button class="nav-btn" onclick="goTo('index.html')">Home</button>
+      <button class="nav-btn active" onclick="goTo('progress.html')">Progress</button>
+    </nav>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
