@@ -5,44 +5,31 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Workout Tracker</title>
   <link rel="stylesheet" href="style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
   <div class="container">
     <header>
-      <h1>💪 Workout Tracker</h1>
-      <p class="subtitle">Track your progress and crush your goals</p>
+      <h1>Workout Tracker</h1>
+      <p class="subtitle">Choose a workout to begin</p>
     </header>
 
     <main>
-      <div class="workout-summary">
-        <h2>Today's Workout</h2>
-        <div class="summary-card">
-          <div>
-            <p class="workout-name">Full Body Burn</p>
-            <p class="workout-duration">Duration: <strong>45 mins</strong></p>
-          </div>
-          <button class="start-btn">Start</button>
-        </div>
-      </div>
-
       <section class="workout-options">
-        <h2>Choose Workout</h2>
         <div class="grid">
-          <div class="workout-card">🏋️ Strength</div>
-          <div class="workout-card">🏃 Cardio</div>
-          <div class="workout-card">🧘 Yoga</div>
-          <div class="workout-card">🦵 Legs</div>
+          <div class="workout-card" onclick="startWorkout('Strength')">Strength Training</div>
+          <div class="workout-card" onclick="startWorkout('Cardio')">Cardio</div>
+          <div class="workout-card" onclick="startWorkout('Yoga')">Yoga</div>
+          <div class="workout-card" onclick="startWorkout('Legs')">Legs</div>
         </div>
       </section>
     </main>
 
     <nav class="bottom-nav">
-      <button class="nav-btn active">🏠</button>
-      <button class="nav-btn">📋</button>
-      <button class="nav-btn">📈</button>
-      <button class="nav-btn">⚙️</button>
+      <button class="nav-btn active" onclick="goTo('index.html')">Home</button>
+      <button class="nav-btn" onclick="goTo('progress.html')">Progress</button>
+      <button class="nav-btn" onclick="goTo('settings.html')">Settings</button>
     </nav>
   </div>
+  <script src="script.js"></script>
 </body>
 </html>
