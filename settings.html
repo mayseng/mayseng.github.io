@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Settings</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Settings</h1>
+    </header>
+
+    <main>
+      <section class="settings-section">
+        <button class="settings-btn">Change Theme</button>
+        <button class="settings-btn">Reset Progress</button>
+        <button class="settings-btn">Notifications</button>
+        <button class="settings-btn">Account Info</button>
+        <button class="settings-btn">Log Out</button>
+      </section>
+    </main>
+
+    <nav class="bottom-nav">
+      <button class="nav-btn" onclick="goTo('index.html')">Home</button>
+      <button class="nav-btn" onclick="goTo('progress.html')">Progress</button>
+      <button class="nav-btn active">Settings</button>
+    </nav>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
